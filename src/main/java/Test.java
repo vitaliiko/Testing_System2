@@ -1,5 +1,11 @@
-/**
- * Created by User on 21.09.2015.
- */
+import supporting.IOFileHandling;
+import userGI.ShowTaskGI;
+
 public class Test {
+
+    public static void main(String[] args) {
+//        new ShowTaskGI();
+
+        new ShowTaskGI(IOFileHandling.loadTestTask("Модуль_1"));
+    }
 }
