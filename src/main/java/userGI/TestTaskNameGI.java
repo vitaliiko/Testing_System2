@@ -4,13 +4,11 @@ import supporting.IOFileHandling;
 import testingClasses.TestTask;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 public class TestTaskNameGI extends JDialog {
 
@@ -18,14 +16,16 @@ public class TestTaskNameGI extends JDialog {
     private JButton completeButton;
     private JButton cancelButton;
     private JTextField taskNameField;
-    private JTextField disciplineNameField;
+    private JTextField subjectNameField;
 
     public TestTaskNameGI() {
-        prepareTaskNamePanel();
-        prepareDisciplineNamePanel();
+        setTitle("Створення тесту");
+        setSize(new Dimension(400, 140));
+        prepareLabelPanel();
+        prepareFieldsPanel();
         prepareButtonPanel();
-        pack();
         setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 
@@ -33,60 +33,38 @@ public class TestTaskNameGI extends JDialog {
         return testTask;
     }
 
-    public void prepareTaskNamePanel() {
-        taskNameField = new JTextField(20);
-        taskNameField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (taskNameField.getText().isEmpty() || disciplineNameField.getText().isEmpty()) {
-                    completeButton.setEnabled(false);
-                } else {
-                    completeButton.setEnabled(true);
-                }
-            }
+    public void prepareLabelPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        Border border = new EmptyBorder(8, 5, 4 ,0);
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                insertUpdate(e);
-            }
+        JLabel testNameLabel = new JLabel("Назва тесту:");
+        testNameLabel.setAlignmentX(RIGHT_ALIGNMENT);
+        testNameLabel.setBorder(border);
+        panel.add(testNameLabel);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                insertUpdate(e);
-            }
-        });
-        JPanel taskNamePanel = new JPanel();
-        taskNamePanel.add(new JLabel("Назва тесту: "));
-        taskNamePanel.add(taskNameField);
-        getContentPane().add(taskNamePanel, BorderLayout.NORTH);
+        JLabel subjectNameLabel = new JLabel("Назва дисципліни:");
+        subjectNameLabel.setAlignmentX(RIGHT_ALIGNMENT);
+        subjectNameLabel.setBorder(border);
+        panel.add(subjectNameLabel);
+
+        getContentPane().add(panel, BorderLayout.WEST);
     }
 
-    public void prepareDisciplineNamePanel() {
-        disciplineNameField = new JTextField(20);
-        disciplineNameField.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                if (taskNameField.getText().isEmpty() || disciplineNameField.getText().isEmpty()) {
-                    completeButton.setEnabled(false);
-                } else {
-                    completeButton.setEnabled(true);
-                }
-            }
+    public void prepareFieldsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                insertUpdate(e);
-            }
+        taskNameField = new JTextField(20);
+        taskNameField.getDocument().addDocumentListener(new InputListener());
+        panel.add(taskNameField);
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                insertUpdate(e);
-            }
-        });
-        JPanel disciplineNamePanel = new JPanel();
-        disciplineNamePanel.add(new JLabel("Назва дисципліни"));
-        disciplineNamePanel.add(disciplineNameField);
-        getContentPane().add(disciplineNamePanel, BorderLayout.CENTER);
+        subjectNameField = new JTextField(20);
+        subjectNameField.getDocument().addDocumentListener(new InputListener());
+        panel.add(subjectNameField);
+
+        getContentPane().add(panel, BorderLayout.CENTER);
     }
 
     public void prepareButtonPanel() {
@@ -102,7 +80,7 @@ public class TestTaskNameGI extends JDialog {
         completeButton = new JButton("Створити");
         completeButton.setEnabled(false);
         completeButton.addActionListener(e -> {
-            testTask = new TestTask(taskNameField.getText(), disciplineNameField.getText(), null);
+            testTask = new TestTask(taskNameField.getText(), subjectNameField.getText(), null);
             IOFileHandling.saveTestTask(testTask, taskNameField.getText());
             dispose();
         });
@@ -114,6 +92,27 @@ public class TestTaskNameGI extends JDialog {
             System.out.println("close");
             dispose();
         });
+    }
+
+    public class InputListener implements DocumentListener {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            if (taskNameField.getText().isEmpty() || subjectNameField.getText().isEmpty()) {
+                completeButton.setEnabled(false);
+            } else {
+                completeButton.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            insertUpdate(e);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            insertUpdate(e);
+        }
     }
 }
 

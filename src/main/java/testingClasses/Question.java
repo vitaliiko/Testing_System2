@@ -20,6 +20,14 @@ public class Question implements Serializable {
         this.rightAnswersList = rightAnswersList;
     }
 
+    public Question(String task, ArrayList<String> answersList, ArrayList<String> rightAnswersList) {
+        this.task = task;
+        this.answersList = answersList;
+        this.rightAnswersList = rightAnswersList;
+        imageInByte = null;
+        imageName = "";
+    }
+
     public String getImageName() {
         return imageName;
     }
