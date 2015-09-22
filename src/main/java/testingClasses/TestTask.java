@@ -14,9 +14,9 @@ public class TestTask implements Serializable {
     private ArrayList<String> availableGroupList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
 
-    public TestTask(String taskName, String disciplineName, String teacherName) {
+    public TestTask(String taskName, String subjectName, String teacherName) {
         this.taskName = taskName;
-        this.disciplineName = disciplineName;
+        this.disciplineName = subjectName;
         this.teacherName = teacherName;
         answersLimit = 5;
         questionsLimit = 30;
