@@ -17,11 +17,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AddQuestionGI extends JFrame {
+public class AddQuestionGI extends JDialog {
 
     private Question question = null;
     private ArrayList<AnswerBoxPanel> answersBoxList;
     private JPanel answersPanel;
+    private JPanel questionPanel;
+    private JPanel imagePanel;
+    private JPanel buttonsPanel;
     private JTextField imageNameField;
     private JTextArea questionArea;
     private JButton openButton;
@@ -31,32 +34,23 @@ public class AddQuestionGI extends JFrame {
 
     private int answersLimit;
 
-    public AddQuestionGI(int answersLimit) {
-        super("Додати питання");
+    public AddQuestionGI(JFrame frame, int answersLimit) {
+        super(frame);
+        setTitle("Додати питання");
+        setModal(true);
         this.answersLimit = answersLimit;
         IOFileHandling.saveQuestion(null);
         prepareImagePanel();
+        getContentPane().add(imagePanel, BorderLayout.NORTH);
         prepareQuestionPanel();
+        getContentPane().add(questionPanel, BorderLayout.CENTER);
         prepareButtonsPanel();
+        getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
         setupWindow();
     }
 
-    public void setupWindow() {
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        pack();
-        setResizable(false);
-        setLocationRelativeTo(null);
-        setVisible(true);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                cancelButton.doClick();
-            }
-        });
-    }
-
-    public AddQuestionGI(Question question, int answersLimit) {
-        this(answersLimit);
+    public AddQuestionGI(JFrame frame, Question question, int answersLimit) {
+        this(frame, answersLimit);
         setTitle("Редагування");
         imageNameField.setText(question.getImageName());
         questionArea.setText(question.getTask());
@@ -76,6 +70,21 @@ public class AddQuestionGI extends JFrame {
     public Question getQuestion() {
         return question;
     }
+
+    public void setupWindow() {
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                cancelButton.doClick();
+            }
+        });
+    }
+
 
     public void prepareOpenButton() {
         openButton = new JButton(new ImageIcon("resources/folder.png"));
@@ -107,7 +116,7 @@ public class AddQuestionGI extends JFrame {
     }
 
     public void prepareImagePanel() {
-        JPanel imagePanel = new JPanel();
+        imagePanel = new JPanel();
         imagePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         prepareImageNameField();
         imagePanel.add(imageNameField);
@@ -115,7 +124,6 @@ public class AddQuestionGI extends JFrame {
         imagePanel.add(openButton);
         prepareBrowseImageButton();
         imagePanel.add(browseImageButton);
-        getContentPane().add(imagePanel, BorderLayout.NORTH);
     }
 
     public void prepareImageNameField() {
@@ -140,7 +148,7 @@ public class AddQuestionGI extends JFrame {
     }
 
     public void prepareQuestionPanel() {
-        JPanel questionPanel = new JPanel();
+        questionPanel = new JPanel();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         questionArea = new JTextArea(5, 40);
@@ -167,12 +175,11 @@ public class AddQuestionGI extends JFrame {
             }
         });
         JScrollPane scrollPane = new JScrollPane(questionArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         questionPanel.add(scrollPane);
         prepareAnswersPanel();
         questionPanel.add(answersPanel);
-        getContentPane().add(questionPanel, BorderLayout.CENTER);
     }
 
     public void prepareAnswersPanel() {
@@ -242,19 +249,18 @@ public class AddQuestionGI extends JFrame {
             if (option == JOptionPane.YES_OPTION) {
                 completeButton.doClick();
             }
-            if (option == JOptionPane.NO_OPTION) {
+            if (option == JOptionPane.NO_OPTION || option == JOptionPane.CANCEL_OPTION) {
                 dispose();
             }
         });
     }
 
     public void prepareButtonsPanel() {
-        JPanel buttonsPanel = new JPanel();
+        buttonsPanel = new JPanel();
         prepareCompleteButton();
         buttonsPanel.add(completeButton);
         prepareCancelButton();
         buttonsPanel.add(cancelButton);
-        getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
     }
 
     public Question createQuestion() throws IOException {

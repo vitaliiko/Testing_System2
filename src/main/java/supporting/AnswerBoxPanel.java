@@ -1,9 +1,6 @@
 package supporting;
 
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import java.awt.Cursor;
 
@@ -21,10 +18,9 @@ public class AnswerBoxPanel extends JPanel {
         textArea = new JTextArea(4, 30);
         textArea.setLineWrap(true);
         textArea.setEnabled(false);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        add(scrollPane);
+        add(new JScrollPane(textArea,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 
     public void setEnabledCheckBox(boolean b) {

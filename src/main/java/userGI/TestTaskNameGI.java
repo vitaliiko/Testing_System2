@@ -18,8 +18,10 @@ public class TestTaskNameGI extends JDialog {
     private JTextField taskNameField;
     private JTextField subjectNameField;
 
-    public TestTaskNameGI() {
+    public TestTaskNameGI(JFrame frame) {
+        super(frame);
         setTitle("Створення тесту");
+        setModal(true);
         setSize(new Dimension(400, 140));
         prepareLabelPanel();
         prepareFieldsPanel();

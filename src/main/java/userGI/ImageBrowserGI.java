@@ -14,7 +14,7 @@ public class ImageBrowserGI extends JFrame {
         ImagePanel imagePanel = new ImagePanel();
         imagePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
         getContentPane().add(imagePanel);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(1000, 500));
         setResizable(false);
         setLocationRelativeTo(null);

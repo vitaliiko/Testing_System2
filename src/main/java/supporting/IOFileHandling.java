@@ -4,23 +4,16 @@ import testingClasses.Question;
 import testingClasses.TestTask;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 public class IOFileHandling {
 
     public static final String QUESTIONS_SER = "IOFiles/questions.ser";
     public static final String TEST_TASK_SER = "IOFiles/theTestTask.ser";
+    public static final String RESOURCES = "resources/";
 
     public static void saveQuestionsList(ArrayList<Question> questionsList) {
         try{
