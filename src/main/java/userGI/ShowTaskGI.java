@@ -1,13 +1,11 @@
 package userGI;
 
 import supporting.IOFileHandling;
-import table.QuestionTableModel;
 import testingClasses.Question;
 import testingClasses.TestTask;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -22,7 +20,6 @@ public class ShowTaskGI extends JFrame {
     private JPanel westPanel;
     private JList<JPanel> browseQuestionList;
     private DefaultListModel<JPanel> browseListModel;
-    private JTable questionsTable;
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
@@ -33,7 +30,7 @@ public class ShowTaskGI extends JFrame {
     public ShowTaskGI() {
         super("Створення тесту");
         frameSetup();
-        launchDialog();
+        dialogLaunch();
     }
 
     public ShowTaskGI(TestTask theTestTask) {
@@ -44,10 +41,8 @@ public class ShowTaskGI extends JFrame {
     }
 
     public void frameSetup() {
-        prepareQuestionsTable();
-        getContentPane().add(questionsTable, BorderLayout.CENTER);
+        prepareBrowsePanel();
         prepareEastPanel();
-        getContentPane().add(eastPanel, BorderLayout.EAST);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(new Dimension(1000, 500));
         setLocationRelativeTo(null);
@@ -55,8 +50,8 @@ public class ShowTaskGI extends JFrame {
         setMinimumSize(new Dimension(500, 250));
     }
 
-    public void launchDialog() {
-        final TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
+    public void dialogLaunch() {
+        final TestTaskNameGI testTaskNameGI = new TestTaskNameGI();
         testTaskNameGI.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -74,14 +69,9 @@ public class ShowTaskGI extends JFrame {
         });
     }
 
-    public void prepareQuestionsTable() {
-        questionsTable = new JTable(new QuestionTableModel(questionsList));
-        questionsTable.setDefaultRenderer(Question.class, new QuestionCellRenderer());
-        questionsTable.getRowHeight(100);
-    }
-
     public void prepareBrowsePanel() {
         browsePanel = new JPanel();
+        browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
         browsePanel.setBackground(Color.DARK_GRAY);
         browseListModel = new DefaultListModel<>();
         browseQuestionList = new JList<>(browseListModel);
@@ -118,20 +108,20 @@ public class ShowTaskGI extends JFrame {
     public JPanel createQuestionPanel(Question theQuestion) {
         final JPanel questionPanel = new JPanel();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
-//        questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         questionPanel.add(prepareTextArea(theQuestion.getTask()));
         for (String s : theQuestion.getAnswersList()) {
-//            JPanel answerPanel = new JPanel();
-//            JLabel answer = new JLabel();
-//            if (theQuestion.getRightAnswersList().contains(s)) {
-//                answer.setIcon(new ImageIcon("resources/right.png"));
-//            } else {
-//                answer.setIcon(new ImageIcon("resources/wrong.png"));
-//            }
-//            answerPanel.add(answer);
-//            answerPanel.setAlignmentX(RIGHT_ALIGNMENT);
-//            answerPanel.add(prepareTextArea(s));
-            questionPanel.add(prepareTextArea(s));
+            JPanel answerPanel = new JPanel();
+            JLabel answer = new JLabel();
+            if (theQuestion.getRightAnswersList().contains(s)) {
+                answer.setIcon(new ImageIcon("resources/right.png"));
+            } else {
+                answer.setIcon(new ImageIcon("resources/wrong.png"));
+            }
+            answerPanel.add(answer);
+            answerPanel.setAlignmentX(RIGHT_ALIGNMENT);
+            answerPanel.add(prepareTextArea(s));
+            questionPanel.add(answerPanel);
         }
         questionsPanelsList.add(questionPanel);
         return questionPanel;
@@ -195,20 +185,6 @@ public class ShowTaskGI extends JFrame {
         eastPanel.add(browseModeBox);
         prepareCompleteButton();
         eastPanel.add(completeButton);
-    }
-
-    public class QuestionCellRenderer implements TableCellRenderer {
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                       boolean hasFocus, int row, int column) {
-            Question question = (Question) value;
-            JPanel panel = createQuestionPanel(question);
-            if (isSelected) {
-                panel.setBackground(table.getSelectionBackground());
-            } else {
-                panel.setBackground(table.getBackground());
-            }
-            return panel;
-        }
+        getContentPane().add(eastPanel, BorderLayout.EAST);
     }
 }
