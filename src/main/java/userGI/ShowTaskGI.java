@@ -9,10 +9,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 public class ShowTaskGI extends JFrame {
@@ -33,9 +30,9 @@ public class ShowTaskGI extends JFrame {
     private JButton setupButton;
     private JLabel questionsCountLabel;
     private JComboBox<String> browseModeBox;
-    private JTable questionTable;
+    private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
-
+    private JScrollPane tableScrollPane;
 
     public ShowTaskGI() {
         super("Створення тесту");
@@ -52,9 +49,9 @@ public class ShowTaskGI extends JFrame {
 
     public void frameSetup() {
         prepareQuestionsTable();
-        getContentPane().add(new JScrollPane(questionTable,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        getContentPane().add(tableScrollPane, BorderLayout.CENTER);
+        prepareBrowsePanel();
+//        getContentPane().add(browsePanel, BorderLayout.CENTER);
         prepareToolsPanel();
         getContentPane().add(toolsPanel, BorderLayout.EAST);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -86,8 +83,9 @@ public class ShowTaskGI extends JFrame {
     public void prepareBrowsePanel() {
         browsePanel = new JPanel();
         browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
-        browsePanel.setBackground(Color.DARK_GRAY);
-
+        for (Question question : questionsList) {
+            browsePanel.add(createQuestionPanel(question));
+        }
     }
 
     private JTextArea prepareTextArea(String text) {
@@ -103,7 +101,7 @@ public class ShowTaskGI extends JFrame {
     }
 
     public JPanel createQuestionPanel(Question theQuestion) {
-        final JPanel questionPanel = new JPanel();
+        JPanel questionPanel = new JPanel();
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         questionPanel.add(prepareTextArea(theQuestion.getTask()));
@@ -146,7 +144,7 @@ public class ShowTaskGI extends JFrame {
         removeButton.setToolTipText("Видалити");
         removeButton.setEnabled(false);
         removeButton.addActionListener(e -> {
-            questionsList.remove(questionTable.getSelectedRow());
+            questionsList.remove(questionsTable.getSelectedRow());
             questionsCountLabel.setText(String.valueOf(questionsList.size()));
         });
     }
@@ -156,7 +154,7 @@ public class ShowTaskGI extends JFrame {
         editButton.setToolTipText("Редагувати");
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
-            int index = questionTable.getSelectedRow();
+            int index = questionsTable.getSelectedRow();
             AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), theTestTask.getAnswersLimit());
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
@@ -236,22 +234,22 @@ public class ShowTaskGI extends JFrame {
 
     public void prepareQuestionsTable() {
         questionTableParameters = new QuestionTableParameters(questionsList);
-        questionTable = new JTable(questionTableParameters);
-        questionTable.setDefaultRenderer(Object.class, questionTableParameters);
-        questionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        questionTable.setShowHorizontalLines(false);
-        questionTable.setShowVerticalLines(false);
-        questionTable.getColumnModel().getColumn(0).setPreferredWidth(8);
-        questionTable.getTableHeader().setReorderingAllowed(false);
-        questionTable.setTableHeader(null);
-        TableColumnModel columnModel = questionTable.getColumnModel();
+        questionsTable = new JTable(questionTableParameters);
+        questionsTable.setDefaultRenderer(Object.class, questionTableParameters);
+        questionsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        questionsTable.setShowHorizontalLines(false);
+        questionsTable.setShowVerticalLines(false);
+        questionsTable.getColumnModel().getColumn(0).setPreferredWidth(8);
+        questionsTable.getTableHeader().setReorderingAllowed(false);
+        questionsTable.setTableHeader(null);
+        TableColumnModel columnModel = questionsTable.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(50);
         columnModel.getColumn(0).setMinWidth(25);
-        questionTable.getSelectionModel().addListSelectionListener(e -> {
+        questionsTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
         });
-        questionTable.addMouseListener(new MouseAdapter() {
+        questionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
@@ -259,5 +257,9 @@ public class ShowTaskGI extends JFrame {
                 }
             }
         });
+
+        tableScrollPane = new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
     }
 }

@@ -83,7 +83,6 @@ public class AddQuestionGI extends JFrame {
         });
     }
 
-
     public void prepareOpenButton() {
         openButton = new JButton(new ImageIcon("resources/folder.png"));
         openButton.setToolTipText("Відкрити");
@@ -246,12 +245,16 @@ public class AddQuestionGI extends JFrame {
         cancelButton = new JButton("Відмінити");
         cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cancelButton.addActionListener(e -> {
-            int option = JOptionPane.showConfirmDialog(null, "Ви бажаєте зберегти зміни?",
-                    null, JOptionPane.YES_NO_CANCEL_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                completeButton.doClick();
-            }
-            if (option == JOptionPane.NO_OPTION || option == JOptionPane.CANCEL_OPTION) {
+            if (!questionArea.getText().isEmpty()) {
+                int option = JOptionPane.showConfirmDialog(null, "Ви бажаєте зберегти зміни?",
+                        null, JOptionPane.YES_NO_CANCEL_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    completeButton.doClick();
+                }
+                if (option == JOptionPane.NO_OPTION) {
+                    dispose();
+                }
+            } else {
                 dispose();
             }
         });
@@ -298,9 +301,12 @@ public class AddQuestionGI extends JFrame {
         if (rightAnswersList.size() == answersList.size()) {
             int option = JOptionPane.showConfirmDialog(
                     null, "Ви відмітили всі відповіді як правильні. Бажаєте продовжити?",
-                    null, JOptionPane.YES_NO_CANCEL_OPTION);
-            if (option == JOptionPane.NO_OPTION || option == JOptionPane.CANCEL_OPTION) {
-                return null;
+                    null, JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                new Question(imageName, imageInByte, task, answersList, rightAnswersList);
+            }
+            if (option == JOptionPane.NO_OPTION) {
+
             }
         }
         return new Question(imageName, imageInByte, task, answersList, rightAnswersList);
