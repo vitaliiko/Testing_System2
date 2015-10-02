@@ -5,6 +5,7 @@ import testingClasses.TestTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
@@ -97,9 +98,19 @@ public class IOFileHandling {
             baos.flush();
             imageInByte = baos.toByteArray();
         } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні графічного об\'єкта",
+            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
                     "Попередження", JOptionPane.DEFAULT_OPTION);
         }
         return imageInByte;
+    }
+
+    public static Image imageFromByteArr(byte[] imageInByte) {
+        try {
+            return ImageIO.read(new ByteArrayInputStream(imageInByte));
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
+                    "Попередження", JOptionPane.DEFAULT_OPTION);
+        }
+        return null;
     }
 }

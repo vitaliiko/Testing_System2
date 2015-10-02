@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class AddQuestionGI extends JDialog {
+public class AddQuestionGI extends JFrame {
 
     private Question question = null;
     private ArrayList<AnswerBoxPanel> answersBoxList;
@@ -34,10 +34,8 @@ public class AddQuestionGI extends JDialog {
 
     private int answersLimit;
 
-    public AddQuestionGI(JFrame frame, int answersLimit) {
-        super(frame);
-        setTitle("Додати питання");
-        setModal(true);
+    public AddQuestionGI(int answersLimit) {
+        super("Додати питання");
         this.answersLimit = answersLimit;
         IOFileHandling.saveQuestion(null);
         prepareImagePanel();
@@ -49,8 +47,8 @@ public class AddQuestionGI extends JDialog {
         setupWindow();
     }
 
-    public AddQuestionGI(JFrame frame, Question question, int answersLimit) {
-        this(frame, answersLimit);
+    public AddQuestionGI(Question question, int answersLimit) {
+        this(answersLimit);
         setTitle("Редагування");
         imageNameField.setText(question.getImageName());
         questionArea.setText(question.getTask());
@@ -107,7 +105,11 @@ public class AddQuestionGI extends JDialog {
         browseImageButton.setEnabled(false);
         browseImageButton.addActionListener(e -> {
             try {
-                new ImageBrowserGI(ImageIO.read(new File(imageNameField.getText())));
+                if (question != null) {
+                    new ImageBrowserGI(IOFileHandling.imageFromByteArr(question.getImageInByte()));
+                } else {
+                    new ImageBrowserGI(ImageIO.read(new File(imageNameField.getText())));
+                }
             } catch (IOException e1) {
                 JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
                         "Попередження", JOptionPane.DEFAULT_OPTION);
@@ -190,7 +192,7 @@ public class AddQuestionGI extends JDialog {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         answersBoxList = new ArrayList<>();
         for (int i = 0; i < answersLimit; i++) {
-            final AnswerBoxPanel answerBoxPanel = new AnswerBoxPanel();
+            AnswerBoxPanel answerBoxPanel = new AnswerBoxPanel();
             answerBoxPanel.setEnabledTextArea(i == 0);
             answerBoxPanel.addDocumentListener(new DocumentListener() {
                 @Override

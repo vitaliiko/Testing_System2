@@ -8,6 +8,8 @@ import testingClasses.TestTask;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -123,7 +125,7 @@ public class ShowTaskGI extends JFrame {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
         addButton.addActionListener(e -> {
-            AddQuestionGI addQuestionGI = new AddQuestionGI(this, theTestTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(theTestTask.getAnswersLimit());
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -148,7 +150,7 @@ public class ShowTaskGI extends JFrame {
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
             int index = questionTable.getSelectedRow();
-            AddQuestionGI addQuestionGI = new AddQuestionGI(this, questionsList.get(index), theTestTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), theTestTask.getAnswersLimit());
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -210,9 +212,7 @@ public class ShowTaskGI extends JFrame {
         prepareBrowseModePanel();
         eastPanel.add(browseModePanel);
         prepareCompleteButton();
-        JPanel panel = new JPanel();
-        panel.add(completeButton);
-        eastPanel.add(panel);
+        eastPanel.add(completeButton);
     }
 
     public void prepareQuestionsTable() {
@@ -228,6 +228,14 @@ public class ShowTaskGI extends JFrame {
         questionTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
+        });
+        questionTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    editButton.doClick();
+                }
+            }
         });
 
         //TableColumn payFormColumn = questionTable.getColumnModel().getColumn(5);
