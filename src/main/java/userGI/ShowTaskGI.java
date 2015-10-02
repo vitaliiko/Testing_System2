@@ -7,6 +7,7 @@ import testingClasses.TestTask;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,15 +21,17 @@ public class ShowTaskGI extends JFrame {
     private ArrayList<JPanel> questionPanelList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
     private JPanel browsePanel;
-    private JPanel eastPanel;
-    private JPanel buttonPanel;
+    private JPanel toolsPanel;
+    private JPanel buttonsPanel;
     private JPanel browseModePanel;
     private JPanel westPanel;
+    private JPanel questionsCountPanel;
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
     private JButton completeButton;
     private JButton setupButton;
+    private JLabel questionsCountLabel;
     private JComboBox<String> browseModeBox;
     private JTable questionTable;
     private QuestionTableParameters questionTableParameters;
@@ -52,17 +55,17 @@ public class ShowTaskGI extends JFrame {
         getContentPane().add(new JScrollPane(questionTable,
                 ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
-        prepareEastPanel();
-        getContentPane().add(eastPanel, BorderLayout.EAST);
+        prepareToolsPanel();
+        getContentPane().add(toolsPanel, BorderLayout.EAST);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(new Dimension(1000, 500));
+        setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
         setVisible(true);
-        setMinimumSize(new Dimension(500, 250));
+        setMinimumSize(new Dimension(700, 400));
     }
 
     public void dialogLaunch() {
-        final TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
+        TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
         testTaskNameGI.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -131,6 +134,7 @@ public class ShowTaskGI extends JFrame {
                 public void windowClosed(WindowEvent e) {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.add(addQuestionGI.getQuestion());
+                        questionsCountLabel.setText(String.valueOf(questionsList.size()));
                     }
                 }
             });
@@ -141,7 +145,10 @@ public class ShowTaskGI extends JFrame {
         removeButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "remove.png"));
         removeButton.setToolTipText("Видалити");
         removeButton.setEnabled(false);
-        removeButton.addActionListener(e -> questionsList.remove(questionTable.getSelectedRow()));
+        removeButton.addActionListener(e -> {
+            questionsList.remove(questionTable.getSelectedRow());
+            questionsCountLabel.setText(String.valueOf(questionsList.size()));
+        });
     }
 
     public void prepareEditButton() {
@@ -169,16 +176,16 @@ public class ShowTaskGI extends JFrame {
         setupButton.setEnabled(false);
     }
 
-    public void prepareButtonPanel() {
-        buttonPanel = new JPanel();
+    public void prepareButtonsPanel() {
+        buttonsPanel = new JPanel();
         prepareAddButton();
-        buttonPanel.add(addButton);
+        buttonsPanel.add(addButton);
         prepareEditButton();
-        buttonPanel.add(editButton);
+        buttonsPanel.add(editButton);
         prepareRemoveButton();
-        buttonPanel.add(removeButton);
+        buttonsPanel.add(removeButton);
         prepareSetupButton();
-        buttonPanel.add(setupButton);
+        buttonsPanel.add(setupButton);
     }
 
     public void prepareCompleteButton() {
@@ -190,29 +197,41 @@ public class ShowTaskGI extends JFrame {
         });
     }
 
-    public void prepareBrowseModeBox() {
-        String[] items = {"Повністю", "Частково"};
-        browseModeBox = new JComboBox<>(items);
-    }
-
     public void prepareBrowseModePanel() {
         browseModePanel = new JPanel();
-        browseModePanel.setLayout(new BoxLayout(browseModePanel, BoxLayout.Y_AXIS));
-        browseModePanel.add(new JLabel("Кількість запитань: " + questionsList.size()));
-        browseModePanel.add(new JLabel("Режим відображення:"));
-        prepareBrowseModeBox();
+        browseModePanel.add(new JLabel("Режим відображення: "));
+
+        String[] items = {"Повністю", "Частково"};
+        browseModeBox = new JComboBox<>(items);
         browseModePanel.add(browseModeBox);
     }
 
-    public void prepareEastPanel() {
-        eastPanel = new JPanel();
-        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
-        prepareButtonPanel();
-        eastPanel.add(buttonPanel);
+    public void prepareQuestionsCountPanel() {
+        questionsCountPanel = new JPanel();
+        questionsCountPanel.add(new JLabel("Кількість запитань: "));
+
+        questionsCountLabel = new JLabel(String.valueOf(questionsList.size()));
+        questionsCountPanel.add(questionsCountLabel);
+    }
+
+    public void prepareToolsPanel() {
+        toolsPanel = new JPanel();
+        toolsPanel.setLayout(new BorderLayout());
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        prepareButtonsPanel();
+        panel.add(buttonsPanel);
         prepareBrowseModePanel();
-        eastPanel.add(browseModePanel);
+        panel.add(browseModePanel);
+        prepareQuestionsCountPanel();
+        panel.add(questionsCountPanel);
+        toolsPanel.add(panel, BorderLayout.NORTH);
+
         prepareCompleteButton();
-        eastPanel.add(completeButton);
+        JPanel panel1 = new JPanel();
+        panel1.add(completeButton);
+        toolsPanel.add(panel1, BorderLayout.SOUTH);
     }
 
     public void prepareQuestionsTable() {
@@ -225,6 +244,9 @@ public class ShowTaskGI extends JFrame {
         questionTable.getColumnModel().getColumn(0).setPreferredWidth(8);
         questionTable.getTableHeader().setReorderingAllowed(false);
         questionTable.setTableHeader(null);
+        TableColumnModel columnModel = questionTable.getColumnModel();
+        columnModel.getColumn(0).setMaxWidth(50);
+        columnModel.getColumn(0).setMinWidth(25);
         questionTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
@@ -237,8 +259,5 @@ public class ShowTaskGI extends JFrame {
                 }
             }
         });
-
-        //TableColumn payFormColumn = questionTable.getColumnModel().getColumn(5);
-        //payFormColumn.setCellEditor(new DefaultCellEditor(payFormBox));
     }
 }

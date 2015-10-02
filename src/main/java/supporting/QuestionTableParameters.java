@@ -72,7 +72,8 @@ public class QuestionTableParameters extends JTextArea implements TableModel, Ta
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                                                   boolean hasFocus, int row, int column) {
         String data = value.toString();
         int lineWidth = this.getFontMetrics(this.getFont()).stringWidth(data);
         int lineHeight = this.getFontMetrics(this.getFont()).getHeight();
