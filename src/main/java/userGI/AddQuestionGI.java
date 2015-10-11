@@ -1,7 +1,7 @@
 package userGI;
 
-import tabelsAndFrames.AnswerBoxPanel;
 import supporting.IOFileHandling;
+import tablesAndFrames.AnswerBoxPanel;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;
@@ -9,10 +9,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
 import java.awt.*;
-
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +35,12 @@ public class AddQuestionGI extends JFrame {
 
     public AddQuestionGI(int answersLimit) {
         super("Додати питання");
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException |
+                UnsupportedLookAndFeelException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         this.answersLimit = answersLimit;
         IOFileHandling.saveQuestion(null);
         prepareImagePanel();
@@ -153,6 +158,7 @@ public class AddQuestionGI extends JFrame {
         questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         questionArea = new JTextArea(5, 40);
+        questionArea.setFont(new Font("Arial", Font.PLAIN, 12));
         questionArea.setLineWrap(true);
         questionArea.setBorder(new EmptyBorder(5, 5, 5, 5));
         questionArea.getDocument().addDocumentListener(new DocumentListener() {

@@ -32,6 +32,12 @@ public abstract class MainFrame extends JFrame {
     }
 
     private void mainFrameSetup() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException |
+                UnsupportedLookAndFeelException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         prepareContainer();
         getContentPane().add(container, BorderLayout.CENTER);
         prepareToolsPanel();
@@ -49,11 +55,12 @@ public abstract class MainFrame extends JFrame {
         toolsPanel.setLayout(new BorderLayout());
 
         prepareTabbedList();
-        toolsPanel.add(tabbedList, BorderLayout.CENTER);
+        toolsPanel.add(new BoxPanel(tabbedList), BorderLayout.CENTER);
     }
 
     private void prepareTabbedList() {
         tabbedList = new JList<>(tabbedItems);
+        tabbedList.setFont(new Font("Arial", Font.BOLD, 12));
         tabbedList.addListSelectionListener(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
                 ((CardLayout) container.getLayout()).first(container);

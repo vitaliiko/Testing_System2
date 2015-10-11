@@ -20,6 +20,12 @@ public class TestTaskNameGI extends JDialog {
 
     public TestTaskNameGI(JFrame frame) {
         super(frame);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException |
+                UnsupportedLookAndFeelException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         setTitle("Створення тесту");
         setModal(true);
         setSize(new Dimension(400, 140));

@@ -2,7 +2,7 @@ package tablesAndFrames;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
-import java.awt.Cursor;
+import java.awt.*;
 
 public class AnswerBoxPanel extends JPanel {
 
@@ -16,6 +16,7 @@ public class AnswerBoxPanel extends JPanel {
         add(checkBox);
 
         textArea = new JTextArea(4, 30);
+        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
         textArea.setLineWrap(true);
         textArea.setEnabled(false);
         add(new JScrollPane(textArea,

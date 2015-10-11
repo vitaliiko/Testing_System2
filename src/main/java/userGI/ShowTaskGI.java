@@ -2,8 +2,8 @@ package userGI;
 
 import supporting.IOFileHandling;
 import supporting.QuestionTableParameters;
-import tabelsAndFrames.BoxPanel;
-import tabelsAndFrames.MainFrame;
+import tablesAndFrames.BoxPanel;
+import tablesAndFrames.MainFrame;
 import testingClasses.Question;
 import testingClasses.TestTask;
 
@@ -102,13 +102,14 @@ public class ShowTaskGI extends MainFrame {
     public void prepareBrowsePanel() {
         browsePanel = new JPanel();
         browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
-        for (Question question : questionsList) {
-            browsePanel.add(createQuestionPanel(question));
+        for (int i = 0; i < questionsList.size(); i++) {
+            browsePanel.add(createQuestionPanel(i + 1, questionsList.get(i)));
         }
     }
 
     private JTextArea prepareTextArea(String text) {
         JTextArea textArea = new JTextArea();
+        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
         textArea.setText(text);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
@@ -119,23 +120,18 @@ public class ShowTaskGI extends MainFrame {
         return textArea;
     }
 
-    public JPanel createQuestionPanel(Question theQuestion) {
-        JPanel questionPanel = new JPanel();
-        questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
+    public JPanel createQuestionPanel(int index, Question theQuestion) {
+        JPanel questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        questionPanel.setFont(new Font("Arial", Font.PLAIN, 12));
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        questionPanel.add(prepareTextArea(theQuestion.getTask()));
-        for (String s : theQuestion.getAnswersList()) {
-            JPanel answerPanel = new JPanel();
-            JLabel answer = new JLabel();
+        questionPanel.add(prepareTextArea(index + ". " + theQuestion.getTask()));
+        for (int i = 0; i < theQuestion.getAnswersList().size(); i++) {
+            String s = theQuestion.getAnswersList().get(i);
+            JTextArea answerArea = prepareTextArea("\t" + ((char) (65 + i)) + ". " + s);
             if (theQuestion.getRightAnswersList().contains(s)) {
-                answer.setIcon(new ImageIcon("resources/right.png"));
-            } else {
-                answer.setIcon(new ImageIcon("resources/wrong.png"));
+                answerArea.setForeground(Color.GREEN);
             }
-            answerPanel.add(answer);
-            answerPanel.setAlignmentX(RIGHT_ALIGNMENT);
-            answerPanel.add(prepareTextArea(s));
-            questionPanel.add(answerPanel);
+            questionPanel.add(answerArea);
         }
         questionPanelList.add(questionPanel);
         return questionPanel;

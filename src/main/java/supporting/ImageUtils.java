@@ -4,6 +4,9 @@ import java.io.File;
 
 public class ImageUtils {
 
+    public static final int MAX_IMAGE_WIDTH = 500;
+    public static final int MAX_IMAGE_HEIGHT = 400;
+
     public final static String jpeg = "jpeg";
     public final static String jpg = "jpg";
     public final static String gif = "gif";
@@ -11,9 +14,6 @@ public class ImageUtils {
     public final static String tif = "tif";
     public final static String png = "png";
 
-    /**
-     * Get the extension of a file.
-     */
     public static String getExtension(File f) {
         String ext = null;
         String s = f.getName();
