@@ -2,6 +2,8 @@ package userGI;
 
 import supporting.IOFileHandling;
 import supporting.QuestionTableParameters;
+import tabelsAndFrames.BoxPanel;
+import tabelsAndFrames.MainFrame;
 import testingClasses.Question;
 import testingClasses.TestTask;
 
@@ -15,31 +17,26 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
-public class ShowTaskGI extends JFrame {
+public class ShowTaskGI extends MainFrame {
 
     private TestTask theTestTask;
     private ArrayList<JPanel> questionPanelList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
 
-    private Container container;
     private JPanel browsePanel;
-    private JPanel toolsPanel;
-    private JPanel buttonsPanel;
-    private JPanel questionsCountPanel;
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
     private JButton completeButton;
     private JButton setupButton;
-    private JList<String> tabbedList;
     private JLabel questionsCountLabel;
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
 
     public ShowTaskGI() {
         super("Створення тесту");
-        frameSetup();
         launchDialog();
+        frameSetup();
     }
 
     public ShowTaskGI(TestTask theTestTask) {
@@ -50,17 +47,13 @@ public class ShowTaskGI extends JFrame {
     }
 
     public void frameSetup() {
-        prepareContainer();
-        getContentPane().add(container, BorderLayout.CENTER);
-//        prepareBrowsePanel();
-//        getContentPane().add(browsePanel, BorderLayout.CENTER);
-        prepareToolsPanel();
-        getContentPane().add(toolsPanel, BorderLayout.WEST);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        fillContainer();
+        fillTollsPanel();
+        setTabbedItems("Редагування", "Перегляд");
+        setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
         setVisible(true);
-        setMinimumSize(new Dimension(700, 400));
     }
 
     public void launchDialog() {
@@ -82,28 +75,28 @@ public class ShowTaskGI extends JFrame {
         });
     }
 
-    public void prepareContainer() {
-        container = new Container();
-        container.setLayout(new CardLayout());
-        prepareQuestionsTable();
-        container.add(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+    public void fillTollsPanel() {
+        prepareAddButton();
+        prepareEditButton();
+        prepareRemoveButton();
+        prepareSetupButton();
+        questionsCountLabel = new JLabel(String.valueOf(questionsList.size()));
 
-        prepareBrowsePanel();
-        container.add(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        BoxPanel box = new BoxPanel(BoxLayout.Y_AXIS);
+        box.add(new BoxPanel(addButton, editButton, removeButton, setupButton));
+        box.add(new BoxPanel(new JLabel("Кількість запитань: "), questionsCountLabel));
+
+        prepareCompleteButton();
+        addOnToolsPanel(box, new BoxPanel(completeButton));
     }
 
-    public void prepareTabbedList() {
-        String[] items = {"Редагування", "Перегляд"};
-        tabbedList = new JList<>(items);
-        tabbedList.addListSelectionListener(e -> {
-           if (tabbedList.getSelectedIndex() == 0) {
-               ((CardLayout) container.getLayout()).first(container);
-           } else {
-               ((CardLayout) container.getLayout()).last(container);
-           }
-        });
+    public void fillContainer() {
+        prepareQuestionsTable();
+        prepareBrowsePanel();
+        addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 
     public void prepareBrowsePanel() {
@@ -196,20 +189,8 @@ public class ShowTaskGI extends JFrame {
 
     public void prepareSetupButton() {
         setupButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "setup.png"));
-        setupButton.setToolTipText("Налаштування");
+        setupButton.setToolTipText("Налаштування тесту");
         setupButton.setEnabled(false);
-    }
-
-    public void prepareButtonsPanel() {
-        buttonsPanel = new JPanel();
-        prepareAddButton();
-        buttonsPanel.add(addButton);
-        prepareEditButton();
-        buttonsPanel.add(editButton);
-        prepareRemoveButton();
-        buttonsPanel.add(removeButton);
-        prepareSetupButton();
-        buttonsPanel.add(setupButton);
     }
 
     public void prepareCompleteButton() {
@@ -219,34 +200,6 @@ public class ShowTaskGI extends JFrame {
             theTestTask.setQuestionsList(questionsList);
             IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
         });
-    }
-
-    public void prepareQuestionsCountPanel() {
-        questionsCountPanel = new JPanel();
-        questionsCountPanel.add(new JLabel("Кількість запитань: "));
-
-        questionsCountLabel = new JLabel(String.valueOf(questionsList.size()));
-        questionsCountPanel.add(questionsCountLabel);
-    }
-
-    public void prepareToolsPanel() {
-        toolsPanel = new JPanel();
-        toolsPanel.setLayout(new BorderLayout());
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-
-        prepareButtonsPanel();
-        panel.add(buttonsPanel);
-        prepareQuestionsCountPanel();
-        panel.add(questionsCountPanel);
-        prepareTabbedList();
-        panel.add(tabbedList);
-        toolsPanel.add(panel, BorderLayout.NORTH);
-
-        prepareCompleteButton();
-        JPanel panel1 = new JPanel();
-        panel1.add(completeButton);
-        toolsPanel.add(panel1, BorderLayout.SOUTH);
     }
 
     public void prepareQuestionsTable() {

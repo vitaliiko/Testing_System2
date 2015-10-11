@@ -1,6 +1,6 @@
 package userGI;
 
-import supporting.AnswerBoxPanel;
+import tabelsAndFrames.AnswerBoxPanel;
 import supporting.IOFileHandling;
 import testingClasses.Question;
 
