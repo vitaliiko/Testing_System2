@@ -9,7 +9,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class ShowTaskGI extends JFrame {
@@ -17,27 +20,26 @@ public class ShowTaskGI extends JFrame {
     private TestTask theTestTask;
     private ArrayList<JPanel> questionPanelList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
+
+    private Container container;
     private JPanel browsePanel;
     private JPanel toolsPanel;
     private JPanel buttonsPanel;
-    private JPanel browseModePanel;
-    private JPanel westPanel;
     private JPanel questionsCountPanel;
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
     private JButton completeButton;
     private JButton setupButton;
+    private JList<String> tabbedList;
     private JLabel questionsCountLabel;
-    private JComboBox<String> browseModeBox;
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
-    private JScrollPane tableScrollPane;
 
     public ShowTaskGI() {
         super("Створення тесту");
         frameSetup();
-        dialogLaunch();
+        launchDialog();
     }
 
     public ShowTaskGI(TestTask theTestTask) {
@@ -48,12 +50,12 @@ public class ShowTaskGI extends JFrame {
     }
 
     public void frameSetup() {
-        prepareQuestionsTable();
-        getContentPane().add(tableScrollPane, BorderLayout.CENTER);
-        prepareBrowsePanel();
+        prepareContainer();
+        getContentPane().add(container, BorderLayout.CENTER);
+//        prepareBrowsePanel();
 //        getContentPane().add(browsePanel, BorderLayout.CENTER);
         prepareToolsPanel();
-        getContentPane().add(toolsPanel, BorderLayout.EAST);
+        getContentPane().add(toolsPanel, BorderLayout.WEST);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
@@ -61,7 +63,7 @@ public class ShowTaskGI extends JFrame {
         setMinimumSize(new Dimension(700, 400));
     }
 
-    public void dialogLaunch() {
+    public void launchDialog() {
         TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
         testTaskNameGI.addWindowListener(new WindowAdapter() {
             @Override
@@ -77,6 +79,30 @@ public class ShowTaskGI extends JFrame {
                     theTestTask = testTaskNameGI.getTestTask();
                 }
             }
+        });
+    }
+
+    public void prepareContainer() {
+        container = new Container();
+        container.setLayout(new CardLayout());
+        prepareQuestionsTable();
+        container.add(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+
+        prepareBrowsePanel();
+        container.add(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+    }
+
+    public void prepareTabbedList() {
+        String[] items = {"Редагування", "Перегляд"};
+        tabbedList = new JList<>(items);
+        tabbedList.addListSelectionListener(e -> {
+           if (tabbedList.getSelectedIndex() == 0) {
+               ((CardLayout) container.getLayout()).first(container);
+           } else {
+               ((CardLayout) container.getLayout()).last(container);
+           }
         });
     }
 
@@ -195,15 +221,6 @@ public class ShowTaskGI extends JFrame {
         });
     }
 
-    public void prepareBrowseModePanel() {
-        browseModePanel = new JPanel();
-        browseModePanel.add(new JLabel("Режим відображення: "));
-
-        String[] items = {"Повністю", "Частково"};
-        browseModeBox = new JComboBox<>(items);
-        browseModePanel.add(browseModeBox);
-    }
-
     public void prepareQuestionsCountPanel() {
         questionsCountPanel = new JPanel();
         questionsCountPanel.add(new JLabel("Кількість запитань: "));
@@ -220,10 +237,10 @@ public class ShowTaskGI extends JFrame {
 
         prepareButtonsPanel();
         panel.add(buttonsPanel);
-        prepareBrowseModePanel();
-        panel.add(browseModePanel);
         prepareQuestionsCountPanel();
         panel.add(questionsCountPanel);
+        prepareTabbedList();
+        panel.add(tabbedList);
         toolsPanel.add(panel, BorderLayout.NORTH);
 
         prepareCompleteButton();
@@ -257,9 +274,5 @@ public class ShowTaskGI extends JFrame {
                 }
             }
         });
-
-        tableScrollPane = new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
     }
 }
