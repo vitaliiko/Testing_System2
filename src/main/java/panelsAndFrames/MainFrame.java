@@ -1,6 +1,6 @@
 package panelsAndFrames;
 
-import userGI.SettingsGI;
+import userGI.AccountSettingsGI;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
@@ -102,7 +102,7 @@ public abstract class MainFrame extends JFrame {
 
         JMenuItem settingsItem = new JMenuItem("Налаштування облікового запису");
         settingsItem.setIcon(new ImageIcon("resources/settings.png"));
-        settingsItem.addActionListener(e -> new SettingsGI(this, teacher, teacherController));
+        settingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherController));
         fileMenu.add(settingsItem);
 
         fileMenu.addSeparator();

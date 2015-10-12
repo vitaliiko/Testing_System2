@@ -15,7 +15,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class SettingsGI extends JDialog {
+public class AccountSettingsGI extends JDialog {
 
     private static final int COLUMNS_COUNT = 26;
 
@@ -39,8 +39,8 @@ public class SettingsGI extends JDialog {
     private JLabel messageLabel;
     private TypeListener typeListener;
 
-    public SettingsGI(Frame frame, Teacher teacher, TeacherController teacherController) {
-        super(frame);
+    public AccountSettingsGI(Frame frame, Teacher teacher, TeacherController teacherController) {
+        super(frame, "Налаштування облікового запису");
         this.frame = (JFrame) frame;
         this.teacher = teacher;
         this.teacherController = teacherController;
@@ -68,7 +68,6 @@ public class SettingsGI extends JDialog {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 430));
         setIconImage(new ImageIcon("resources/settings.png").getImage());
-        setTitle("Налаштування облікового запису");
         setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
