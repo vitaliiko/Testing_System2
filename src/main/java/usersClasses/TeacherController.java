@@ -46,12 +46,18 @@ public class TeacherController {
         IOFileHandling.saveTeachersSet(teacherSet);
     }
 
-    public void updateTeacherInfo(Teacher teacher, String name, String surname, String secondName, String telephone, String mail)
+    public void updateTeacherInfo(Teacher teacher, String surname, String name, String secondName, String telephone, String mail)
             throws IOException {
         validateName(name, surname, secondName);
+
+        String userName = surname + " " + name + " " + secondName;
+        checkUserName(userName);
+
         teacher.setName(name);
         teacher.setSurname(surname);
         teacher.setSecondName(secondName);
+        teacher.setUserName(userName);
+
         if (!telephone.isEmpty()) {
             validateTelephone(telephone);
             teacher.setTelephoneNum(telephone);
@@ -59,6 +65,14 @@ public class TeacherController {
         if (!mail.isEmpty()) {
             validateMail(mail);
             teacher.setMailAddress(mail);
+        }
+    }
+
+    public void checkUserName(String userName) throws IOException {
+        for (Teacher teacher : teacherSet) {
+            if (teacher.getUserName().equals(userName)) {
+                throw new IOException(Message.EXIST_USER);
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 package userGI;
 
 import supporting.IOFileHandling;
-import tablesAndFrames.AnswerBoxPanel;
+import panelsAndFrames.AnswerBoxPanel;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;

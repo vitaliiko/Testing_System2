@@ -1,4 +1,8 @@
-package tablesAndFrames;
+package panelsAndFrames;
+
+import userGI.SettingsGI;
+import usersClasses.Teacher;
+import usersClasses.TeacherController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +13,17 @@ public abstract class MainFrame extends JFrame {
     private JPanel toolsPanel;
     private JList<String> tabbedList;
     private String[] tabbedItems = new String[2];
+    private JMenuBar menuBar;
+    private JMenu fileMenu;
+    private JMenu helpMenu;
 
-    public MainFrame(String title) throws HeadlessException {
+    protected Teacher teacher;
+    protected TeacherController teacherController;
+
+    public MainFrame(String title, Teacher teacher, TeacherController teacherController) throws HeadlessException {
         super(title);
+        this.teacher = teacher;
+        this.teacherController = teacherController;
         mainFrameSetup();
     }
 
@@ -38,6 +50,8 @@ public abstract class MainFrame extends JFrame {
                 UnsupportedLookAndFeelException | IllegalAccessException e) {
             e.printStackTrace();
         }
+        prepareMenuBar();
+        setJMenuBar(menuBar);
         prepareContainer();
         getContentPane().add(container, BorderLayout.CENTER);
         prepareToolsPanel();
@@ -68,5 +82,42 @@ public abstract class MainFrame extends JFrame {
                 ((CardLayout) container.getLayout()).last(container);
             }
         });
+    }
+
+    public void prepareMenuBar() {
+        menuBar = new JMenuBar();
+        prepareFileMenu();
+        menuBar.add(fileMenu);
+        prepareHelpMenu();
+        menuBar.add(helpMenu);
+    }
+
+    public void prepareFileMenu() {
+        fileMenu = new JMenu("Файл");
+
+        JMenuItem logoutItem = new JMenuItem("Вихід");
+        logoutItem.setIcon(new ImageIcon("resources/logout.png"));
+        logoutItem.addActionListener(e -> dispose());
+        fileMenu.add(logoutItem);
+
+        JMenuItem settingsItem = new JMenuItem("Налаштування облікового запису");
+        settingsItem.setIcon(new ImageIcon("resources/settings.png"));
+        settingsItem.addActionListener(e -> new SettingsGI(this, teacher, teacherController));
+        fileMenu.add(settingsItem);
+
+        fileMenu.addSeparator();
+
+        JMenuItem closeItem = new JMenuItem("Закрити");
+        closeItem.addActionListener(e -> System.exit(0));
+        fileMenu.add(closeItem);
+    }
+
+    public void prepareHelpMenu() {
+        helpMenu = new JMenu("Справка");
+        JMenuItem aboutItem = new JMenuItem("Про програму");
+        aboutItem.addActionListener(e -> JOptionPane.showConfirmDialog(null,
+                "<html></html>", "Про програму",
+                JOptionPane.DEFAULT_OPTION));
+        helpMenu.add(aboutItem);
     }
 }

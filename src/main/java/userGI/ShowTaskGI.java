@@ -2,10 +2,12 @@ package userGI;
 
 import supporting.IOFileHandling;
 import supporting.QuestionTableParameters;
-import tablesAndFrames.BoxPanel;
-import tablesAndFrames.MainFrame;
+import panelsAndFrames.BoxPanel;
+import panelsAndFrames.MainFrame;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import usersClasses.Teacher;
+import usersClasses.TeacherController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,14 +35,14 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
 
-    public ShowTaskGI() {
-        super("Створення тесту");
+    public ShowTaskGI(Teacher teacher, TeacherController teacherController) {
+        super("Створення тесту", teacher, teacherController);
         launchDialog();
         frameSetup();
     }
 
-    public ShowTaskGI(TestTask theTestTask) {
-        super("Редагування тесту");
+    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherController teacherController) {
+        super("Редагування тесту", teacher, teacherController);
         this.theTestTask = theTestTask;
         questionsList = theTestTask.getQuestionsList();
         frameSetup();

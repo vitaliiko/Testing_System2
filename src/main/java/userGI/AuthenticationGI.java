@@ -2,8 +2,8 @@ package userGI;
 
 import supporting.IOFileHandling;
 import supporting.Message;
-import tablesAndFrames.BoxPanel;
-import tablesAndFrames.LabelComponentPanel;
+import panelsAndFrames.BoxPanel;
+import panelsAndFrames.LabelComponentPanel;
 import usersClasses.TeacherController;
 import usersClasses.Teacher;
 
@@ -99,6 +99,12 @@ public class AuthenticationGI extends JFrame {
         teacherNamesBox.setEditable(true);
         ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
                 addDocumentListener(new LoginTypeListener());
+        teacherNamesBox.addItemListener(e -> {
+            String username = (String) teacherNamesBox.getSelectedItem();
+            if (teacherController.getTeachersNamesList().get(teacherNamesBox.getSelectedIndex()) == null) {
+                teacherNamesBox.removeItem(username);
+            }
+        });
     }
 
     public void prepareLoginButton() {
@@ -114,8 +120,8 @@ public class AuthenticationGI extends JFrame {
             } else {
                 setVisible(false);
                 clearFields();
-                ShowTaskGI workspaceGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"));
-                workspaceGI.addWindowListener(new WindowAdapter() {
+                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherController);
+                showTaskGI.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         setVisible(true);

@@ -57,6 +57,10 @@ public class Teacher implements Serializable {
         return userName;
     }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public char[] getPassword() {
         return password;
     }
