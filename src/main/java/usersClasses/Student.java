@@ -1,19 +1,23 @@
 package usersClasses;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable {
 
     private String surname;
     private String name;
     private String secondName;
     private String userName;
+    private int indexInGroup;
     private char[] password;
-    private String group;
+    private StudentsGroup group;
 
-    public Student(String surname, String name, String secondName, String group) {
+    public Student(String surname, String name, String secondName, StudentsGroup group) {
         this.surname = surname;
         this.name = name;
         this.secondName = secondName;
         this.group = group;
+        indexInGroup = this.group.addStudent(this);
         userName = surname + " " + name + " " + secondName;
     }
 
@@ -57,12 +61,16 @@ public class Student {
         this.password = password;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupName() {
+        return group.getName();
     }
 
-    public void setGroup(String group) {
+    public void setGroup(StudentsGroup group) {
         this.group = group;
+    }
+
+    public int getIndexInGroup() {
+        return indexInGroup;
     }
 
     @Override

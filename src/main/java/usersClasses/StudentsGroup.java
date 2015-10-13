@@ -1,13 +1,17 @@
 package usersClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class StudentsGroup {
+public class StudentsGroup implements StudentDAO {
 
     private String name;
     private String faculty;
     private String department;
-    private ArrayList<Student> studentsList = new ArrayList<>();
+    private Set<Student> studentsSet = new HashSet<>();
 
     public StudentsGroup(String name, String faculty, String department) {
         this.name = name;
@@ -39,14 +43,6 @@ public class StudentsGroup {
         this.department = department;
     }
 
-    public ArrayList<Student> getStudentsList() {
-        return studentsList;
-    }
-
-    public void setStudentsList(ArrayList<Student> studentsList) {
-        this.studentsList = studentsList;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,5 +56,36 @@ public class StudentsGroup {
     @Override
     public int hashCode() {
         return name.hashCode();
+    }
+
+    @Override
+    public List<Student> getAllStudents() {
+        return new ArrayList<>(studentsSet);
+    }
+
+    @Override
+    public Student getStudent(int index) {
+        return new ArrayList<>(studentsSet).get(index);
+    }
+
+    @Override
+    public void updateStudent(Student student) {
+
+    }
+
+    @Override
+    public void deleteStudent(Student student) {
+        studentsSet.remove(student);
+    }
+
+    @Override
+    public int addStudent(Student student) {
+        studentsSet.add(student);
+        return new ArrayList<>(studentsSet).indexOf(student);
+    }
+
+    @Override
+    public int getStudentIndex(Student student) {
+        return new ArrayList<>(studentsSet).indexOf(student);
     }
 }
