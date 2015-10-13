@@ -58,12 +58,9 @@ public class AccountSettingsGI extends JDialog {
         prepareFieldsPanel();
         getContentPane().add(fieldsPanel, BorderLayout.EAST);
 
-        JPanel buttonsPanel = new JPanel();
         prepareSaveButton();
-        buttonsPanel.add(saveButton);
         prepareCancelButton();
-        buttonsPanel.add(cancelButton);
-        getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
+        getContentPane().add(new BoxPanel(saveButton, cancelButton), BorderLayout.SOUTH);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 430));

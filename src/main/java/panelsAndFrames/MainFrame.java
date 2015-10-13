@@ -5,13 +5,14 @@ import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 
 public abstract class MainFrame extends JFrame {
 
+    protected JList<String> tabbedList;
     private Container container;
     private JPanel toolsPanel;
-    private JList<String> tabbedList;
     private String[] tabbedItems = new String[2];
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -84,7 +85,11 @@ public abstract class MainFrame extends JFrame {
         });
     }
 
-    public void prepareMenuBar() {
+    public void addListenerToTabbedList(ListSelectionListener listSelectionListener) {
+        tabbedList.addListSelectionListener(listSelectionListener);
+    }
+
+    private void prepareMenuBar() {
         menuBar = new JMenuBar();
         prepareFileMenu();
         menuBar.add(fileMenu);
@@ -92,7 +97,7 @@ public abstract class MainFrame extends JFrame {
         menuBar.add(helpMenu);
     }
 
-    public void prepareFileMenu() {
+    private void prepareFileMenu() {
         fileMenu = new JMenu("Файл");
 
         JMenuItem logoutItem = new JMenuItem("Вихід");
@@ -112,7 +117,7 @@ public abstract class MainFrame extends JFrame {
         fileMenu.add(closeItem);
     }
 
-    public void prepareHelpMenu() {
+    private void prepareHelpMenu() {
         helpMenu = new JMenu("Справка");
         JMenuItem aboutItem = new JMenuItem("Про програму");
         aboutItem.addActionListener(e -> JOptionPane.showConfirmDialog(null,

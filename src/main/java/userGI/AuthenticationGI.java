@@ -101,9 +101,6 @@ public class AuthenticationGI extends JFrame {
                 addDocumentListener(new LoginTypeListener());
         teacherNamesBox.addItemListener(e -> {
             String username = (String) teacherNamesBox.getSelectedItem();
-            if (teacherController.getTeachersNamesList().get(teacherNamesBox.getSelectedIndex()) == null) {
-                teacherNamesBox.removeItem(username);
-            }
         });
     }
 

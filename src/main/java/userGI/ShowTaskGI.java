@@ -30,7 +30,7 @@ public class ShowTaskGI extends MainFrame {
     private JButton removeButton;
     private JButton editButton;
     private JButton completeButton;
-    private JButton setupButton;
+    private JButton settingsButton;
     private JLabel questionsCountLabel;
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
@@ -52,6 +52,7 @@ public class ShowTaskGI extends MainFrame {
         fillContainer();
         fillTollsPanel();
         setTabbedItems("Редагування", "Перегляд");
+        addSelectionListener();
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
@@ -85,7 +86,7 @@ public class ShowTaskGI extends MainFrame {
         questionsCountLabel = new JLabel(String.valueOf(questionsList.size()));
 
         BoxPanel box = new BoxPanel(BoxLayout.Y_AXIS);
-        box.add(new BoxPanel(addButton, editButton, removeButton, setupButton));
+        box.add(new BoxPanel(addButton, editButton, removeButton, settingsButton));
         box.add(new BoxPanel(new JLabel("Кількість запитань: "), questionsCountLabel));
 
         prepareCompleteButton();
@@ -99,6 +100,20 @@ public class ShowTaskGI extends MainFrame {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+    }
+
+    public void addSelectionListener() {
+        addListenerToTabbedList(e -> {
+            if (tabbedList.getSelectedIndex() == 0) {
+                if (questionsTable.getSelectedRow() != -1) {
+                    removeButton.setEnabled(true);
+                    editButton.setEnabled(true);
+                }
+            } else {
+                removeButton.setEnabled(false);
+                editButton.setEnabled(false);
+            }
+        });
     }
 
     public void prepareBrowsePanel() {
@@ -186,9 +201,9 @@ public class ShowTaskGI extends MainFrame {
     }
 
     public void prepareSetupButton() {
-        setupButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "setup.png"));
-        setupButton.setToolTipText("Налаштування тесту");
-        setupButton.setEnabled(false);
+        settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
+        settingsButton.setToolTipText("Налаштування тесту");
+        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherController));
     }
 
     public void prepareCompleteButton() {
@@ -207,12 +222,11 @@ public class ShowTaskGI extends MainFrame {
         questionsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         questionsTable.setShowHorizontalLines(false);
         questionsTable.setShowVerticalLines(false);
-        questionsTable.getColumnModel().getColumn(0).setPreferredWidth(8);
-        questionsTable.getTableHeader().setReorderingAllowed(false);
         questionsTable.setTableHeader(null);
         TableColumnModel columnModel = questionsTable.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(50);
         columnModel.getColumn(0).setMinWidth(25);
+        columnModel.getColumn(0).setPreferredWidth(8);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
