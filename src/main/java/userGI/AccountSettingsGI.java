@@ -64,7 +64,7 @@ public class AccountSettingsGI extends JDialog {
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 430));
-        setIconImage(new ImageIcon("resources/settings.png").getImage());
+        setIconImage(new ImageIcon("resources/account.png").getImage());
         setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -82,7 +82,7 @@ public class AccountSettingsGI extends JDialog {
         nameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("Ім\'я: ", nameField));
 
-        secondNameField = new JTextField(teacher.getUserName(), COLUMNS_COUNT);
+        secondNameField = new JTextField(teacher.getSecondName(), COLUMNS_COUNT);
         secondNameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("По-батькові: ", secondNameField));
 

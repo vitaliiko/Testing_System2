@@ -7,24 +7,24 @@ import java.util.Set;
 public class StudentController {
 
     private Set<Student> studentSet;
-    private ArrayList<StudentsGroup> studentsGroupList;
+    private Set<StudentsGroup> studentsGroupSet;
 
     public StudentController() {
-        studentsGroupList = new ArrayList<>();
-        studentsGroupList.add(new StudentsGroup("CGC-1466", "", ""));
-        studentsGroupList.add(new StudentsGroup("CGC-1566", "", ""));
-        studentsGroupList.add(new StudentsGroup("CGC-1366", "", ""));
-        studentsGroupList.add(new StudentsGroup("CG-126", "", ""));
-        studentsGroupList.add(new StudentsGroup("RV-125", "", ""));
+        studentsGroupSet = new HashSet<>();
+        studentsGroupSet.add(new StudentsGroup("CGC-1466", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1566", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1366", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
+        studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
 
         studentSet = new HashSet<>();
-        studentSet.add(new Student("Іванов", "Іван", "Іванович", studentsGroupList.get(0)));
-        studentSet.add(new Student("Іваненко", "Іван", "Іванович", studentsGroupList.get(0)));
-        studentSet.add(new Student("Петренко", "Іван", "Іванович", studentsGroupList.get(0)));
-        studentSet.add(new Student("Петров", "Іван", "Іванович", studentsGroupList.get(0)));
-        studentSet.add(new Student("Іванов", "Петро", "Іванович", studentsGroupList.get(1)));
-        studentSet.add(new Student("Іванов", "Іван", "Петрович", studentsGroupList.get(1)));
-        studentSet.add(new Student("Іванов", "Федір", "Петрович", studentsGroupList.get(1)));
+        studentSet.add(new Student("Іванов", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
+        studentSet.add(new Student("Іваненко", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
+        studentSet.add(new Student("Петренко", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
+        studentSet.add(new Student("Петров", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
+        studentSet.add(new Student("Іванов", "Петро", "Іванович", new ArrayList<>(studentsGroupSet).get(1)));
+        studentSet.add(new Student("Іванов", "Іван", "Петрович", new ArrayList<>(studentsGroupSet).get(1)));
+        studentSet.add(new Student("Іванов", "Федір", "Петрович", new ArrayList<>(studentsGroupSet).get(1)));
     }
 
     public Set<Student> getStudentSet() {
@@ -35,11 +35,19 @@ public class StudentController {
         this.studentSet = studentSet;
     }
 
-    public ArrayList<StudentsGroup> getStudentsGroupList() {
-        return studentsGroupList;
+    public Set<StudentsGroup> getStudentsGroupSet() {
+        return studentsGroupSet;
     }
 
-    public void setStudentsGroupList(ArrayList<StudentsGroup> studentsGroupList) {
-        this.studentsGroupList = studentsGroupList;
+    public void setStudentsGroupSet(Set<StudentsGroup> studentsGroupSet) {
+        this.studentsGroupSet = studentsGroupSet;
+    }
+
+    public ArrayList<String> getGroupNamesList() {
+        ArrayList<String> groupNamesList = new ArrayList<>();
+        for (StudentsGroup studentsGroup : studentsGroupSet) {
+            groupNamesList.add(studentsGroup.getName());
+        }
+        return groupNamesList;
     }
 }

@@ -1,8 +1,12 @@
 import supporting.IOFileHandling;
+import testingClasses.Question;
+import testingClasses.TestTask;
 import userGI.AuthenticationGI;
+import userGI.ShowTaskGI;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,13 +15,14 @@ public class Start {
     public static void main(String[] args) {
 //        new ShowTaskGI();
 
-//        new ShowTaskGI(IOFileHandling.loadTestTask("111"));
+
 
 //        new AddQuestionGI(5);
 
         TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
         try {
-            new AuthenticationGI(controller);
+//            new AuthenticationGI(controller);
+            new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"), controller);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,11 +37,11 @@ public class Start {
 
 
 //        ArrayList<String> answersList = new ArrayList<>();
-//        answersList.add("1");
-//        answersList.add("2");
-//        answersList.add("3");
+//        answersList.add("11111111111111111111111111111111111111111111");
+//        answersList.add("2222222222222222222222222222222222222222222");
+//        answersList.add("333333333333333333333333333333333333333333");
 //        ArrayList<String> rightAnswersList = new ArrayList<>();
-//        rightAnswersList.add("2");
+//        rightAnswersList.add("2222222222222222222222222222222222222222222");
 //        ArrayList<Question> questions = new ArrayList<>();
 //        questions.add(new Question("dfdfdf", answersList, rightAnswersList));
 //        questions.add(new Question("dfdf212121df", answersList, rightAnswersList));
@@ -46,6 +51,6 @@ public class Start {
 //        questions.add(new Question("dfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdf", answersList, rightAnswersList));
 //        TestTask testTask = new TestTask("111", "222", "333");
 //        testTask.setQuestionsList(questions);
-//        new ShowTaskGI(testTask);
+//        IOFileHandling.saveTestTask(testTask, "111");
     }
 }

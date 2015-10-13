@@ -99,7 +99,7 @@ public class ShowTaskGI extends MainFrame {
         addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
     public void addSelectionListener() {
@@ -150,6 +150,7 @@ public class ShowTaskGI extends MainFrame {
             }
             questionPanel.add(answerArea);
         }
+        questionPanel.add(new JSeparator());
         questionPanelList.add(questionPanel);
         return questionPanel;
     }
@@ -203,7 +204,7 @@ public class ShowTaskGI extends MainFrame {
     public void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
-        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherController));
+        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherController, studentController));
     }
 
     public void prepareCompleteButton() {

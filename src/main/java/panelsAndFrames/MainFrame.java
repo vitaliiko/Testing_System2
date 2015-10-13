@@ -1,6 +1,7 @@
 package panelsAndFrames;
 
 import userGI.AccountSettingsGI;
+import usersClasses.StudentController;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
@@ -20,11 +21,13 @@ public abstract class MainFrame extends JFrame {
 
     protected Teacher teacher;
     protected TeacherController teacherController;
+    protected StudentController studentController;
 
     public MainFrame(String title, Teacher teacher, TeacherController teacherController) throws HeadlessException {
         super(title);
         this.teacher = teacher;
         this.teacherController = teacherController;
+        studentController = new StudentController();
         mainFrameSetup();
     }
 
@@ -105,10 +108,10 @@ public abstract class MainFrame extends JFrame {
         logoutItem.addActionListener(e -> dispose());
         fileMenu.add(logoutItem);
 
-        JMenuItem settingsItem = new JMenuItem("Налаштування облікового запису");
-        settingsItem.setIcon(new ImageIcon("resources/settings.png"));
-        settingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherController));
-        fileMenu.add(settingsItem);
+        JMenuItem accountSettingsItem = new JMenuItem("Налаштування облікового запису");
+        accountSettingsItem.setIcon(new ImageIcon("resources/account.png"));
+        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherController));
+        fileMenu.add(accountSettingsItem);
 
         fileMenu.addSeparator();
 
