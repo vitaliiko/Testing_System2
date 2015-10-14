@@ -1,9 +1,9 @@
 package userGI;
 
-import supporting.IOFileHandling;
-import supporting.QuestionTableParameters;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.MainFrame;
+import supporting.IOFileHandling;
+import supporting.QuestionTableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
 import usersClasses.Teacher;
@@ -11,7 +11,8 @@ import usersClasses.TeacherController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableColumnModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -52,7 +53,7 @@ public class ShowTaskGI extends MainFrame {
         fillContainer();
         fillTollsPanel();
         setTabbedItems("Редагування", "Перегляд");
-        addSelectionListener();
+        addListenerToTabbedList(new SelectionListener());
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
@@ -100,20 +101,6 @@ public class ShowTaskGI extends MainFrame {
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
-    }
-
-    public void addSelectionListener() {
-        addListenerToTabbedList(e -> {
-            if (tabbedList.getSelectedIndex() == 0) {
-                if (questionsTable.getSelectedRow() != -1) {
-                    removeButton.setEnabled(true);
-                    editButton.setEnabled(true);
-                }
-            } else {
-                removeButton.setEnabled(false);
-                editButton.setEnabled(false);
-            }
-        });
     }
 
     public void prepareBrowsePanel() {
@@ -218,16 +205,7 @@ public class ShowTaskGI extends MainFrame {
 
     public void prepareQuestionsTable() {
         questionTableParameters = new QuestionTableParameters(questionsList);
-        questionsTable = new JTable(questionTableParameters);
-        questionsTable.setDefaultRenderer(Object.class, questionTableParameters);
-        questionsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        questionsTable.setShowHorizontalLines(false);
-        questionsTable.setShowVerticalLines(false);
-        questionsTable.setTableHeader(null);
-        TableColumnModel columnModel = questionsTable.getColumnModel();
-        columnModel.getColumn(0).setMaxWidth(50);
-        columnModel.getColumn(0).setMinWidth(25);
-        columnModel.getColumn(0).setPreferredWidth(8);
+        questionsTable = createTable(questionTableParameters);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
@@ -240,5 +218,21 @@ public class ShowTaskGI extends MainFrame {
                 }
             }
         });
+    }
+
+    public class SelectionListener implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if (tabbedList.getSelectedIndex() == 0) {
+                if (questionsTable.getSelectedRow() != -1) {
+                    removeButton.setEnabled(true);
+                    editButton.setEnabled(true);
+                }
+            } else {
+                removeButton.setEnabled(false);
+                editButton.setEnabled(false);
+            }
+        }
     }
 }
