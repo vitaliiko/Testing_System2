@@ -2,6 +2,7 @@ package userGI;
 
 import supporting.IOFileHandling;
 import panelsAndFrames.AnswerBoxPanel;
+import supporting.ImageUtils;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;
@@ -92,12 +93,21 @@ public class AddQuestionGI extends JFrame {
         openButton = new JButton(new ImageIcon("resources/folder.png"));
         openButton.setToolTipText("Відкрити");
         openButton.addActionListener(e -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.addChoosableFileFilter(new supporting.ImageFilter());
-            fileChooser.setAcceptAllFileFilterUsed(false);
-            int returnVal = fileChooser.showOpenDialog(fileChooser);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                imageNameField.setText(fileChooser.getSelectedFile().getAbsolutePath());
+            try {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.addChoosableFileFilter(new supporting.ImageFilter());
+                fileChooser.setAcceptAllFileFilterUsed(false);
+                int returnVal = fileChooser.showOpenDialog(fileChooser);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    String imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+                    ImageUtils.checkImageSize(imagePath);
+                    imageNameField.setText(imagePath);
+                }
+            } catch (IndexOutOfBoundsException e1) {
+                JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
+                        "Попередження", JOptionPane.DEFAULT_OPTION);
+            } catch (IOException e1) {
+                JOptionPane.showConfirmDialog(null, e1.getMessage(), "Попередження", JOptionPane.DEFAULT_OPTION);
             }
         });
         openButton.setCursor(new Cursor(Cursor.HAND_CURSOR));

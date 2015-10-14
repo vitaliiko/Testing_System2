@@ -1,30 +1,24 @@
 package userGI;
 
+import panelsAndFrames.BoxPanel;
+import panelsAndFrames.ImagePanel;
+import supporting.ImageUtils;
+
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class ImageBrowserGI extends JFrame {
 
-    private Image image;
-
     public ImageBrowserGI(Image image) {
         super("Перегляд");
-        this.image = image;
-        ImagePanel imagePanel = new ImagePanel();
-        imagePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
-        getContentPane().add(imagePanel);
+
+        ImagePanel imagePanel = new ImagePanel(image);
+
+        getContentPane().add(new BoxPanel(imagePanel), BorderLayout.CENTER);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setSize(new Dimension(1000, 500));
+        setSize(new Dimension(ImageUtils.MAX_IMAGE_WIDTH, ImageUtils.MAX_IMAGE_HEIGHT));
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
-    }
-
-    public class ImagePanel extends JPanel {
-        @Override
-        protected void paintComponent(Graphics g) {
-            g.drawImage(image, 0, 0, null);
-        }
     }
 }

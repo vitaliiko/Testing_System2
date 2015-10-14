@@ -1,6 +1,13 @@
 package supporting;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 public class ImageUtils {
 
@@ -23,5 +30,40 @@ public class ImageUtils {
             ext = s.substring(i+1).toLowerCase();
         }
         return ext;
+    }
+
+    public static void checkImageSize(String imagePath) throws IOException {
+        Image image = new ImageIcon(imagePath).getImage();
+
+        if (image.getWidth(null) > MAX_IMAGE_WIDTH || image.getHeight(null) > MAX_IMAGE_HEIGHT) {
+            throw new IOException("Зображення занадто велике");
+        }
+    }
+
+    public static byte[] imageInByteArr(String imagePath) {
+        File image;
+        byte[] imageInByte = null;
+        try {
+            image = new File(imagePath);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = ImageIO.read(image);
+            ImageIO.write(bufferedImage, ImageUtils.getExtension(image), baos);
+            baos.flush();
+            imageInByte = baos.toByteArray();
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
+                    "Попередження", JOptionPane.DEFAULT_OPTION);
+        }
+        return imageInByte;
+    }
+
+    public static Image imageFromByteArr(byte[] imageInByte) {
+        try {
+            return ImageIO.read(new ByteArrayInputStream(imageInByte));
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
+                    "Попередження", JOptionPane.DEFAULT_OPTION);
+        }
+        return null;
     }
 }

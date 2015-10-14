@@ -1,8 +1,10 @@
 package userGI;
 
 import panelsAndFrames.BoxPanel;
+import panelsAndFrames.ImagePanel;
 import panelsAndFrames.MainFrame;
 import supporting.IOFileHandling;
+import supporting.ImageUtils;
 import supporting.QuestionTableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
@@ -126,9 +128,12 @@ public class ShowTaskGI extends MainFrame {
 
     public JPanel createQuestionPanel(int index, Question theQuestion) {
         JPanel questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
-        questionPanel.setFont(new Font("Arial", Font.PLAIN, 12));
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
         questionPanel.add(prepareTextArea(index + ". " + theQuestion.getTask()));
+        if (theQuestion.getImageInByte() != null) {
+            questionPanel.add(new ImagePanel(ImageUtils.imageFromByteArr(theQuestion.getImageInByte())));
+        }
         for (int i = 0; i < theQuestion.getAnswersList().size(); i++) {
             String s = theQuestion.getAnswersList().get(i);
             JTextArea answerArea = prepareTextArea("\t" + ((char) (65 + i)) + ". " + s);
