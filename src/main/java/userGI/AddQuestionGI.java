@@ -120,7 +120,7 @@ public class AddQuestionGI extends JFrame {
         browseImageButton.addActionListener(e -> {
             try {
                 if (question != null) {
-                    new ImageBrowserGI(IOFileHandling.imageFromByteArr(question.getImageInByte()));
+                    new ImageBrowserGI(ImageUtils.imageFromByteArr(question.getImageInByte()));
                 } else {
                     new ImageBrowserGI(ImageIO.read(new File(imageNameField.getText())));
                 }
@@ -293,7 +293,7 @@ public class AddQuestionGI extends JFrame {
 
         if (!imageNameField.getText().isEmpty()) {
             imageName = imageNameField.getText();
-            imageInByte = IOFileHandling.imageInByteArr(imageName);
+            imageInByte = ImageUtils.imageInByteArr(imageName);
         }
         task = questionArea.getText();
         for (AnswerBoxPanel answer : answersBoxList) {

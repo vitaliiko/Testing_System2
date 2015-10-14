@@ -4,10 +4,7 @@ import testingClasses.Question;
 import testingClasses.TestTask;
 import usersClasses.Teacher;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Set;
@@ -20,7 +17,7 @@ public class IOFileHandling {
     private final static String TEACHERS_SER = "IOFiles/teachers.ser";
 
     public static void saveQuestionsList(ArrayList<Question> questionsList) {
-        try{
+        try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(QUESTIONS_SER));
             os.writeObject(questionsList);
             os.close();
@@ -43,7 +40,7 @@ public class IOFileHandling {
     }
 
     public static void saveQuestion(Question question) {
-        try{
+        try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(QUESTIONS_SER));
             os.writeObject(question);
             os.close();
@@ -67,7 +64,7 @@ public class IOFileHandling {
 
     public static void saveTestTask(TestTask testTask, String fileName) {
         fileName = fileName.replace(" ", "_");
-        try{
+        try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("IOFiles/" + fileName + ".ser"));
             os.writeObject(testTask);
             os.close();
@@ -91,7 +88,7 @@ public class IOFileHandling {
     }
 
     public static void saveTeachersSet(Set<Teacher> teacherSet) {
-        try{
+        try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(TEACHERS_SER));
             os.writeObject(teacherSet);
             os.close();
@@ -112,32 +109,5 @@ public class IOFileHandling {
                     JOptionPane.DEFAULT_OPTION);
         }
         return usersSet;
-    }
-
-    public static byte[] imageInByteArr(String imagePath) {
-        File image;
-        byte[] imageInByte = null;
-        try {
-            image = new File(imagePath);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            BufferedImage bufferedImage = ImageIO.read(image);
-            ImageIO.write(bufferedImage, ImageUtils.getExtension(image), baos);
-            baos.flush();
-            imageInByte = baos.toByteArray();
-        } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
-                    "Попередження", JOptionPane.DEFAULT_OPTION);
-        }
-        return imageInByte;
-    }
-
-    public static Image imageFromByteArr(byte[] imageInByte) {
-        try {
-            return ImageIO.read(new ByteArrayInputStream(imageInByte));
-        } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
-                    "Попередження", JOptionPane.DEFAULT_OPTION);
-        }
-        return null;
     }
 }
