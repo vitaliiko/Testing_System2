@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class TeacherController {
 
@@ -22,10 +23,7 @@ public class TeacherController {
     public TeacherController(Set<Teacher> teacherSet) {
         this.teacherSet = teacherSet;
         teachersNamesList = new ArrayList<>();
-        for (Teacher teacher : this.teacherSet) {
-            String teacherName = teacher.getSurname() + " " + teacher.getName() + " " + teacher.getSecondName();
-            teachersNamesList.add(teacherName);
-        }
+        teachersNamesList.addAll(this.teacherSet.stream().map(Teacher::getUserName).collect(Collectors.toList()));
     }
 
     public Set<Teacher> getTeacherSet() {

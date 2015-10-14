@@ -130,10 +130,6 @@ public class TestTask implements Serializable {
         this.studentGroupsList = studentGroupsList;
     }
 
-    public void addQuestions(ArrayList<Question> questionsList) {
-        this.questionsList.addAll(questionsList);
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
