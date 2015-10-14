@@ -6,26 +6,29 @@ import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.awt.*;
-
 import java.util.ArrayList;
 
 public class SelectionTableGI extends JDialog {
 
-    private ArrayList<String> namesList;
-    private ArrayList<String> markedNamesList;
+    private ArrayList<Object> namesList;
+    private ArrayList<Object> markedNamesList;
+    private ArrayList<Object> newMarkedNamesList = new ArrayList<>();
     private JTable selectionTable;
     private JButton completeButton;
+    private JButton cancelButton;
 
-    public SelectionTableGI(String title, ArrayList<String> namesList, ArrayList<String> markedNamesList) {
+    public SelectionTableGI(String title, ArrayList<Object> namesList, ArrayList<Object> markedNamesList) {
         super();
         this.namesList = namesList;
         this.markedNamesList = markedNamesList;
+        newMarkedNamesList.addAll(this.markedNamesList);
 
         prepareTable();
         getContentPane().add(new JScrollPane(selectionTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         prepareCompleteButton();
-        getContentPane().add(new BoxPanel(completeButton), BorderLayout.SOUTH);
+        prepareCancelButton();
+        getContentPane().add(new BoxPanel(completeButton, cancelButton), BorderLayout.SOUTH);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 400));
@@ -37,7 +40,7 @@ public class SelectionTableGI extends JDialog {
         setVisible(true);
     }
 
-    public ArrayList<String> getMarkedNamesList() {
+    public ArrayList<Object> getMarkedNamesList() {
         return markedNamesList;
     }
 
@@ -55,7 +58,16 @@ public class SelectionTableGI extends JDialog {
 
     public void prepareCompleteButton() {
         completeButton = new JButton("Готово");
-        completeButton.addActionListener(e -> dispose());
+        completeButton.addActionListener(e -> {
+            markedNamesList.clear();
+            markedNamesList.addAll(newMarkedNamesList);
+            dispose();
+        });
+    }
+
+    public void prepareCancelButton() {
+        cancelButton = new JButton("Відмінити");
+        cancelButton.addActionListener(e -> dispose());
     }
 
     public class SelectionTableModel implements TableModel {
@@ -88,7 +100,7 @@ public class SelectionTableGI extends JDialog {
         @Override
         public Object getValueAt(int rowIndex, int columnIndex) {
             if (columnIndex == 0) {
-                return markedNamesList.contains(namesList.get(rowIndex));
+                return newMarkedNamesList.contains(namesList.get(rowIndex).toString());
             }
             return namesList.get(rowIndex);
         }
@@ -96,9 +108,9 @@ public class SelectionTableGI extends JDialog {
         @Override
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
             if ((Boolean) this.getValueAt(rowIndex, 0)) {
-                markedNamesList.remove((String) this.getValueAt(rowIndex, 1));
+                newMarkedNamesList.remove(this.getValueAt(rowIndex, 1));
             } else {
-                markedNamesList.add((String) this.getValueAt(rowIndex, 1));
+                newMarkedNamesList.add(this.getValueAt(rowIndex, 1));
             }
         }
 

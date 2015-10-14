@@ -1,14 +1,7 @@
 import supporting.IOFileHandling;
-import testingClasses.Question;
-import testingClasses.TestTask;
-import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class Start {
 

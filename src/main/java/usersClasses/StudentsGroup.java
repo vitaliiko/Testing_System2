@@ -87,4 +87,9 @@ public class StudentsGroup implements StudentDAO {
     public int getStudentIndex(Student student) {
         return new ArrayList<>(studentsSet).indexOf(student);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

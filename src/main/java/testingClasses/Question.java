@@ -67,4 +67,9 @@ public class Question implements Serializable {
     public void setRightAnswersList(ArrayList<String> rightAnswersList) {
         this.rightAnswersList = rightAnswersList;
     }
+
+    @Override
+    public String toString() {
+        return task;
+    }
 }

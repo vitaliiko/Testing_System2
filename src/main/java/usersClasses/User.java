@@ -79,4 +79,9 @@ public abstract class User implements Serializable {
     public int hashCode() {
         return userName.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return userName;
+    }
 }
