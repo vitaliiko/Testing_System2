@@ -160,7 +160,7 @@ public class AccountSettingsGI extends JDialog {
     }
 
     public void checkPassword() throws IOException {
-        if (!Arrays.equals(teacher.getPassword(), currentPasswordField.getPassword())){
+        if (!teacher.isPasswordsMatches(currentPasswordField.getPassword())){
             throw new IOException(Message.INCORRECT_PASSWORD);
         }
         if (!Arrays.equals(newPasswordField.getPassword(), repeatPasswordField.getPassword())) {

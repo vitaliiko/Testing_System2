@@ -8,7 +8,7 @@ public abstract class User implements Serializable {
     private String name;
     private String secondName;
     private String userName;
-    private char[] password;
+    private String password;
 
     public User(String secondName, String surname, String name) {
         this.secondName = secondName;
@@ -21,7 +21,7 @@ public abstract class User implements Serializable {
         this.surname = surname;
         this.name = name;
         this.secondName = secondName;
-        this.password = password;
+        this.password = PasswordDigest.hashPassword(password);
         userName = surname + " " + name + " " + secondName;
     }
 
@@ -57,12 +57,17 @@ public abstract class User implements Serializable {
         this.userName = userName;
     }
 
-    public char[] getPassword() {
-        return password;
+    public void setPassword(char[] password) {
+        this.password = PasswordDigest.hashPassword(password);
     }
 
-    public void setPassword(char[] password) {
-        this.password = password;
+
+    public boolean isMatches(String userName, char[] password) {
+        return this.userName.equals(userName) && this.password.equals(PasswordDigest.hashPassword(password));
+    }
+
+    public boolean isPasswordsMatches(char[] password) {
+        return this.password.equals(PasswordDigest.hashPassword(password));
     }
 
     @Override

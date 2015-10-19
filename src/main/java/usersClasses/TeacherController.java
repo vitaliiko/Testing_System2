@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 public class TeacherController {
 
-    private static final String NAME_REG = "^[A-Z][a-zA-Z-]{2,}$";
+    private static final String NAME_REG = "^[А-ЯЄЇІ][а-яА-Я-'їіє]{2,}$";
     private static final String PASSWORD_REG = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*-_]).{8,24})";
     private static final String TEL_NUM_REG = "^[\\d]{10}$";
     private static final String MAIL_REG = "^[a-zA-Z0-9\\._%+-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,4}$";
@@ -51,7 +51,9 @@ public class TeacherController {
         validateName(name, surname, secondName);
 
         String userName = surname + " " + name + " " + secondName;
-        checkUserName(userName);
+        if (!teacher.getUserName().equals(userName)) {
+            checkUserName(userName);
+        }
 
         teacher.setName(name);
         teacher.setSurname(surname);

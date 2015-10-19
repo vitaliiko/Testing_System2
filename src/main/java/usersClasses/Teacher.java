@@ -31,8 +31,4 @@ public class Teacher extends User {
     public void setMailAddress(String mailAddress) {
         this.mailAddress = mailAddress;
     }
-
-    public boolean isMatches(String userName, char[] password) {
-        return this.getUserName().equals(userName) && Arrays.equals(this.getPassword(), password);
-    }
 }
