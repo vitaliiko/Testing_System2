@@ -50,7 +50,7 @@ public class TestTaskSettingsGI extends JDialog {
         getContentPane().add(testSettingsPanel, BorderLayout.EAST);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setSize(new Dimension(480, 500));
+        setSize(new Dimension(480, 600));
         setIconImage(new ImageIcon("resources/settings.png").getImage());
         setModal(true);
         setResizable(false);
@@ -90,13 +90,23 @@ public class TestTaskSettingsGI extends JDialog {
 
         prepareSetLimitPanel();
         testSettingsPanel.add(setLimitPanel);
+
+        testSettingsPanel.add(new JSeparator());
+        testSettingsPanel.add(new JLabel("Додайте групи запитань, якi не повиннi повторюватись у одному тестi"));
+
+        prepareSelectionQuestionsButton();
+        questionGroupsList = createSelectionList(testTask.createQuestionGroupsNames().toArray());
+        testSettingsPanel.add(new LabelComponentPanel("Групи запитань: ", new BoxPanel(new JScrollPane(questionGroupsList,
+                        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                        selectionQuestionsButton))
+        );
     }
 
     public JList<Object> createSelectionList(Object[] dataList) {
         JList<Object> selectionList = new JList<>(dataList);
         selectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectionList.setDragEnabled(false);
-        selectionList.setVisibleRowCount(5);
+        selectionList.setVisibleRowCount(4);
         return selectionList;
     }
 
@@ -104,7 +114,7 @@ public class TestTaskSettingsGI extends JDialog {
         selectionAuthorsButton = new JButton(new ImageIcon("resources/selection.png"));
         selectionAuthorsButton.addActionListener(e -> {
             SelectionTableGI selectionTableGI = new SelectionTableGI("Вибір авторів",
-                    new ArrayList<>(teacherController.getTeachersNamesList()), testTask.getAuthorsList());
+                    new ArrayList<>(teacherController.getTeacherSet()), new ArrayList<>(testTask.getAuthorsList()));
             selectionTableGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -117,14 +127,23 @@ public class TestTaskSettingsGI extends JDialog {
     public void prepareSelectionGroupsButton() {
         selectionGroupsButton = new JButton(new ImageIcon("resources/selection.png"));
         selectionGroupsButton.addActionListener(e -> {
-            SelectionTableGI selectionTableGI = new SelectionTableGI("Вибір груп студентів",
-                    studentController.getGroupNamesList(), testTask.getStudentGroupsList());
+            SelectionTableGI selectionTableGI = new SelectionTableGI("Вибір групи студентів",
+                    new ArrayList<>(studentController.getStudentsGroupSet()), new ArrayList<>(testTask.getStudentGroupsList()));
             selectionTableGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
                     groupsList.setListData(selectionTableGI.getMarkedNamesList().toArray());
                 }
             });
+        });
+    }
+
+    public void prepareSelectionQuestionsButton() {
+        selectionQuestionsButton = new JButton(new ImageIcon("resources/selection.png"));
+        selectionQuestionsButton.addActionListener(e -> {
+            SelectionTableGI selectionTableGI = new SelectionTableGI("Вибір групи запитань",
+                    new ArrayList<>(testTask.getQuestionsList()),
+                    new ArrayList<>(testTask.getQuestionGroupsList().get(questionGroupsList.getSelectedIndex())));
         });
     }
 
@@ -149,7 +168,6 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     public class GridPanel extends JPanel {
-
         public GridPanel(JComponent component) {
             setLayout(new GridLayout(1, 2));
             add(component);

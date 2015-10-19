@@ -130,8 +130,24 @@ public class TestTask implements Serializable {
         this.studentGroupsList = studentGroupsList;
     }
 
-    public void addQuestions(ArrayList<Question> questionsList) {
-        this.questionsList.addAll(questionsList);
+    public ArrayList<String> createQuestionGroupsNames() {
+        ArrayList<String> dataList = new ArrayList<>();
+        for (ArrayList<Question> questionGroup : questionGroupsList) {
+            String questionGroupName = "";
+            for (Question question : questionGroup) {
+                questionGroupName += questionsList.indexOf(question) + ", ";
+            }
+            dataList.add(questionGroupName);
+        }
+        return dataList;
+    }
+
+    public ArrayList<String> getQuestionNamesList() {
+        ArrayList<String> questionNamesList = new ArrayList<>();
+        for (Question question : questionsList) {
+            questionNamesList.add(question.getTask());
+        }
+        return questionNamesList;
     }
 
     @Override
@@ -147,5 +163,10 @@ public class TestTask implements Serializable {
     @Override
     public int hashCode() {
         return taskName.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return taskName;
     }
 }

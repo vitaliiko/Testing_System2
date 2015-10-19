@@ -1,6 +1,7 @@
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
@@ -13,15 +14,24 @@ public class Start {
 
     public static void main(String[] args) {
 
-
+        initTeacherSet();
+        crateAuthenticationWindow();
 
     }
 
-    public static void createWindow() {
+    public static void createShowTaskWindow() {
         TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
         try {
-//            new AuthenticationGI(controller);
             new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"), controller);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void crateAuthenticationWindow() {
+        TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
+        try {
+            new AuthenticationGI(controller);
         } catch (Exception e) {
             e.printStackTrace();
         }

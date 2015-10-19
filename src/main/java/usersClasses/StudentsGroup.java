@@ -1,6 +1,5 @@
 package usersClasses;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -87,5 +86,10 @@ public class StudentsGroup implements StudentDAO {
     @Override
     public int getStudentIndex(Student student) {
         return new ArrayList<>(studentsSet).indexOf(student);
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

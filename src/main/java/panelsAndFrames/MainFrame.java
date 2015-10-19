@@ -1,5 +1,6 @@
 package panelsAndFrames;
 
+import supporting.QuestionTableParameters;
 import userGI.AccountSettingsGI;
 import usersClasses.StudentController;
 import usersClasses.Teacher;
@@ -7,6 +8,7 @@ import usersClasses.TeacherController;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
 public abstract class MainFrame extends JFrame {
@@ -86,6 +88,20 @@ public abstract class MainFrame extends JFrame {
                 ((CardLayout) container.getLayout()).last(container);
             }
         });
+    }
+
+    public JTable createTable(QuestionTableParameters parameters) {
+        JTable table = new JTable(parameters);
+        table.setDefaultRenderer(Object.class, parameters);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setShowHorizontalLines(false);
+        table.setShowVerticalLines(false);
+        table.setTableHeader(null);
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setMaxWidth(50);
+        columnModel.getColumn(0).setMinWidth(25);
+        columnModel.getColumn(0).setPreferredWidth(8);
+        return table;
     }
 
     public void addListenerToTabbedList(ListSelectionListener listSelectionListener) {
