@@ -7,6 +7,7 @@ import usersClasses.StudentController;
 import usersClasses.TeacherController;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -14,16 +15,18 @@ import java.util.ArrayList;
 
 public class TestTaskSettingsGI extends JDialog {
 
-    private static final int COLUMNS_COUNT = 15;
+    private static final int COLUMNS_COUNT = 20;
 
     private TestTask testTask;
     private TeacherController teacherController;
     private StudentController studentController;
 
+    private JTabbedPane tabbedPane;
     private JPanel testSettingsPanel;
     private JPanel setLimitPanel;
+    private JPanel generalPanel;
     private JTextField nameField;
-    private JTextField disciplineNameField;
+    private JTextField disciplineField;
     private JComboBox<Object> attributeBox;
     private JSpinner answersLimit;
     private JSpinner questionsLimit;
@@ -46,40 +49,53 @@ public class TestTaskSettingsGI extends JDialog {
         this.teacherController = teacherController;
         this.studentController = studentController;
 
-        prepareTestSettingsPanel();
-        getContentPane().add(testSettingsPanel, BorderLayout.EAST);
+        prepareTabbedPanel();
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(480, 600));
         setIconImage(new ImageIcon("resources/settings.png").getImage());
         setModal(true);
-        setResizable(false);
+        //setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    public void prepareTestSettingsPanel() {
-        testSettingsPanel = new BoxPanel(BoxLayout.Y_AXIS);
+    public void prepareTabbedPanel() {
+        tabbedPane = new JTabbedPane();
+
+        prepareGeneralPanel();
+        tabbedPane.addTab("Загальні", new BoxPanel(generalPanel, BorderLayout.EAST));
+
+    }
+
+    public void prepareGeneralPanel() {
+        generalPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         nameField = new JTextField(testTask.getTaskName(), COLUMNS_COUNT);
-        testSettingsPanel.add(new LabelComponentPanel("Назва тесту: ", nameField));
+        generalPanel.add(new LabelComponentPanel("Назва тесту: ", nameField));
 
-        disciplineNameField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
-        testSettingsPanel.add(new LabelComponentPanel("Назва дисципліни: ", disciplineNameField));
+        disciplineField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
+        generalPanel.add(new LabelComponentPanel("Назва дисципліни: ", disciplineField));
 
-        testSettingsPanel.add(new LabelComponentPanel("Створив: ", new JLabel(testTask.getCreatorName())));
+        generalPanel.add(new LabelComponentPanel("Створив: ", new JLabel(testTask.getCreatorName())));
 
         String[] attributeItems = {"Загальнодоступний", "З обмеженим доступом", "Лише перегляд"};
         attributeBox = new JComboBox<>(attributeItems);
         attributeBox.setSelectedIndex(testTask.getAttribute());
-        testSettingsPanel.add(new LabelComponentPanel("Режим доступу: ", attributeBox), new JSeparator());
+        generalPanel.add(new LabelComponentPanel("Режим доступу: ", attributeBox));
 
         prepareSelectionAuthorsButton();
         authorsList = createSelectionList(testTask.getAuthorsList().toArray());
-        testSettingsPanel.add(new LabelComponentPanel("Автори: ", new BoxPanel(new JScrollPane(authorsList,
-                        ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                        selectionAuthorsButton))
-        );
+        JPanel authorsPanel = new LabelComponentPanel("", new BoxPanel(new JScrollPane(authorsList,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                selectionAuthorsButton));
+        authorsPanel.setBorder(new TitledBorder("Перелік авторів"));
+        generalPanel.add(authorsPanel);
+    }
+
+    public void prepareTestSettingsPanel() {
+
 
         prepareSelectionGroupsButton();
         groupsList = createSelectionList(testTask.getStudentGroupsList().toArray());
@@ -106,7 +122,7 @@ public class TestTaskSettingsGI extends JDialog {
         JList<Object> selectionList = new JList<>(dataList);
         selectionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectionList.setDragEnabled(false);
-        selectionList.setVisibleRowCount(4);
+        selectionList.setVisibleRowCount(6);
         return selectionList;
     }
 
