@@ -7,6 +7,8 @@ import usersClasses.StudentController;
 import usersClasses.TeacherController;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 
 public class TestTaskSettingsGI extends JDialog {
 
-    private static final int COLUMNS_COUNT = 20;
+    private static final int COLUMNS_COUNT = 35;
 
     private TestTask testTask;
     private TeacherController teacherController;
@@ -70,28 +72,45 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     public void prepareGeneralPanel() {
-        generalPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        generalPanel = new BoxPanel(new BorderLayout());
+        generalPanel.add(createLabelPanel("Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
+        generalPanel.add(createGeneralComponents(), BorderLayout.CENTER);
+
+        prepareSelectionAuthorsButton();
+        authorsList = createSelectionList(testTask.getAuthorsList().toArray());
+        JPanel authorsPanel = new BoxPanel(new JScrollPane(authorsList,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
+                selectionAuthorsButton);
+        authorsPanel.setBorder(new TitledBorder("Перелік авторів"));
+        generalPanel.add(authorsPanel, BorderLayout.SOUTH);
+    }
+
+    private JPanel createLabelPanel(String... strings) {
+        JPanel panel = new JPanel(new GridLayout(strings.length, 1));
+        for (String s : strings) {
+            JLabel label = new JLabel(s, JLabel.RIGHT);
+            panel.add(label);
+        }
+        return panel;
+    }
+
+    public JPanel createGeneralComponents() {
+        JPanel componentsPanel = new JPanel(new GridLayout(4, 1));
 
         nameField = new JTextField(testTask.getTaskName(), COLUMNS_COUNT);
-        generalPanel.add(new LabelComponentPanel("Назва тесту: ", nameField));
+        componentsPanel.add(nameField);
 
         disciplineField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
-        generalPanel.add(new LabelComponentPanel("Назва дисципліни: ", disciplineField));
+        componentsPanel.add(disciplineField);
 
-        generalPanel.add(new LabelComponentPanel("Створив: ", new JLabel(testTask.getCreatorName())));
+        componentsPanel.add(new JLabel(testTask.getCreatorName()));
 
         String[] attributeItems = {"Загальнодоступний", "З обмеженим доступом", "Лише перегляд"};
         attributeBox = new JComboBox<>(attributeItems);
         attributeBox.setSelectedIndex(testTask.getAttribute());
-        generalPanel.add(new LabelComponentPanel("Режим доступу: ", attributeBox));
+        componentsPanel.add(attributeBox);
 
-        prepareSelectionAuthorsButton();
-        authorsList = createSelectionList(testTask.getAuthorsList().toArray());
-        JPanel authorsPanel = new LabelComponentPanel("", new BoxPanel(new JScrollPane(authorsList,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                selectionAuthorsButton));
-        authorsPanel.setBorder(new TitledBorder("Перелік авторів"));
-        generalPanel.add(authorsPanel);
+        return componentsPanel;
     }
 
     public void prepareTestSettingsPanel() {

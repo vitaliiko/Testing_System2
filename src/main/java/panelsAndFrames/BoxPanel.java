@@ -1,6 +1,7 @@
 package panelsAndFrames;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.io.IOException;
 
@@ -11,10 +12,19 @@ public class BoxPanel extends JPanel {
         setLayout(new BoxLayout(this, axis));
     }
 
+    public BoxPanel(BorderLayout borderLayout) {
+        setLayout(borderLayout);
+    }
+
     public BoxPanel(JComponent... components) {
         for (JComponent component : components) {
             add(component);
         }
+    }
+
+    public BoxPanel(JComponent component, Border border) {
+        add(component);
+        setBorder(border);
     }
 
     public BoxPanel(int axis, JComponent... components) {
@@ -32,9 +42,16 @@ public class BoxPanel extends JPanel {
     }
 
     public void add(JComponent... components) {
-        for (JComponent component : components) {
-            add(component);
+        if (!(getLayout() instanceof BorderLayout)) {
+            for (JComponent component : components) {
+                add(component);
+            }
         }
+    }
+
+    public void add(JComponent component, String constrains) {
+        checkConstraint(constrains);
+        super.add(component, constrains);
     }
 
     private void checkAxis(int axis) {
