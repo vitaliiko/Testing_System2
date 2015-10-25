@@ -9,6 +9,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/userGI/AuthenticationGI.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/userGI/SelectionTableGI.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/userGI/TestTaskSettingsGI.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/usersClasses/StudentController.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/usersClasses/TeacherController.java" charset="UTF-8" />
   </component>
 </project>
