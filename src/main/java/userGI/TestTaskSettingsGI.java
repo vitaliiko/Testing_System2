@@ -8,8 +8,6 @@ import usersClasses.TeacherController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.text.html.ObjectView;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -97,14 +95,8 @@ public class TestTaskSettingsGI extends JDialog {
         generalPanel.add(createLabelPanel("Назва: ", "Дисципліна: ", "Створив: ", "Режим доступу: "), BorderLayout.WEST);
         generalPanel.add(createGeneralComponents(), BorderLayout.CENTER);
 
-        prepareSelectionAuthorsButton();
-        authorsList = createSelectionList(testTask.getAuthorsList().toArray(), 7);
-        JPanel authorsPanel = new BoxPanel(new JScrollPane(authorsList,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED),
-                selectionAuthorsButton);
-        authorsPanel.setBorder(new TitledBorder("Перелік авторів"));
-        authorsPanel.setBackground(Color.WHITE);
-        generalPanel.add(authorsPanel, BorderLayout.SOUTH);
+        generalPanel.add(new JScrollPane(createCheckBoxPanel(new ArrayList<>(teacherController.getTeacherSet()), testTask.getAuthorsList()),
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.SOUTH);
     }
 
     private JPanel createLabelPanel(String... strings) {
@@ -118,12 +110,13 @@ public class TestTaskSettingsGI extends JDialog {
         return panel;
     }
 
-    private JPanel createCheckBoxPanel(ArrayList<Object> dataList) {
+    private JPanel createCheckBoxPanel(ArrayList<Object> dataList, ArrayList<String> markedList) {
         JPanel checkBoxPanel = new JPanel();
         checkBoxPanel.setBackground(Color.WHITE);
         for (Object o : dataList) {
-
+            new JCheckBox(o.toString(), markedList.contains(o.toString()));
         }
+        return checkBoxPanel;
     }
 
     public JPanel createGeneralComponents() {
