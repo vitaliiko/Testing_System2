@@ -1,9 +1,8 @@
 package usersClasses;
 
-import java.io.Serializable;
 import java.util.List;
 
-public interface StudentDAO extends Serializable {
+public interface StudentDAO {
 
     List<Student> getAllStudents();
 

@@ -17,14 +17,15 @@ public class StudentController {
         studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
         studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
 
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
         studentSet = new HashSet<>();
-        studentSet.add(new Student("Іванов", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
-        studentSet.add(new Student("Іваненко", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
-        studentSet.add(new Student("Петренко", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
-        studentSet.add(new Student("Петров", "Іван", "Іванович", new ArrayList<>(studentsGroupSet).get(0)));
-        studentSet.add(new Student("Іванов", "Петро", "Іванович", new ArrayList<>(studentsGroupSet).get(1)));
-        studentSet.add(new Student("Іванов", "Іван", "Петрович", new ArrayList<>(studentsGroupSet).get(1)));
-        studentSet.add(new Student("Іванов", "Федір", "Петрович", new ArrayList<>(studentsGroupSet).get(1)));
+        studentSet.add(new Student("Р†РІР°РЅРѕРІ", "Р†РІР°РЅ", "Р†РІР°РЅРѕРІРёС‡", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Р†РІР°РЅРµРЅРєРѕ", "Р†РІР°РЅ", "Р†РІР°РЅРѕРІРёС‡", studentsGroupsList.get(0)));
+        studentSet.add(new Student("РџРµС‚СЂРµРЅРєРѕ", "Р†РІР°РЅ", "Р†РІР°РЅРѕРІРёС‡", studentsGroupsList.get(0)));
+        studentSet.add(new Student("РџРµС‚СЂРѕРІ", "Р†РІР°РЅ", "Р†РІР°РЅРѕРІРёС‡", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Р†РІР°РЅРѕРІ", "РџРµС‚СЂРѕ", "Р†РІР°РЅРѕРІРёС‡", studentsGroupsList.get(1)));
+        studentSet.add(new Student("Р†РІР°РЅРѕРІ", "Р†РІР°РЅ", "РџРµС‚СЂРѕРІРёС‡", studentsGroupsList.get(1)));
+        studentSet.add(new Student("Р†РІР°РЅРѕРІ", "Р¤РµРґС–СЂ", "РџРµС‚СЂРѕРІРёС‡", studentsGroupsList.get(1)));
     }
 
     public Set<Student> getStudentSet() {

@@ -1,11 +1,12 @@
 package usersClasses;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StudentsGroup implements StudentDAO {
+public class StudentsGroup implements StudentDAO, Serializable {
 
     private String name;
     private String faculty;
@@ -43,21 +44,6 @@ public class StudentsGroup implements StudentDAO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        StudentsGroup that = (StudentsGroup) o;
-
-        return name.equals(that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return name.hashCode();
-    }
-
-    @Override
     public List<Student> getAllStudents() {
         return new ArrayList<>(studentsSet);
     }
@@ -86,6 +72,21 @@ public class StudentsGroup implements StudentDAO {
     @Override
     public int getStudentIndex(Student student) {
         return new ArrayList<>(studentsSet).indexOf(student);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StudentsGroup that = (StudentsGroup) o;
+
+        return name.equals(that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     @Override
