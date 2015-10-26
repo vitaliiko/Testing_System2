@@ -9,11 +9,13 @@ import usersClasses.TeacherController;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class Start {
 
     public static void main(String[] args) {
 
+        initTeacherSet();
         createShowTaskWindow();
 
     }
@@ -56,12 +58,17 @@ public class Start {
     }
 
     public static void initTeacherSet() {
-        Set<Teacher> teacherSet = new HashSet<>();
+        Set<Teacher> teacherSet = new TreeSet<>();
         teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Петров", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Сидоров", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Іваненко", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Петренко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Федоренко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Сидоренко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Клименко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", "111111"));
         IOFileHandling.saveTeachersSet(teacherSet);
     }
 }

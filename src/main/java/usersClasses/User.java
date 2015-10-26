@@ -2,7 +2,7 @@ package usersClasses;
 
 import java.io.Serializable;
 
-public abstract class User implements Serializable {
+public abstract class User implements Serializable, Comparable<User> {
 
     private String surname;
     private String name;
@@ -14,10 +14,19 @@ public abstract class User implements Serializable {
         this.secondName = secondName;
         this.surname = surname;
         this.name = name;
+        password = "";
         userName = surname + " " + name + " " + secondName;
     }
 
     public User(String surname, String name, String secondName, char[] password) {
+        this.surname = surname;
+        this.name = name;
+        this.secondName = secondName;
+        this.password = PasswordDigest.hashPassword(password);
+        userName = surname + " " + name + " " + secondName;
+    }
+
+    public User(String surname, String name, String secondName, String password) {
         this.surname = surname;
         this.name = name;
         this.secondName = secondName;
@@ -88,5 +97,10 @@ public abstract class User implements Serializable {
     @Override
     public String toString() {
         return userName;
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return userName.compareTo(user.getUserName());
     }
 }

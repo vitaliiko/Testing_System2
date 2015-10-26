@@ -1,8 +1,5 @@
 package usersClasses;
 
-import java.io.Serializable;
-import java.util.Arrays;
-
 public class Teacher extends User {
 
     private String telephoneNum;
@@ -13,7 +10,7 @@ public class Teacher extends User {
     }
 
     public Teacher(String surname, String name, String secondName, String password) {
-        super(surname, name, secondName, password.toCharArray());
+        super(surname, name, secondName, password);
     }
 
     public String getTelephoneNum() {
