@@ -8,6 +8,7 @@ import usersClasses.TeacherController;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -92,11 +93,17 @@ public class TestTaskSettingsGI extends JDialog {
         generalPanel = new BoxPanel(new BorderLayout());
         generalPanel.setBackground(Color.WHITE);
         generalPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        generalPanel.add(createLabelPanel("Назва: ", "Дисципліна: ", "Створив: ", "Режим доступу: "), BorderLayout.WEST);
+        generalPanel.add(createLabelPanel("Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
         generalPanel.add(createGeneralComponents(), BorderLayout.CENTER);
 
-        generalPanel.add(new JScrollPane(createCheckBoxPanel(new ArrayList<>(teacherController.getTeacherSet()), testTask.getAuthorsList()),
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.SOUTH);
+        JPanel checkBoxPanel = createCheckBoxPanel(
+                new ArrayList<>(teacherController.getTeacherSet()), testTask.getAuthorsList());
+        JScrollPane scrollPane = new JScrollPane(checkBoxPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(300, 188));
+        scrollPane.setBorder(new TitledBorder("Автори:"));
+        scrollPane.setBackground(Color.WHITE);
+        generalPanel.add(scrollPane, BorderLayout.SOUTH);
     }
 
     private JPanel createLabelPanel(String... strings) {
@@ -111,10 +118,26 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private JPanel createCheckBoxPanel(ArrayList<Object> dataList, ArrayList<String> markedList) {
-        JPanel checkBoxPanel = new JPanel();
+        JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
         checkBoxPanel.setBackground(Color.WHITE);
+
+        JCheckBox checkAll = new JCheckBox("Відмітити усіх");
+        checkAll.setBackground(Color.WHITE);
+        checkAll.setFocusable(false);
+        checkAll.addItemListener(e -> {
+            checkAll.setText(checkAll.isSelected() ? "Зняти усіх" : "Відмітити усіх");
+            for (int i = 2; i < checkBoxPanel.getComponentCount(); i++) {
+                ((JCheckBox) checkBoxPanel.getComponent(i)).setSelected(checkAll.isSelected());
+            }
+        });
+        checkBoxPanel.add(checkAll);
+        checkBoxPanel.add(new JSeparator());
+
         for (Object o : dataList) {
-            new JCheckBox(o.toString(), markedList.contains(o.toString()));
+            JCheckBox checkBox = new JCheckBox(o.toString(), markedList.contains(o.toString()));
+            checkBox.setBackground(Color.WHITE);
+            checkBox.setFocusable(false);
+            checkBoxPanel.add(checkBox);
         }
         return checkBoxPanel;
     }
