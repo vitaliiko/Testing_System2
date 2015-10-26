@@ -1,5 +1,7 @@
 package testingClasses;
 
+import usersClasses.Student;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,6 +24,7 @@ public class TestTask implements Serializable {
     private ArrayList<ArrayList<Question>> questionGroupsList = new ArrayList<>();
     private ArrayList<String> authorsList = new ArrayList<>();
     private ArrayList<String> studentGroupsList = new ArrayList<>();
+    private ArrayList<Student> notAllowedStudentsList = new ArrayList<>();
 
     public TestTask(String taskName, String disciplineName, String creatorName) {
         this.taskName = taskName;
@@ -128,6 +131,14 @@ public class TestTask implements Serializable {
 
     public void setStudentGroupsList(ArrayList<String> studentGroupsList) {
         this.studentGroupsList = studentGroupsList;
+    }
+
+    public ArrayList<Student> getNotAllowedStudentsList() {
+        return notAllowedStudentsList;
+    }
+
+    public void setNotAllowedStudentsList(ArrayList<Student> notAllowedStudentsList) {
+        this.notAllowedStudentsList = notAllowedStudentsList;
     }
 
     public ArrayList<String> createQuestionGroupsNames() {
