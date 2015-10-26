@@ -10,14 +10,13 @@ public class ImageFilter extends FileFilter {
             return true;
         }
 
-        String extension = ImageUtils.getExtension(f);
-        return extension != null && (extension.equals(ImageUtils.tiff) ||
-                extension.equals(ImageUtils.tif) ||
-                extension.equals(ImageUtils.gif) ||
-                extension.equals(ImageUtils.jpeg) ||
-                extension.equals(ImageUtils.jpg) ||
-                extension.equals(ImageUtils.png));
-
+        String fileName = f.getName();
+        return fileName.endsWith(ImageUtils.tiff) ||
+                fileName.endsWith(ImageUtils.tif) ||
+                fileName.endsWith(ImageUtils.gif) ||
+                fileName.endsWith(ImageUtils.jpeg) ||
+                fileName.endsWith(ImageUtils.jpg) ||
+                fileName.endsWith(ImageUtils.png);
     }
 
     @Override
