@@ -25,8 +25,10 @@ public class TestTaskSettingsGI extends JDialog {
     private JPanel generalTabPanel;
     private JPanel limitTabPanel;
     private JPanel studentsTabPanel;
+    private JPanel questionsTabPanel;
     private JPanel authorsPanel;
     private JPanel studentsGroupPanel;
+    private JPanel questionsGroupPanel;
     private JPanel notAllowedStudentsPanel;
     private JTextField nameField;
     private JTextField disciplineField;
@@ -140,7 +142,7 @@ public class TestTaskSettingsGI extends JDialog {
     private JScrollPane createScrollPane(JPanel panel, String title) {
         JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(300, 188));
+        scrollPane.setPreferredSize(new Dimension(100, 188));
         scrollPane.setBorder(new TitledBorder(title));
         scrollPane.setBackground(Color.WHITE);
         return scrollPane;
@@ -168,15 +170,19 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private void prepareLimitTabPanel() {
-        limitTabPanel = new JPanel(new BorderLayout());
+        limitTabPanel = new JPanel();
         limitTabPanel.setBackground(Color.WHITE);
         limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        limitTabPanel.add(createLabelPanel("Максимальна кількість варіантів відповідей:",
-                "Максимальна кількість запитань у тесті:",
-                "Максимальна кількість часу, хв.:",
-                "Максимальна кількість спроб:"), BorderLayout.WEST);
-        limitTabPanel.add(createSpinners(),BorderLayout.CENTER);
+        JPanel limitPanel = new JPanel(new BorderLayout());
+        limitPanel.add(createLabelPanel("<html>Максимальна кількість<br>варіантів відповідей:</html>",
+                "<html>Максимальна кількість<br>запитань у тесті:</html>",
+                "<html>Максимальна кількість<br>часу, хв.:</html>",
+                "<html>Максимальна кількість<br>спроб:</html>"), BorderLayout.WEST);
+        limitPanel.add(createSpinners(),BorderLayout.CENTER);
+        limitPanel.setBorder(new TitledBorder("Обмеження"));
+        limitPanel.setBackground(Color.WHITE);
+        limitTabPanel.add(limitPanel);
     }
 
     public JPanel createSpinners() {
@@ -208,18 +214,21 @@ public class TestTaskSettingsGI extends JDialog {
                 testTask.getStudentGroupsList());
         studentsTabPanel.add(createScrollPane(studentsGroupPanel, "Групи студентів"), BorderLayout.SOUTH);
 
-        JButton notAllowedLabel = createButtonAsLink("Вибрати студентів");
+        JButton notAllowedButton = createButtonAsLink("Вибрати студентів");
+        notAllowedButton.setHorizontalAlignment(SwingConstants.CENTER);
 
-        studentsTabPanel.add(notAllowedLabel);
+
+        studentsTabPanel.add(notAllowedButton);
     }
 
     private JButton createButtonAsLink(String title) {
         JButton button = new JButton("<html><u>" + title + "<html>");
-        button.setForeground(new Color(0, 100, 255));
+        button.setForeground(new Color(0, 144, 255));
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
         button.setOpaque(false);
         button.setMargin(new Insets(0, 0, 0, 0));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return button;
     }
 }
