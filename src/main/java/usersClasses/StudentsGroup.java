@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StudentsGroup implements StudentDAO, Serializable {
+public class StudentsGroup implements UserDAO, Serializable {
 
     private String name;
     private String faculty;
@@ -44,33 +44,35 @@ public class StudentsGroup implements StudentDAO, Serializable {
     }
 
     @Override
-    public List<Student> getAllStudents() {
+    public List<User> getAllUsers() {
         return new ArrayList<>(studentsSet);
     }
 
     @Override
-    public Student getStudent(int index) {
+    public User getUser(int index) {
         return new ArrayList<>(studentsSet).get(index);
     }
 
     @Override
-    public void updateStudent(Student student) {
+    public void updateUser(User user) {
 
     }
 
     @Override
-    public void deleteStudent(Student student) {
+    public void deleteUser(User user) {
+        Student student = (Student) user;
         studentsSet.remove(student);
     }
 
     @Override
-    public int addStudent(Student student) {
-        studentsSet.add(student);
-        return new ArrayList<>(studentsSet).indexOf(student);
+    public int addUser(User user) {
+        studentsSet.add((Student) user);
+        return new ArrayList<>(studentsSet).indexOf(user);
     }
 
     @Override
-    public int getStudentIndex(Student student) {
+    public int getUserIndex(User user) {
+        Student student = (Student) user;
         return new ArrayList<>(studentsSet).indexOf(student);
     }
 

@@ -217,7 +217,6 @@ public class TestTaskSettingsGI extends JDialog {
         JButton notAllowedButton = createButtonAsLink("Вибрати студентів");
         notAllowedButton.setHorizontalAlignment(SwingConstants.CENTER);
 
-
         studentsTabPanel.add(notAllowedButton);
     }
 
