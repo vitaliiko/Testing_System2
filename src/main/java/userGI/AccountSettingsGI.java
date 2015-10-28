@@ -106,7 +106,7 @@ public class AccountSettingsGI extends JDialog {
         removeButton.setHorizontalAlignment(SwingConstants.CENTER);
         removeButton.addActionListener(e -> {
             teacherController.removeTeacher(teacher);
-            IOFileHandling.saveUsersSet(teacherController.getTeacherSet());
+            IOFileHandling.saveTeachersSet(teacherController.getTeacherSet());
             dispose();
             frame.dispose();
         });
@@ -147,7 +147,7 @@ public class AccountSettingsGI extends JDialog {
                 }
                 messageLabel.setIcon(null);
                 messageLabel.setText(Message.SAVED);
-                IOFileHandling.saveUsersSet(teacherController.getTeacherSet());
+                IOFileHandling.saveTeachersSet(teacherController.getTeacherSet());
                 currentPasswordField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");

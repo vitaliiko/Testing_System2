@@ -7,7 +7,7 @@ public class Student extends User {
     public Student(String surname, String name, String secondName, StudentsGroup group) {
         super(surname, name, secondName);
         this.group = group;
-        this.group.addUser(this);
+        this.group.addStudent(this);
     }
 
     public String getGroupName() {
@@ -15,8 +15,8 @@ public class Student extends User {
     }
 
     public void setGroup(StudentsGroup group) {
-        this.group.deleteUser(this);
+        this.group.deleteStudent(this);
         this.group = group;
-        this.group.addUser(this);
+        this.group.addStudent(this);
     }
 }

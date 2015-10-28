@@ -41,7 +41,7 @@ public class TeacherController {
         if (!teacherSet.add(new Teacher(surname, name, secondName, password))) {
             throw new IOException(Message.EXIST_USER);
         }
-        IOFileHandling.saveUsersSet(teacherSet);
+        IOFileHandling.saveTeachersSet(teacherSet);
     }
 
     public void updateTeacherInfo(Teacher teacher, String surname, String name, String secondName, String telephone, String mail)
