@@ -6,16 +6,9 @@ import supporting.Message;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class TeacherController {
-
-    private static final String NAME_REG = "^[А-ЯЄЇІ][а-яА-Я-'їіє]{2,}$";
-    private static final String PASSWORD_REG = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*-_]).{8,24})";
-    private static final String TEL_NUM_REG = "^[\\d]{10}$";
-    private static final String MAIL_REG = "^[a-zA-Z0-9\\._%+-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,4}$";
+public class TeacherController extends Validator {
 
     private Set<Teacher> teacherSet;
     private ArrayList<String> teachersNamesList;
@@ -78,46 +71,6 @@ public class TeacherController {
 
     public void removeTeacher(Teacher teacher) {
         teacherSet.remove(teacher);
-    }
-
-    public boolean validateName(String surname, String name, String secondName) throws IOException {
-        if (!validate(name, NAME_REG) || !validate(surname, NAME_REG) || !validate(secondName, NAME_REG)) {
-            throw new IOException(Message.WRONG_NAME);
-        }
-        return true;
-    }
-
-    public boolean validatePassword(char[] password) throws IOException {
-        if (password.length < 8) {
-            throw new IOException(Message.SHORT_PASSWORD);
-        }
-        if (password.length > 24) {
-            throw new IOException(Message.LONG_PASSWORD);
-        }
-        if (!validate(String.valueOf(password), PASSWORD_REG)) {
-            throw new IOException(Message.WRONG_PASSWORD);
-        }
-        return true;
-    }
-
-    public boolean validateTelephone(String telephone) throws IOException {
-        if (!validate(telephone, TEL_NUM_REG)) {
-            throw new IOException(Message.WRONG_TEL);
-        }
-        return true;
-    }
-
-    public boolean validateMail(String mail) throws IOException {
-        if (!validate(mail, MAIL_REG)) {
-            throw new IOException(Message.WRONG_MAIL);
-        }
-        return true;
-    }
-
-    private boolean validate(String text, String regExp) {
-        Pattern pattern = Pattern.compile(regExp);
-        Matcher matcher = pattern.matcher(text);
-        return matcher.matches();
     }
 
     public Teacher authorizedTeacher(String userName, char[] password) {

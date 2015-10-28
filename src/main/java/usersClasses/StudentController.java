@@ -1,31 +1,15 @@
 package usersClasses;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
-public class StudentController {
+public class StudentController extends Validator {
 
     private Set<Student> studentSet;
     private Set<StudentsGroup> studentsGroupSet;
 
-    public StudentController() {
-        studentsGroupSet = new HashSet<>();
-        studentsGroupSet.add(new StudentsGroup("CGC-1466", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CGC-1566", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CGC-1366", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
-        studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
-
-        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
-        studentSet = new HashSet<>();
-        studentSet.add(new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1)));
-        studentSet.add(new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1)));
-        studentSet.add(new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1)));
+    public StudentController(Set<StudentsGroup> studentsGroupSet) {
+        this.studentsGroupSet = studentsGroupSet;
     }
 
     public Set<Student> getStudentSet() {

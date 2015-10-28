@@ -3,10 +3,13 @@ import testingClasses.Question;
 import testingClasses.TestTask;
 import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
+import usersClasses.Student;
+import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -75,5 +78,27 @@ public class Start {
         teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", "111111"));
         IOFileHandling.saveTeachersSet(teacherSet);
+    }
+
+    public static void initStudents() {
+        Set<Student> studentSet;
+        Set<StudentsGroup> studentsGroupSet;
+
+        studentsGroupSet = new HashSet<>();
+        studentsGroupSet.add(new StudentsGroup("CGC-1466", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1566", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1366", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
+        studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
+
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
+        studentSet = new HashSet<>();
+        studentSet.add(new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0)));
+        studentSet.add(new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1)));
+        studentSet.add(new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1)));
+        studentSet.add(new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1)));
     }
 }
