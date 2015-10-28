@@ -2,6 +2,7 @@ package userGI;
 
 import panelsAndFrames.MainFrame;
 import supporting.QuestionTableParameters;
+import usersClasses.StudentController;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
@@ -17,8 +18,8 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JTable testTaskTable;
     private QuestionTableParameters testTaskTableParameters;
 
-    public TeacherWorkspaceGI(Teacher teacher, TeacherController teacherController) {
-        super("Робоче середовище", teacher, teacherController);
+    public TeacherWorkspaceGI(Teacher teacher, TeacherController teacherController, StudentController studentController) {
+        super("Робоче середовище", teacher, teacherController, studentController);
 
     }
 

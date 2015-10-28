@@ -1,5 +1,6 @@
 package userGI;
 
+import panelsAndFrames.BoxPanel;
 import supporting.IOFileHandling;
 import panelsAndFrames.AnswerBoxPanel;
 import supporting.ImageUtils;
@@ -8,6 +9,7 @@ import testingClasses.Question;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -132,7 +134,7 @@ public class AddQuestionGI extends JFrame {
     }
 
     public void prepareImagePanel() {
-        imagePanel = new JPanel();
+        JPanel imagePanel = new JPanel();
         imagePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         prepareImageNameField();
         imagePanel.add(imageNameField);
@@ -140,11 +142,11 @@ public class AddQuestionGI extends JFrame {
         imagePanel.add(openButton);
         prepareBrowseImageButton();
         imagePanel.add(browseImageButton);
+        this.imagePanel = new BoxPanel(BoxLayout.Y_AXIS, new JLabel("Оберіть зображення:"), imagePanel);
     }
 
     public void prepareImageNameField() {
         imageNameField = new JTextField(35);
-        imageNameField.setBorder(new EmptyBorder(5, 5, 5, 5));
         imageNameField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -164,9 +166,9 @@ public class AddQuestionGI extends JFrame {
     }
 
     public void prepareQuestionPanel() {
-        questionPanel = new JPanel();
-        questionPanel.setLayout(new BoxLayout(questionPanel, BoxLayout.Y_AXIS));
+        questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         questionArea = new JTextArea(5, 40);
         questionArea.setFont(new Font("Arial", Font.PLAIN, 12));
         questionArea.setLineWrap(true);
@@ -194,14 +196,15 @@ public class AddQuestionGI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(questionArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        questionPanel.add(new JLabel("Текст запитання:"));
         questionPanel.add(scrollPane);
         prepareAnswersPanel();
         questionPanel.add(answersPanel);
     }
 
     public void prepareAnswersPanel() {
-        answersPanel = new JPanel();
-        answersPanel.setLayout(new BoxLayout(answersPanel, BoxLayout.Y_AXIS));
+        answersPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        answersPanel.setBorder(new TitledBorder("Варіанти відповідей"));
         JScrollPane scrollPane = new JScrollPane(answersPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);

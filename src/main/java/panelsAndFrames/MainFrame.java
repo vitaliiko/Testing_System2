@@ -25,11 +25,12 @@ public abstract class MainFrame extends JFrame {
     protected TeacherController teacherController;
     protected StudentController studentController;
 
-    public MainFrame(String title, Teacher teacher, TeacherController teacherController) throws HeadlessException {
+    public MainFrame(String title, Teacher teacher, TeacherController teacherController,
+                     StudentController studentController) throws HeadlessException {
         super(title);
         this.teacher = teacher;
         this.teacherController = teacherController;
-        studentController = new StudentController();
+        this.studentController = studentController;
         mainFrameSetup();
     }
 

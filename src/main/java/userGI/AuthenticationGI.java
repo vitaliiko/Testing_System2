@@ -4,6 +4,7 @@ import supporting.IOFileHandling;
 import supporting.Message;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
+import usersClasses.StudentController;
 import usersClasses.TeacherController;
 import usersClasses.Teacher;
 
@@ -40,10 +41,12 @@ public class AuthenticationGI extends JFrame {
     private Dimension loginDimension = new Dimension(350, 170);
     private Dimension signUpDimension = new Dimension(400, 270);
     private TeacherController teacherController;
+    private StudentController studentController;
 
-    public AuthenticationGI(TeacherController teacherController) throws Exception {
+    public AuthenticationGI(TeacherController teacherController, StudentController studentController) throws Exception {
         super("Вхід");
         this.teacherController = teacherController;
+        this.studentController = studentController;
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -117,7 +120,7 @@ public class AuthenticationGI extends JFrame {
             } else {
                 setVisible(false);
                 clearFields();
-                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherController);
+                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherController, studentController);
                 showTaskGI.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {

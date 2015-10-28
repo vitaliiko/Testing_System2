@@ -3,10 +3,7 @@ import testingClasses.Question;
 import testingClasses.TestTask;
 import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
-import usersClasses.Student;
-import usersClasses.StudentsGroup;
-import usersClasses.Teacher;
-import usersClasses.TeacherController;
+import usersClasses.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,8 +20,10 @@ public class Start {
 
     public static void createShowTaskWindow() {
         TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
+        StudentController studentController = new StudentController(initStudents());
         try {
-            new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"), controller);
+            new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"),
+                    controller, studentController);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -32,8 +31,9 @@ public class Start {
 
     public static void crateAuthenticationWindow() {
         TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
+        StudentController studentController = new StudentController(initStudents());
         try {
-            new AuthenticationGI(controller);
+            new AuthenticationGI(controller, studentController);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +80,7 @@ public class Start {
         IOFileHandling.saveTeachersSet(teacherSet);
     }
 
-    public static void initStudents() {
+    public static Set<StudentsGroup> initStudents() {
         Set<Student> studentSet;
         Set<StudentsGroup> studentsGroupSet;
 
@@ -100,5 +100,7 @@ public class Start {
         studentSet.add(new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1)));
         studentSet.add(new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1)));
         studentSet.add(new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1)));
+
+        return studentsGroupSet;
     }
 }

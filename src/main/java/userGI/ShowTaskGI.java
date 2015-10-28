@@ -8,6 +8,7 @@ import supporting.ImageUtils;
 import supporting.QuestionTableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import usersClasses.StudentController;
 import usersClasses.Teacher;
 import usersClasses.TeacherController;
 
@@ -38,14 +39,14 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
 
-    public ShowTaskGI(Teacher teacher, TeacherController teacherController) {
-        super("Створення тесту", teacher, teacherController);
+    public ShowTaskGI(Teacher teacher, TeacherController teacherController, StudentController studentController) {
+        super("Створення тесту", teacher, teacherController, studentController);
         launchDialog();
         frameSetup();
     }
 
-    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherController teacherController) {
-        super("Редагування тесту", teacher, teacherController);
+    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherController teacherController, StudentController studentController) {
+        super("Редагування тесту", teacher, teacherController, studentController);
         this.theTestTask = theTestTask;
         questionsList = theTestTask.getQuestionsList();
         frameSetup();
