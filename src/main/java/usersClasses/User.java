@@ -9,22 +9,8 @@ public abstract class User implements Serializable, Comparable<User> {
     private String secondName;
     private String userName;
     private String password;
-
-    public User(String secondName, String surname, String name) {
-        this.secondName = secondName;
-        this.surname = surname;
-        this.name = name;
-        password = "";
-        userName = surname + " " + name + " " + secondName;
-    }
-
-    public User(String surname, String name, String secondName, char[] password) {
-        this.surname = surname;
-        this.name = name;
-        this.secondName = secondName;
-        this.password = PasswordDigest.hashPassword(password);
-        userName = surname + " " + name + " " + secondName;
-    }
+    private String mailAddress;
+    private String telephoneNum;
 
     public User(String surname, String name, String secondName, String password) {
         this.surname = surname;
@@ -32,6 +18,10 @@ public abstract class User implements Serializable, Comparable<User> {
         this.secondName = secondName;
         this.password = PasswordDigest.hashPassword(password);
         userName = surname + " " + name + " " + secondName;
+    }
+
+    public User(String surname, String name, String secondName, char[] password) {
+        this(surname, name, secondName, String.valueOf(password));
     }
 
     public String getSurname() {
@@ -70,6 +60,21 @@ public abstract class User implements Serializable, Comparable<User> {
         this.password = PasswordDigest.hashPassword(password);
     }
 
+    public String getMailAddress() {
+        return mailAddress;
+    }
+
+    public void setMailAddress(String mailAddress) {
+        this.mailAddress = mailAddress;
+    }
+
+    public String getTelephoneNum() {
+        return telephoneNum;
+    }
+
+    public void setTelephoneNum(String telephoneNum) {
+        this.telephoneNum = telephoneNum;
+    }
 
     public boolean isMatches(String userName, char[] password) {
         return this.userName.equals(userName) && this.password.equals(PasswordDigest.hashPassword(password));

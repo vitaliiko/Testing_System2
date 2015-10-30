@@ -5,7 +5,7 @@ public class Student extends User {
     private StudentsGroup group;
 
     public Student(String surname, String name, String secondName, StudentsGroup group) {
-        super(surname, name, secondName);
+        super(surname, name, secondName, "");
         this.group = group;
         this.group.addStudent(this);
     }

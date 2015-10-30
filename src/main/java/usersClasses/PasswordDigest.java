@@ -10,6 +10,10 @@ public class PasswordDigest {
     }
 
     public static String hashPassword(String password) {
+        if (password.isEmpty()) {
+            return "";
+        }
+
         MessageDigest md5 ;
         StringBuilder hexString = new StringBuilder();
         try {
@@ -25,6 +29,7 @@ public class PasswordDigest {
         catch (NoSuchAlgorithmException e) {
             return e.toString();
         }
+        System.out.println(password + " " + hexString.toString());
         return hexString.toString();
     }
 }

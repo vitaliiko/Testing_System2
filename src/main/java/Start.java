@@ -14,8 +14,9 @@ public class Start {
 
     public static void main(String[] args) {
 
+//        initTeacherSet();
         createShowTaskWindow();
-
+//        crateAuthenticationWindow();
     }
 
     public static void createShowTaskWindow() {
@@ -66,17 +67,19 @@ public class Start {
     }
 
     public static void initTeacherSet() {
+        char[] pass = {'5', '4', '3', '2', '1'};
+
         Set<Teacher> teacherSet = new TreeSet<>();
-        teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "00000"));
         teacherSet.add(new Teacher("Петров", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Сидоров", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Іваненко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Сидоров", "Іван", "Іванович", "22222"));
+        teacherSet.add(new Teacher("Іваненко", "Іван", "Іванович", "1110111"));
         teacherSet.add(new Teacher("Петренко", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Федоренко", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Сидоренко", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Клименко", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "111111"));
-        teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", "111111"));
+        teacherSet.add(new Teacher("Федоренко", "Іван", "Іванович", "1111111"));
+        teacherSet.add(new Teacher("Сидоренко", "Іван", "Іванович", "11115811"));
+        teacherSet.add(new Teacher("Клименко", "Іван", "Іванович", "22"));
+        teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "5"));
+        teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", pass));
         IOFileHandling.saveTeachersSet(teacherSet);
     }
 
