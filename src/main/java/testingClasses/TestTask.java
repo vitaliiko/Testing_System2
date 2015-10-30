@@ -1,11 +1,14 @@
 package testingClasses;
 
 import usersClasses.Student;
+import usersClasses.User;
+import usersClasses.UserDAO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
-public class TestTask implements Serializable {
+public class TestTask implements Serializable, UserDAO {
 
     private static final int PUBLIC_ATR = 0;
     private static final int PRIVATE_ATR = 1;
@@ -159,6 +162,36 @@ public class TestTask implements Serializable {
             questionNamesList.add(question.getTask());
         }
         return questionNamesList;
+    }
+
+    @Override
+    public <T extends User> Set<T> getAllUsers() {
+        return null;
+    }
+
+    @Override
+    public User getUser(int index) {
+        return null;
+    }
+
+    @Override
+    public void updateUser(User user) {
+
+    }
+
+    @Override
+    public void deleteUser(User user) {
+
+    }
+
+    @Override
+    public int addUser(User user) {
+        return 0;
+    }
+
+    @Override
+    public int getUserIndex(User user) {
+        return 0;
     }
 
     @Override
