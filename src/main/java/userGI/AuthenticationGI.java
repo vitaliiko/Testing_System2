@@ -4,8 +4,8 @@ import supporting.IOFileHandling;
 import supporting.Message;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
-import usersClasses.StudentController;
-import usersClasses.TeacherController;
+import usersClasses.StudentManager;
+import usersClasses.TeacherManager;
 import usersClasses.Teacher;
 
 import javax.swing.*;
@@ -40,13 +40,13 @@ public class AuthenticationGI extends JFrame {
 
     private Dimension loginDimension = new Dimension(350, 170);
     private Dimension signUpDimension = new Dimension(400, 270);
-    private TeacherController teacherController;
-    private StudentController studentController;
+    private TeacherManager teacherManager;
+    private StudentManager studentManager;
 
-    public AuthenticationGI(TeacherController teacherController, StudentController studentController) throws Exception {
+    public AuthenticationGI(TeacherManager teacherManager, StudentManager studentManager) throws Exception {
         super("Вхід");
-        this.teacherController = teacherController;
-        this.studentController = studentController;
+        this.teacherManager = teacherManager;
+        this.studentManager = studentManager;
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -97,7 +97,7 @@ public class AuthenticationGI extends JFrame {
     }
 
     public void prepareUsernameBox() {
-        teacherNamesBox = new JComboBox<>(teacherController.getTeachersNamesList().toArray());
+        teacherNamesBox = new JComboBox<>(teacherManager.getTeachersNamesList().toArray());
         teacherNamesBox.setSelectedIndex(-1);
         teacherNamesBox.setEditable(true);
         ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
@@ -111,7 +111,7 @@ public class AuthenticationGI extends JFrame {
         loginButton = new JButton("Вхід");
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
-            Teacher teacher = teacherController.authorizedTeacher(
+            Teacher teacher = teacherManager.authorizedTeacher(
                     ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText(),
                     passwordField.getPassword());
             if (teacher == null) {
@@ -120,7 +120,7 @@ public class AuthenticationGI extends JFrame {
             } else {
                 setVisible(false);
                 clearFields();
-                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherController, studentController);
+                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherManager, studentManager);
                 showTaskGI.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -191,7 +191,7 @@ public class AuthenticationGI extends JFrame {
         signUpButton.addActionListener(e -> {
             try {
                 if (Arrays.equals(firstPasswordField.getPassword(), secondPasswordField.getPassword())) {
-                    teacherController.createTeacher(surnameField.getText(), nameField.getText(), secondNameField.getText(),
+                    teacherManager.createTeacher(surnameField.getText(), nameField.getText(), secondNameField.getText(),
                             firstPasswordField.getPassword());
                 } else {
                     throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);

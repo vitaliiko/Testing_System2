@@ -2,9 +2,9 @@ package panelsAndFrames;
 
 import supporting.QuestionTableParameters;
 import userGI.AccountSettingsGI;
-import usersClasses.StudentController;
+import usersClasses.StudentManager;
 import usersClasses.Teacher;
-import usersClasses.TeacherController;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
@@ -22,15 +22,15 @@ public abstract class MainFrame extends JFrame {
     private JMenu helpMenu;
 
     protected Teacher teacher;
-    protected TeacherController teacherController;
-    protected StudentController studentController;
+    protected TeacherManager teacherManager;
+    protected StudentManager studentManager;
 
-    public MainFrame(String title, Teacher teacher, TeacherController teacherController,
-                     StudentController studentController) throws HeadlessException {
+    public MainFrame(String title, Teacher teacher, TeacherManager teacherManager,
+                     StudentManager studentManager) throws HeadlessException {
         super(title);
         this.teacher = teacher;
-        this.teacherController = teacherController;
-        this.studentController = studentController;
+        this.teacherManager = teacherManager;
+        this.studentManager = studentManager;
         mainFrameSetup();
     }
 
@@ -127,7 +127,7 @@ public abstract class MainFrame extends JFrame {
 
         JMenuItem accountSettingsItem = new JMenuItem("Налаштування облікового запису");
         accountSettingsItem.setIcon(new ImageIcon("resources/account.png"));
-        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherController));
+        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherManager));
         fileMenu.add(accountSettingsItem);
 
         fileMenu.addSeparator();

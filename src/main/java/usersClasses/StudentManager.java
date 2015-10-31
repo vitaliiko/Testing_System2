@@ -3,12 +3,12 @@ package usersClasses;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class StudentController extends Validator {
+public class StudentManager extends Validator {
 
     private Set<Student> studentSet;
     private Set<StudentsGroup> studentsGroupSet;
 
-    public StudentController(Set<StudentsGroup> studentsGroupSet) {
+    public StudentManager(Set<StudentsGroup> studentsGroupSet) {
         this.studentsGroupSet = studentsGroupSet;
     }
 

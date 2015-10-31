@@ -2,8 +2,8 @@ package userGI;
 
 import panelsAndFrames.BoxPanel;
 import testingClasses.TestTask;
-import usersClasses.StudentController;
-import usersClasses.TeacherController;
+import usersClasses.StudentManager;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -17,8 +17,8 @@ public class TestTaskSettingsGI extends JDialog {
     private static final int COLUMNS_COUNT = 35;
 
     private TestTask testTask;
-    private TeacherController teacherController;
-    private StudentController studentController;
+    private TeacherManager teacherManager;
+    private StudentManager studentManager;
 
     private JTabbedPane tabbedPane;
     private JPanel testSettingsPanel;
@@ -41,12 +41,12 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton cancelButton;
     private JButton removeButton;
 
-    public TestTaskSettingsGI(JFrame owner, TestTask testTask, TeacherController teacherController,
-                              StudentController studentController) {
+    public TestTaskSettingsGI(JFrame owner, TestTask testTask, TeacherManager teacherManager,
+                              StudentManager studentManager) {
         super(owner, "Налаштування тесту");
         this.testTask = testTask;
-        this.teacherController = teacherController;
-        this.studentController = studentController;
+        this.teacherManager = teacherManager;
+        this.studentManager = studentManager;
 
         prepareTabbedPanel();
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
@@ -99,7 +99,7 @@ public class TestTaskSettingsGI extends JDialog {
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
         authorsPanel = createCheckBoxPanel(
-                new ArrayList<>(teacherController.getTeacherSet()), testTask.getAuthorsList());
+                new ArrayList<>(teacherManager.getTeacherSet()), testTask.getAuthorsList());
         generalTabPanel.add(createScrollPane(authorsPanel, "Автори"), BorderLayout.SOUTH);
     }
 
@@ -210,7 +210,7 @@ public class TestTaskSettingsGI extends JDialog {
         studentsTabPanel.setBackground(Color.WHITE);
         studentsTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentController.getStudentsGroupSet()),
+        studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()),
                 testTask.getStudentGroupsList());
         studentsTabPanel.add(createScrollPane(studentsGroupPanel, "Групи студентів"), BorderLayout.SOUTH);
 

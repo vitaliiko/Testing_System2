@@ -5,7 +5,7 @@ import supporting.Message;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
 import usersClasses.Teacher;
-import usersClasses.TeacherController;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,7 +20,7 @@ public class AccountSettingsGI extends JDialog {
     private static final int COLUMNS_COUNT = 26;
 
     private Teacher teacher;
-    private TeacherController teacherController;
+    private TeacherManager teacherManager;
     private JFrame frame;
 
     private JPanel fieldsPanel;
@@ -39,11 +39,11 @@ public class AccountSettingsGI extends JDialog {
     private JLabel messageLabel;
     private TypeListener typeListener;
 
-    public AccountSettingsGI(Frame frame, Teacher teacher, TeacherController teacherController) {
+    public AccountSettingsGI(Frame frame, Teacher teacher, TeacherManager teacherManager) {
         super(frame, "Налаштування облікового запису");
         this.frame = (JFrame) frame;
         this.teacher = teacher;
-        this.teacherController = teacherController;
+        this.teacherManager = teacherManager;
         typeListener = new TypeListener();
 
         try {
@@ -105,8 +105,8 @@ public class AccountSettingsGI extends JDialog {
         removeButton = new JButton("Видалити обліковий запис");
         removeButton.setHorizontalAlignment(SwingConstants.CENTER);
         removeButton.addActionListener(e -> {
-            teacherController.removeTeacher(teacher);
-            IOFileHandling.saveTeachersSet(teacherController.getTeacherSet());
+            teacherManager.removeTeacher(teacher);
+            IOFileHandling.saveCollection(teacherManager.getTeacherSet());
             dispose();
             frame.dispose();
         });
@@ -139,7 +139,7 @@ public class AccountSettingsGI extends JDialog {
         saveButton.setEnabled(false);
         saveButton.addActionListener(e -> {
             try {
-                teacherController.updateTeacherInfo(teacher, surnameField.getText(), nameField.getText(),
+                teacherManager.updateTeacherInfo(teacher, surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), telephoneField.getText(), mailField.getText());
 
                 if (isNotPasswordsFieldsEmpty()) {
@@ -147,7 +147,7 @@ public class AccountSettingsGI extends JDialog {
                 }
                 messageLabel.setIcon(null);
                 messageLabel.setText(Message.SAVED);
-                IOFileHandling.saveTeachersSet(teacherController.getTeacherSet());
+                IOFileHandling.saveCollection(teacherManager.getTeacherSet());
                 currentPasswordField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");
@@ -166,7 +166,7 @@ public class AccountSettingsGI extends JDialog {
         if (!Arrays.equals(newPasswordField.getPassword(), repeatPasswordField.getPassword())) {
             throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);
         }
-        if (teacherController.validatePassword(newPasswordField.getPassword())) {
+        if (teacherManager.validatePassword(newPasswordField.getPassword())) {
             teacher.setPassword(newPasswordField.getPassword());
         }
     }

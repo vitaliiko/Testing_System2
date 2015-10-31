@@ -8,9 +8,9 @@ import supporting.ImageUtils;
 import supporting.QuestionTableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
-import usersClasses.StudentController;
+import usersClasses.StudentManager;
 import usersClasses.Teacher;
-import usersClasses.TeacherController;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,14 +39,14 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
 
-    public ShowTaskGI(Teacher teacher, TeacherController teacherController, StudentController studentController) {
-        super("Створення тесту", teacher, teacherController, studentController);
+    public ShowTaskGI(Teacher teacher, TeacherManager teacherManager, StudentManager studentManager) {
+        super("Створення тесту", teacher, teacherManager, studentManager);
         launchDialog();
         frameSetup();
     }
 
-    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherController teacherController, StudentController studentController) {
-        super("Редагування тесту", teacher, teacherController, studentController);
+    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherManager teacherManager, StudentManager studentManager) {
+        super("Редагування тесту", teacher, teacherManager, studentManager);
         this.theTestTask = theTestTask;
         questionsList = theTestTask.getQuestionsList();
         frameSetup();
@@ -197,7 +197,7 @@ public class ShowTaskGI extends MainFrame {
     public void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
-        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherController, studentController));
+        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherManager, studentManager));
     }
 
     public void prepareCompleteButton() {
@@ -205,7 +205,7 @@ public class ShowTaskGI extends MainFrame {
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
             theTestTask.setQuestionsList(questionsList);
-            IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
+            //IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
         });
     }
 

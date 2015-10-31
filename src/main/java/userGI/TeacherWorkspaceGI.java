@@ -2,9 +2,9 @@ package userGI;
 
 import panelsAndFrames.MainFrame;
 import supporting.QuestionTableParameters;
-import usersClasses.StudentController;
+import usersClasses.StudentManager;
 import usersClasses.Teacher;
-import usersClasses.TeacherController;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -18,8 +18,8 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JTable testTaskTable;
     private QuestionTableParameters testTaskTableParameters;
 
-    public TeacherWorkspaceGI(Teacher teacher, TeacherController teacherController, StudentController studentController) {
-        super("Робоче середовище", teacher, teacherController, studentController);
+    public TeacherWorkspaceGI(Teacher teacher, TeacherManager teacherManager, StudentManager studentManager) {
+        super("Робоче середовище", teacher, teacherManager, studentManager);
 
     }
 

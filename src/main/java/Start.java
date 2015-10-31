@@ -15,26 +15,27 @@ public class Start {
     public static void main(String[] args) {
 
 //        initTeacherSet();
+        initTestTask();
         createShowTaskWindow();
 //        crateAuthenticationWindow();
     }
 
     public static void createShowTaskWindow() {
-        TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
-        StudentController studentController = new StudentController(initStudents());
+        TeacherManager controller = new TeacherManager(IOFileHandling.loadCollection());
+        StudentManager studentManager = new StudentManager(initStudents());
         try {
             new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"),
-                    controller, studentController);
+                    controller, studentManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void crateAuthenticationWindow() {
-        TeacherController controller = new TeacherController(IOFileHandling.loadTeachersSet());
-        StudentController studentController = new StudentController(initStudents());
+        TeacherManager controller = new TeacherManager(IOFileHandling.loadCollection());
+        StudentManager studentManager = new StudentManager(initStudents());
         try {
-            new AuthenticationGI(controller, studentController);
+            new AuthenticationGI(controller, studentManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +81,7 @@ public class Start {
         teacherSet.add(new Teacher("Клименко", "Іван", "Іванович", "22"));
         teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "5"));
         teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", pass));
-        IOFileHandling.saveTeachersSet(teacherSet);
+        IOFileHandling.saveCollection(teacherSet);
     }
 
     public static Set<StudentsGroup> initStudents() {
