@@ -9,7 +9,6 @@ import supporting.QuestionTableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
 import usersClasses.StudentManager;
-import usersClasses.Teacher;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -26,7 +25,6 @@ import java.util.ArrayList;
 public class ShowTaskGI extends MainFrame {
 
     private TestTask theTestTask;
-    private ArrayList<JPanel> questionPanelList = new ArrayList<>();
     private ArrayList<Question> questionsList = new ArrayList<>();
 
     private JPanel browsePanel;
@@ -39,14 +37,14 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private QuestionTableParameters questionTableParameters;
 
-    public ShowTaskGI(Teacher teacher, TeacherManager teacherManager, StudentManager studentManager) {
-        super("Створення тесту", teacher, teacherManager, studentManager);
+    public ShowTaskGI(TeacherManager teacherManager, StudentManager studentManager) {
+        super("Створення тесту", teacherManager, studentManager);
         launchDialog();
         frameSetup();
     }
 
-    public ShowTaskGI(TestTask theTestTask, Teacher teacher, TeacherManager teacherManager, StudentManager studentManager) {
-        super("Редагування тесту", teacher, teacherManager, studentManager);
+    public ShowTaskGI(TestTask theTestTask, TeacherManager teacherManager, StudentManager studentManager) {
+        super("Редагування тесту", teacherManager, studentManager);
         this.theTestTask = theTestTask;
         questionsList = theTestTask.getQuestionsList();
         frameSetup();
@@ -144,7 +142,6 @@ public class ShowTaskGI extends MainFrame {
             questionPanel.add(answerArea);
         }
         questionPanel.add(new JSeparator());
-        questionPanelList.add(questionPanel);
         return questionPanel;
     }
 
@@ -205,7 +202,7 @@ public class ShowTaskGI extends MainFrame {
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
             theTestTask.setQuestionsList(questionsList);
-            //IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
+            IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
         });
     }
 

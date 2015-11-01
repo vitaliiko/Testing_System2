@@ -12,11 +12,12 @@ public class TeacherManager extends Validator {
 
     private Set<Teacher> teacherSet;
     private ArrayList<String> teachersNamesList;
+    private Teacher currentTeacher;
 
-    public TeacherManager(Set<Teacher> teacherSet) {
-        this.teacherSet = teacherSet;
-        teachersNamesList = new ArrayList<>();
-        teachersNamesList.addAll(this.teacherSet.stream().map(Teacher::getUserName).collect(Collectors.toList()));
+    public TeacherManager() {
+        teacherSet = IOFileHandling.loadUserSet(IOFileHandling.TEACHERS_SER);
+        teachersNamesList = new ArrayList<>(
+                this.teacherSet.stream().map(Teacher::getUserName).collect(Collectors.toList()));
     }
 
     public Set<Teacher> getTeacherSet() {
@@ -27,6 +28,14 @@ public class TeacherManager extends Validator {
         return teachersNamesList;
     }
 
+    public Teacher getCurrentTeacher() {
+        return currentTeacher;
+    }
+
+    public void saveTeacherSet() {
+        IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
+    }
+
     public void createTeacher(String surname, String name, String secondName, char[] password)
             throws IOException {
         validateName(surname, name, secondName);
@@ -34,30 +43,30 @@ public class TeacherManager extends Validator {
         if (!teacherSet.add(new Teacher(surname, name, secondName, password))) {
             throw new IOException(Message.EXIST_USER);
         }
-        IOFileHandling.saveCollection(teacherSet);
+        IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
     }
 
-    public void updateTeacherInfo(Teacher teacher, String surname, String name, String secondName, String telephone, String mail)
+    public void updateCurrentTeacherInfo(String surname, String name, String secondName, String telephone, String mail)
             throws IOException {
         validateName(name, surname, secondName);
 
         String userName = surname + " " + name + " " + secondName;
-        if (!teacher.getUserName().equals(userName)) {
+        if (!currentTeacher.getUserName().equals(userName)) {
             checkUserName(userName);
         }
 
-        teacher.setName(name);
-        teacher.setSurname(surname);
-        teacher.setSecondName(secondName);
-        teacher.setUserName(userName);
+        currentTeacher.setName(name);
+        currentTeacher.setSurname(surname);
+        currentTeacher.setSecondName(secondName);
+        currentTeacher.setUserName(userName);
 
         if (!telephone.isEmpty()) {
             validateTelephone(telephone);
-            teacher.setTelephoneNum(telephone);
+            currentTeacher.setTelephoneNum(telephone);
         }
         if (!mail.isEmpty()) {
             validateMail(mail);
-            teacher.setMailAddress(mail);
+            currentTeacher.setMailAddress(mail);
         }
     }
 
@@ -69,16 +78,27 @@ public class TeacherManager extends Validator {
         }
     }
 
-    public void removeTeacher(Teacher teacher) {
+    public void deleteTeacher(Teacher teacher) {
         teacherSet.remove(teacher);
     }
 
-    public Teacher authorizedTeacher(String userName, char[] password) {
+    public void deleteCurrentTeacher() {
+        teacherSet.remove(currentTeacher);
+        currentTeacher = null;
+    }
+
+    public boolean authorizedTeacher(String userName, char[] password) {
         for (Teacher teacher : teacherSet) {
             if (teacher.isMatches(userName, password)) {
-                return teacher;
+                currentTeacher = teacher;
+                return true;
             }
         }
-        return null;
+        return false;
+    }
+
+    public String[] getCurentTeacherFields() {
+        return new String[]{currentTeacher.getSurname(), currentTeacher.getName(),
+                currentTeacher.getSecondName(), currentTeacher.getTelephoneNum(), currentTeacher.getMailAddress()};
     }
 }

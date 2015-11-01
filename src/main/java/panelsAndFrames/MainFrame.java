@@ -3,7 +3,6 @@ package panelsAndFrames;
 import supporting.QuestionTableParameters;
 import userGI.AccountSettingsGI;
 import usersClasses.StudentManager;
-import usersClasses.Teacher;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -21,14 +20,12 @@ public abstract class MainFrame extends JFrame {
     private JMenu fileMenu;
     private JMenu helpMenu;
 
-    protected Teacher teacher;
     protected TeacherManager teacherManager;
     protected StudentManager studentManager;
 
-    public MainFrame(String title, Teacher teacher, TeacherManager teacherManager,
+    public MainFrame(String title, TeacherManager teacherManager,
                      StudentManager studentManager) throws HeadlessException {
         super(title);
-        this.teacher = teacher;
         this.teacherManager = teacherManager;
         this.studentManager = studentManager;
         mainFrameSetup();
@@ -127,7 +124,7 @@ public abstract class MainFrame extends JFrame {
 
         JMenuItem accountSettingsItem = new JMenuItem("Налаштування облікового запису");
         accountSettingsItem.setIcon(new ImageIcon("resources/account.png"));
-        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacher, teacherManager));
+        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacherManager));
         fileMenu.add(accountSettingsItem);
 
         fileMenu.addSeparator();

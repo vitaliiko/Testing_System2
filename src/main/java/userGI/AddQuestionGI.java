@@ -45,7 +45,6 @@ public class AddQuestionGI extends JFrame {
             e.printStackTrace();
         }
         this.answersLimit = answersLimit;
-        IOFileHandling.saveQuestion(null);
         prepareImagePanel();
         getContentPane().add(imagePanel, BorderLayout.NORTH);
         prepareQuestionPanel();

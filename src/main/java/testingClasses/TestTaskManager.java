@@ -4,13 +4,20 @@ import supporting.IOFileHandling;
 
 import java.util.ArrayList;
 
-public class TaskManager {
+public class TestTaskManager {
 
     private ArrayList<TestTask> testTaskList;
-    private ArrayList<TestTask> testTasksArchive = new ArrayList<>();
 
-    public TaskManager() {
+    public TestTaskManager() {
         testTaskList = IOFileHandling.loadTestTasks();
+    }
+
+    public TestTask getTest(int index) {
+        return testTaskList.get(index);
+    }
+
+    public void setTest(TestTask test, int index) {
+        testTaskList.set(index, test);
     }
 
     public void addTest(TestTask testTask) {
@@ -22,15 +29,7 @@ public class TaskManager {
         return testTask;
     }
 
-    public void archiveTest(TestTask testTask) {
-        testTasksArchive.add(deleteTest(testTask));
-    }
-
     public void saveTests() {
-        IOFileHandling.saveTestTasks(testTaskList, IOFileHandling.TEST_TASK_SER);
-    }
-
-    public void saveArchive() {
-        IOFileHandling.saveTestTasks(testTasksArchive, IOFileHandling.TEST_TASK_ARCHIVE);
+        IOFileHandling.saveTestTasks(testTaskList);
     }
 }

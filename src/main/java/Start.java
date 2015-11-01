@@ -14,28 +14,28 @@ public class Start {
 
     public static void main(String[] args) {
 
-//        initTeacherSet();
+        initTeacherSet();
         initTestTask();
-        createShowTaskWindow();
-//        crateAuthenticationWindow();
+//        createShowTaskWindow();
+        crateAuthenticationWindow();
     }
 
     public static void createShowTaskWindow() {
-        TeacherManager controller = new TeacherManager(IOFileHandling.loadCollection());
+        TeacherManager teacherManager = new TeacherManager();
+        teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
         StudentManager studentManager = new StudentManager(initStudents());
         try {
-            new ShowTaskGI(IOFileHandling.loadTestTask("111"), new Teacher("Іванов", "Іван", "Іванович", "111111"),
-                    controller, studentManager);
+            new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacherManager, studentManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void crateAuthenticationWindow() {
-        TeacherManager controller = new TeacherManager(IOFileHandling.loadCollection());
+        TeacherManager teacherManager = new TeacherManager();
         StudentManager studentManager = new StudentManager(initStudents());
         try {
-            new AuthenticationGI(controller, studentManager);
+            new AuthenticationGI(teacherManager, studentManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -64,12 +64,13 @@ public class Start {
 
         TestTask testTask = new TestTask("111", "222", "333");
         testTask.setQuestionsList(questions);
-        IOFileHandling.saveTestTask(testTask, "111");
+
+        ArrayList<TestTask> testTasks = new ArrayList<>();
+        testTasks.add(testTask);
+        IOFileHandling.saveTestTasks(testTasks);
     }
 
     public static void initTeacherSet() {
-        char[] pass = {'5', '4', '3', '2', '1'};
-
         Set<Teacher> teacherSet = new TreeSet<>();
         teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "00000"));
         teacherSet.add(new Teacher("Петров", "Іван", "Іванович", "111111"));
@@ -80,12 +81,11 @@ public class Start {
         teacherSet.add(new Teacher("Сидоренко", "Іван", "Іванович", "11115811"));
         teacherSet.add(new Teacher("Клименко", "Іван", "Іванович", "22"));
         teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "5"));
-        teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", pass));
-        IOFileHandling.saveCollection(teacherSet);
+        teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", new char[]{'5', '4', '3', '2', '1'}));
+        IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
     }
 
     public static Set<StudentsGroup> initStudents() {
-        Set<Student> studentSet;
         Set<StudentsGroup> studentsGroupSet;
 
         studentsGroupSet = new HashSet<>();
@@ -96,14 +96,13 @@ public class Start {
         studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
 
         ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
-        studentSet = new HashSet<>();
-        studentSet.add(new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0)));
-        studentSet.add(new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1)));
-        studentSet.add(new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1)));
-        studentSet.add(new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1)));
+        new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1));
+        new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
+        new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
 
         return studentsGroupSet;
     }

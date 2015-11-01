@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-
 import java.util.ArrayList;
 
 public class TestTaskSettingsGI extends JDialog {
@@ -114,7 +113,7 @@ public class TestTaskSettingsGI extends JDialog {
         return panel;
     }
 
-    private JPanel createCheckBoxPanel(ArrayList<Object> dataList, ArrayList<String> markedList) {
+    private <T> JPanel createCheckBoxPanel(ArrayList<T> dataList, ArrayList<String> markedList) {
         JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
         checkBoxPanel.setBackground(Color.WHITE);
 
@@ -130,7 +129,7 @@ public class TestTaskSettingsGI extends JDialog {
         checkBoxPanel.add(checkAll);
         checkBoxPanel.add(new JSeparator());
 
-        for (Object o : dataList) {
+        for (T o : dataList) {
             JCheckBox checkBox = new JCheckBox(o.toString(), markedList.contains(o.toString()));
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);

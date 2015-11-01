@@ -1,9 +1,8 @@
 package userGI;
 
-import supporting.IOFileHandling;
-import supporting.Message;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
+import supporting.Message;
 import usersClasses.Teacher;
 import usersClasses.TeacherManager;
 
@@ -39,11 +38,11 @@ public class AccountSettingsGI extends JDialog {
     private JLabel messageLabel;
     private TypeListener typeListener;
 
-    public AccountSettingsGI(Frame frame, Teacher teacher, TeacherManager teacherManager) {
+    public AccountSettingsGI(Frame frame, TeacherManager teacherManager) {
         super(frame, "Налаштування облікового запису");
         this.frame = (JFrame) frame;
-        this.teacher = teacher;
         this.teacherManager = teacherManager;
+        teacher = teacherManager.getCurrentTeacher();
         typeListener = new TypeListener();
 
         try {
@@ -105,8 +104,8 @@ public class AccountSettingsGI extends JDialog {
         removeButton = new JButton("Видалити обліковий запис");
         removeButton.setHorizontalAlignment(SwingConstants.CENTER);
         removeButton.addActionListener(e -> {
-            teacherManager.removeTeacher(teacher);
-            IOFileHandling.saveCollection(teacherManager.getTeacherSet());
+            teacherManager.deleteCurrentTeacher();
+            teacherManager.saveTeacherSet();
             dispose();
             frame.dispose();
         });
@@ -139,7 +138,7 @@ public class AccountSettingsGI extends JDialog {
         saveButton.setEnabled(false);
         saveButton.addActionListener(e -> {
             try {
-                teacherManager.updateTeacherInfo(teacher, surnameField.getText(), nameField.getText(),
+                teacherManager.updateCurrentTeacherInfo(surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), telephoneField.getText(), mailField.getText());
 
                 if (isNotPasswordsFieldsEmpty()) {
@@ -147,7 +146,7 @@ public class AccountSettingsGI extends JDialog {
                 }
                 messageLabel.setIcon(null);
                 messageLabel.setText(Message.SAVED);
-                IOFileHandling.saveCollection(teacherManager.getTeacherSet());
+                teacherManager.saveTeacherSet();
                 currentPasswordField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");

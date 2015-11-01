@@ -1,12 +1,11 @@
 package userGI;
 
-import supporting.IOFileHandling;
-import supporting.Message;
 import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
+import supporting.IOFileHandling;
+import supporting.Message;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
-import usersClasses.Teacher;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -111,22 +110,20 @@ public class AuthenticationGI extends JFrame {
         loginButton = new JButton("Вхід");
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
-            Teacher teacher = teacherManager.authorizedTeacher(
-                    ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText(),
-                    passwordField.getPassword());
-            if (teacher == null) {
-                messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(Message.WRONG_USER);
-            } else {
+            String userName = ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText();
+            if (teacherManager.authorizedTeacher(userName, passwordField.getPassword())) {
                 setVisible(false);
                 clearFields();
-                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacher, teacherManager, studentManager);
+                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacherManager, studentManager);
                 showTaskGI.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
                         setVisible(true);
                     }
                 });
+            } else {
+                messageLabel.setIcon(Message.WARNING_IMAGE);
+                messageLabel.setText(Message.WRONG_USER);
             }
         });
     }
