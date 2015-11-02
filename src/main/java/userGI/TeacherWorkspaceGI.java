@@ -1,7 +1,11 @@
 package userGI;
 
+import panelsAndFrames.BoxPanel;
 import panelsAndFrames.MainFrame;
-import supporting.QuestionTableParameters;
+import supporting.IOFileHandling;
+import supporting.TableParameters;
+import testingClasses.TestTask;
+import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -14,17 +18,22 @@ import java.awt.event.MouseEvent;
 
 public class TeacherWorkspaceGI extends MainFrame {
 
+    private JButton addButton;
+    private JButton removeButton;
+    private JButton editButton;
+    private JButton settingsButton;
     private JTable testTaskTable;
-    private QuestionTableParameters testTaskTableParameters;
+    private TableParameters<TestTask> testTaskTableParameters;
 
-    public TeacherWorkspaceGI(TeacherManager teacherManager, StudentManager studentManager) {
-        super("Робоче середовище", teacherManager, studentManager);
-
+    public TeacherWorkspaceGI(TeacherManager teacherManager) {
+        super("Робоче середовище", teacherManager);
+        frameSetup();
     }
 
+    @Override
     public void frameSetup() {
         fillContainer();
-        fillTollsPanel();
+        fillToolsPanel();
         setTabbedItems("Список тестів", "Список студентів");
         addListenerToTabbedList(new SelectionListener());
         setMinimumSize(new Dimension(700, 400));
@@ -33,29 +42,76 @@ public class TeacherWorkspaceGI extends MainFrame {
         setVisible(true);
     }
 
+    @Override
+    public void fillToolsPanel() {
+        prepareAddButton();
+        prepareEditButton();
+        prepareRemoveButton();
+        prepareSetupButton();
+
+        BoxPanel box = new BoxPanel(BoxLayout.Y_AXIS);
+        box.add(new BoxPanel(addButton, editButton, removeButton, settingsButton));
+    }
+
+    @Override
     public void fillContainer() {
-
+        prepareTestTasksTable();
+        addOnContainer(new JScrollPane(testTaskTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 
-    public void fillTollsPanel() {
-
-    }
-
-    public void prepareQuestionsTable() {
-        testTaskTableParameters = new QuestionTableParameters(null);
+    private void prepareTestTasksTable() {
+        testTaskTableParameters = new TableParameters<>(testTaskManager.getTestTaskList());
         testTaskTable = createTable(testTaskTableParameters);
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {
-//            removeButton.setEnabled(true);
-//            editButton.setEnabled(true);
+            removeButton.setEnabled(true);
+            editButton.setEnabled(true);
+            settingsButton.setEnabled(true);
         });
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-//                    editButton.doClick();
+                    editButton.doClick();
                 }
             }
         });
+    }
+
+    private void prepareAddButton() {
+        addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
+        addButton.setToolTipText("Додати");
+        addButton.addActionListener(e -> {
+            new ShowTaskGI(teacherManager);
+            dispose();
+        });
+    }
+
+    private void prepareRemoveButton() {
+        removeButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "remove.png"));
+        removeButton.setToolTipText("Видалити");
+        removeButton.setEnabled(false);
+        removeButton.addActionListener(e -> {
+
+        });
+    }
+
+    private void prepareEditButton() {
+        editButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "edit.png"));
+        editButton.setToolTipText("Редагувати");
+        editButton.setEnabled(false);
+        editButton.addActionListener(e -> {
+            new ShowTaskGI(teacherManager, testTaskTable.getSelectedRow());
+            dispose();
+        });
+    }
+
+    private void prepareSetupButton() {
+        settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
+        settingsButton.setToolTipText("Налаштування тесту");
+        settingsButton.setEnabled(false);
+        settingsButton.addActionListener(e ->
+                new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
 
     public class SelectionListener implements ListSelectionListener {

@@ -11,21 +11,21 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class QuestionTableParameters extends JTextArea implements TableModel, TableCellRenderer {
+public class TableParameters<T> extends JTextArea implements TableModel, TableCellRenderer {
 
     private Set<TableModelListener> listeners = new HashSet<>();
-    private ArrayList<Question> questionList;
+    private ArrayList<T> objectsList;
 
-    public QuestionTableParameters(ArrayList<Question> questionList) {
+    public TableParameters(ArrayList<T> objectsList) {
         super();
         setLineWrap(true);
         setWrapStyleWord(true);
-        this.questionList = questionList;
+        this.objectsList = objectsList;
     }
 
     @Override
     public int getRowCount() {
-        return questionList.size();
+        return objectsList.size();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class QuestionTableParameters extends JTextArea implements TableModel, Ta
         if (columnIndex == 0) {
             return (rowIndex + 1) + ". ";
         }
-        return questionList.get(rowIndex).getTask();
+        return objectsList.get(rowIndex).toString();
     }
 
     @Override

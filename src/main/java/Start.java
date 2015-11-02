@@ -1,6 +1,7 @@
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import testingClasses.TestTaskManager;
 import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
 import usersClasses.*;
@@ -23,22 +24,15 @@ public class Start {
     public static void createShowTaskWindow() {
         TeacherManager teacherManager = new TeacherManager();
         teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
-        StudentManager studentManager = new StudentManager(initStudents());
         try {
-            new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacherManager, studentManager);
+            new ShowTaskGI(teacherManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void crateAuthenticationWindow() {
-        TeacherManager teacherManager = new TeacherManager();
-        StudentManager studentManager = new StudentManager(initStudents());
-        try {
-            new AuthenticationGI(teacherManager, studentManager);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        new AuthenticationGI();
     }
 
     public static void initTestTask() {

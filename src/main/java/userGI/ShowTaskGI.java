@@ -5,9 +5,10 @@ import panelsAndFrames.ImagePanel;
 import panelsAndFrames.MainFrame;
 import supporting.IOFileHandling;
 import supporting.ImageUtils;
-import supporting.QuestionTableParameters;
+import supporting.TableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -35,24 +36,28 @@ public class ShowTaskGI extends MainFrame {
     private JButton settingsButton;
     private JLabel questionsCountLabel;
     private JTable questionsTable;
-    private QuestionTableParameters questionTableParameters;
+    private TableParameters<Question> questionTableParameters;
 
-    public ShowTaskGI(TeacherManager teacherManager, StudentManager studentManager) {
-        super("Створення тесту", teacherManager, studentManager);
+    public ShowTaskGI(TeacherManager teacherManager, int currentTestTaskIndex) {
+        super("Редагування тесту", teacherManager);
+        theTestTask = testTaskManager.getCurrentTest();
+        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
+        testTaskManager.setCurrentTestIndex(currentTestTaskIndex);
+        frameSetup();
+    }
+
+    public ShowTaskGI(TeacherManager teacherManager) {
+        super("Редагування тесту", teacherManager);
+        theTestTask = testTaskManager.getCurrentTest();
+        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
+        frameSetup();
         launchDialog();
-        frameSetup();
     }
 
-    public ShowTaskGI(TestTask theTestTask, TeacherManager teacherManager, StudentManager studentManager) {
-        super("Редагування тесту", teacherManager, studentManager);
-        this.theTestTask = theTestTask;
-        questionsList = theTestTask.getQuestionsList();
-        frameSetup();
-    }
-
+    @Override
     public void frameSetup() {
         fillContainer();
-        fillTollsPanel();
+        fillToolsPanel();
         setTabbedItems("Редагування", "Перегляд");
         addListenerToTabbedList(new SelectionListener());
         setMinimumSize(new Dimension(700, 400));
@@ -61,7 +66,7 @@ public class ShowTaskGI extends MainFrame {
         setVisible(true);
     }
 
-    public void launchDialog() {
+    private void launchDialog() {
         TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
         testTaskNameGI.addWindowListener(new WindowAdapter() {
             @Override
@@ -80,7 +85,8 @@ public class ShowTaskGI extends MainFrame {
         });
     }
 
-    public void fillTollsPanel() {
+    @Override
+    public void fillToolsPanel() {
         prepareAddButton();
         prepareEditButton();
         prepareRemoveButton();
@@ -95,16 +101,17 @@ public class ShowTaskGI extends MainFrame {
         addOnToolsPanel(box, new BoxPanel(completeButton));
     }
 
+    @Override
     public void fillContainer() {
         prepareQuestionsTable();
-        prepareBrowsePanel();
         addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        prepareBrowsePanel();
         addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
-    public void prepareBrowsePanel() {
+    private void prepareBrowsePanel() {
         browsePanel = new JPanel();
         browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
         for (int i = 0; i < questionsList.size(); i++) {
@@ -125,7 +132,7 @@ public class ShowTaskGI extends MainFrame {
         return textArea;
     }
 
-    public JPanel createQuestionPanel(int index, Question theQuestion) {
+    private JPanel createQuestionPanel(int index, Question theQuestion) {
         JPanel questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -145,7 +152,7 @@ public class ShowTaskGI extends MainFrame {
         return questionPanel;
     }
 
-    public void prepareAddButton() {
+    private void prepareAddButton() {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
         addButton.addActionListener(e -> {
@@ -162,7 +169,7 @@ public class ShowTaskGI extends MainFrame {
         });
     }
 
-    public void prepareRemoveButton() {
+    private void prepareRemoveButton() {
         removeButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "remove.png"));
         removeButton.setToolTipText("Видалити");
         removeButton.setEnabled(false);
@@ -172,7 +179,7 @@ public class ShowTaskGI extends MainFrame {
         });
     }
 
-    public void prepareEditButton() {
+    private void prepareEditButton() {
         editButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "edit.png"));
         editButton.setToolTipText("Редагувати");
         editButton.setEnabled(false);
@@ -184,20 +191,21 @@ public class ShowTaskGI extends MainFrame {
                 public void windowClosed(WindowEvent e) {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.set(index, addQuestionGI.getQuestion());
-                        questionTableParameters = new QuestionTableParameters(questionsList);
+                        questionTableParameters = new TableParameters<>(questionsList);
                     }
                 }
             });
         });
     }
 
-    public void prepareSetupButton() {
+    private void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
-        settingsButton.addActionListener(e -> new TestTaskSettingsGI(this, theTestTask, teacherManager, studentManager));
+        settingsButton.addActionListener(e ->
+                new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
 
-    public void prepareCompleteButton() {
+    private void prepareCompleteButton() {
         completeButton = new JButton("Готово");
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
@@ -206,8 +214,8 @@ public class ShowTaskGI extends MainFrame {
         });
     }
 
-    public void prepareQuestionsTable() {
-        questionTableParameters = new QuestionTableParameters(questionsList);
+    private void prepareQuestionsTable() {
+        questionTableParameters = new TableParameters<>(questionsList);
         questionsTable = createTable(questionTableParameters);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(true);
@@ -223,7 +231,7 @@ public class ShowTaskGI extends MainFrame {
         });
     }
 
-    public class SelectionListener implements ListSelectionListener {
+    private class SelectionListener implements ListSelectionListener {
 
         @Override
         public void valueChanged(ListSelectionEvent e) {

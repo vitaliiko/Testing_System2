@@ -7,6 +7,19 @@ import java.util.ArrayList;
 public class TestTaskManager {
 
     private ArrayList<TestTask> testTaskList;
+    private int currentTestIndex;
+
+    public ArrayList<TestTask> getTestTaskList() {
+        return testTaskList;
+    }
+
+    public TestTask getCurrentTest() {
+        return testTaskList.get(currentTestIndex);
+    }
+
+    public void setCurrentTestIndex(int currentTestIndex) {
+        this.currentTestIndex = currentTestIndex;
+    }
 
     public TestTaskManager() {
         testTaskList = IOFileHandling.loadTestTasks();
@@ -14,10 +27,6 @@ public class TestTaskManager {
 
     public TestTask getTest(int index) {
         return testTaskList.get(index);
-    }
-
-    public void setTest(TestTask test, int index) {
-        testTaskList.set(index, test);
     }
 
     public void addTest(TestTask testTask) {

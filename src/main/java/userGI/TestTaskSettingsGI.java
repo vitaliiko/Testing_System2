@@ -2,6 +2,7 @@ package userGI;
 
 import panelsAndFrames.BoxPanel;
 import testingClasses.TestTask;
+import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -40,10 +41,10 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton cancelButton;
     private JButton removeButton;
 
-    public TestTaskSettingsGI(JFrame owner, TestTask testTask, TeacherManager teacherManager,
+    public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
         super(owner, "Налаштування тесту");
-        this.testTask = testTask;
+        this.testTask = testTaskManager.getCurrentTest();
         this.teacherManager = teacherManager;
         this.studentManager = studentManager;
 

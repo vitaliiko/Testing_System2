@@ -96,9 +96,4 @@ public class TeacherManager extends Validator {
         }
         return false;
     }
-
-    public String[] getCurentTeacherFields() {
-        return new String[]{currentTeacher.getSurname(), currentTeacher.getName(),
-                currentTeacher.getSecondName(), currentTeacher.getTelephoneNum(), currentTeacher.getMailAddress()};
-    }
 }

@@ -1,14 +1,21 @@
 package panelsAndFrames;
 
-import supporting.QuestionTableParameters;
+import supporting.TableParameters;
+import testingClasses.TestTaskManager;
 import userGI.AccountSettingsGI;
+import userGI.AuthenticationGI;
+import usersClasses.Student;
 import usersClasses.StudentManager;
+import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class MainFrame extends JFrame {
 
@@ -22,14 +29,43 @@ public abstract class MainFrame extends JFrame {
 
     protected TeacherManager teacherManager;
     protected StudentManager studentManager;
+    protected TestTaskManager testTaskManager;
 
-    public MainFrame(String title, TeacherManager teacherManager,
-                     StudentManager studentManager) throws HeadlessException {
+    public MainFrame(String title, TeacherManager teacherManager) throws HeadlessException {
         super(title);
         this.teacherManager = teacherManager;
-        this.studentManager = studentManager;
+        testTaskManager = new TestTaskManager();
+        studentManager = new StudentManager(initStudents());
         mainFrameSetup();
     }
+
+    public Set<StudentsGroup> initStudents() {
+        Set<StudentsGroup> studentsGroupSet;
+
+        studentsGroupSet = new HashSet<>();
+        studentsGroupSet.add(new StudentsGroup("CGC-1466", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1566", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CGC-1366", "", ""));
+        studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
+        studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
+
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
+        new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1));
+        new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
+        new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
+
+        return studentsGroupSet;
+    }
+
+    public abstract void frameSetup();
+
+    public abstract void fillToolsPanel();
+
+    public abstract void fillContainer();
 
     public void setTabbedItems(String item1, String item2) {
         tabbedItems[0] = item1;
@@ -88,7 +124,7 @@ public abstract class MainFrame extends JFrame {
         });
     }
 
-    public JTable createTable(QuestionTableParameters parameters) {
+    public JTable createTable(TableParameters parameters) {
         JTable table = new JTable(parameters);
         table.setDefaultRenderer(Object.class, parameters);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -119,7 +155,10 @@ public abstract class MainFrame extends JFrame {
 
         JMenuItem logoutItem = new JMenuItem("Вихід");
         logoutItem.setIcon(new ImageIcon("resources/logout.png"));
-        logoutItem.addActionListener(e -> dispose());
+        logoutItem.addActionListener(e -> {
+            new AuthenticationGI();
+            dispose();
+        });
         fileMenu.add(logoutItem);
 
         JMenuItem accountSettingsItem = new JMenuItem("Налаштування облікового запису");

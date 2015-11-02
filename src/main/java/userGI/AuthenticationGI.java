@@ -4,6 +4,7 @@ import panelsAndFrames.BoxPanel;
 import panelsAndFrames.LabelComponentPanel;
 import supporting.IOFileHandling;
 import supporting.Message;
+import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -40,12 +41,10 @@ public class AuthenticationGI extends JFrame {
     private Dimension loginDimension = new Dimension(350, 170);
     private Dimension signUpDimension = new Dimension(400, 270);
     private TeacherManager teacherManager;
-    private StudentManager studentManager;
 
-    public AuthenticationGI(TeacherManager teacherManager, StudentManager studentManager) throws Exception {
+    public AuthenticationGI() {
         super("Вхід");
-        this.teacherManager = teacherManager;
-        this.studentManager = studentManager;
+        teacherManager = new TeacherManager();
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -101,9 +100,6 @@ public class AuthenticationGI extends JFrame {
         teacherNamesBox.setEditable(true);
         ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
                 addDocumentListener(new LoginTypeListener());
-        teacherNamesBox.addItemListener(e -> {
-            String username = (String) teacherNamesBox.getSelectedItem();
-        });
     }
 
     public void prepareLoginButton() {
@@ -113,14 +109,8 @@ public class AuthenticationGI extends JFrame {
             String userName = ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText();
             if (teacherManager.authorizedTeacher(userName, passwordField.getPassword())) {
                 setVisible(false);
-                clearFields();
-                ShowTaskGI showTaskGI = new ShowTaskGI(IOFileHandling.loadTestTask("111"), teacherManager, studentManager);
-                showTaskGI.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosed(WindowEvent e) {
-                        setVisible(true);
-                    }
-                });
+                new TeacherWorkspaceGI(teacherManager);
+                dispose();
             } else {
                 messageLabel.setIcon(Message.WARNING_IMAGE);
                 messageLabel.setText(Message.WRONG_USER);
