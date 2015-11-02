@@ -1,7 +1,6 @@
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
-import testingClasses.TestTaskManager;
 import userGI.AuthenticationGI;
 import userGI.ShowTaskGI;
 import usersClasses.*;
@@ -15,17 +14,17 @@ public class Start {
 
     public static void main(String[] args) {
 
-        initTeacherSet();
-        initTestTask();
-//        createShowTaskWindow();
-        crateAuthenticationWindow();
+//        initTeacherSet();
+//        initTestTask();
+        createShowTaskWindow();
+//        crateAuthenticationWindow();
     }
 
     public static void createShowTaskWindow() {
         TeacherManager teacherManager = new TeacherManager();
         teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
         try {
-            new ShowTaskGI(teacherManager);
+            new ShowTaskGI(teacherManager, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

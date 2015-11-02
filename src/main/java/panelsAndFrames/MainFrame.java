@@ -22,7 +22,7 @@ public abstract class MainFrame extends JFrame {
     protected JList<String> tabbedList;
     private Container container;
     private JPanel toolsPanel;
-    private String[] tabbedItems = new String[2];
+    private String[] tabbedItems;
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu helpMenu;
@@ -67,14 +67,29 @@ public abstract class MainFrame extends JFrame {
 
     public abstract void fillContainer();
 
-    public void setTabbedItems(String item1, String item2) {
-        tabbedItems[0] = item1;
-        tabbedItems[1] = item2;
+    public void setTabbedItems(String... items) {
+        try {
+            if (items.length == container.getComponentCount() || container.getComponentCount() == 0) {
+                tabbedItems = items;
+            } else {
+                throw new Exception("Count of items must be equals count of components in container");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public void addOnContainer(JComponent... components) {
-        for (JComponent component : components) {
-            container.add(component);
+        try {
+            if (components.length == tabbedItems.length || tabbedItems.length == 0) {
+                for (JComponent component : components) {
+                    container.add(component);
+                }
+            } else {
+                throw new Exception("Count of components must be equals count of items");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -131,6 +146,7 @@ public abstract class MainFrame extends JFrame {
         table.setShowHorizontalLines(false);
         table.setShowVerticalLines(false);
         table.setTableHeader(null);
+
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(50);
         columnModel.getColumn(0).setMinWidth(25);

@@ -6,7 +6,9 @@ import supporting.IOFileHandling;
 import supporting.TableParameters;
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;
+import usersClasses.Student;
 import usersClasses.StudentManager;
+import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -15,6 +17,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class TeacherWorkspaceGI extends MainFrame {
 
@@ -23,7 +26,11 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JButton editButton;
     private JButton settingsButton;
     private JTable testTaskTable;
+    private JTable studentsGroupTable;
+    private JTable studentsTable;
     private TableParameters<TestTask> testTaskTableParameters;
+    private TableParameters<StudentsGroup> studentsGroupTableParameters;
+    private TableParameters<Student> studentTableParameters;
 
     public TeacherWorkspaceGI(TeacherManager teacherManager) {
         super("Робоче середовище", teacherManager);
@@ -75,6 +82,15 @@ public class TeacherWorkspaceGI extends MainFrame {
                     editButton.doClick();
                 }
             }
+        });
+    }
+
+    private void prepareStudentsGroupTable() {
+        studentsGroupTableParameters = new TableParameters<>(new ArrayList<>(studentManager.getStudentsGroupSet()));
+        studentsGroupTable = createTable(studentsGroupTableParameters);
+        studentsGroupTable.getSelectionModel().addListSelectionListener(e -> {
+            removeButton.setEnabled(true);
+            settingsButton.setEnabled(true);
         });
     }
 

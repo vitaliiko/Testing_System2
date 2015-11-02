@@ -1,19 +1,14 @@
 package supporting;
 
-import testingClasses.Question;
-
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class TableParameters<T> extends JTextArea implements TableModel, TableCellRenderer {
 
-    private Set<TableModelListener> listeners = new HashSet<>();
     private ArrayList<T> objectsList;
 
     public TableParameters(ArrayList<T> objectsList) {
@@ -57,19 +52,13 @@ public class TableParameters<T> extends JTextArea implements TableModel, TableCe
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
-    }
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {}
 
     @Override
-    public void addTableModelListener(TableModelListener l) {
-        listeners.add(l);
-    }
+    public void addTableModelListener(TableModelListener l) {}
 
     @Override
-    public void removeTableModelListener(TableModelListener l) {
-        listeners.remove(l);
-    }
+    public void removeTableModelListener(TableModelListener l) {}
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

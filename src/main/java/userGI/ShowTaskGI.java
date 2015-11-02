@@ -8,8 +8,6 @@ import supporting.ImageUtils;
 import supporting.TableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
-import testingClasses.TestTaskManager;
-import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -59,7 +57,17 @@ public class ShowTaskGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Редагування", "Перегляд");
-        addListenerToTabbedList(new SelectionListener());
+        addListenerToTabbedList(e -> {
+            if (tabbedList.getSelectedIndex() == 0) {
+                if (questionsTable.getSelectedRow() != -1) {
+                    removeButton.setEnabled(true);
+                    editButton.setEnabled(true);
+                }
+            } else {
+                removeButton.setEnabled(false);
+                editButton.setEnabled(false);
+            }
+        });
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
@@ -191,7 +199,6 @@ public class ShowTaskGI extends MainFrame {
                 public void windowClosed(WindowEvent e) {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.set(index, addQuestionGI.getQuestion());
-                        questionTableParameters = new TableParameters<>(questionsList);
                     }
                 }
             });
@@ -210,7 +217,7 @@ public class ShowTaskGI extends MainFrame {
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
             theTestTask.setQuestionsList(questionsList);
-            IOFileHandling.saveTestTask(theTestTask, theTestTask.getTaskName());
+            testTaskManager.saveTests();
         });
     }
 
@@ -229,21 +236,5 @@ public class ShowTaskGI extends MainFrame {
                 }
             }
         });
-    }
-
-    private class SelectionListener implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-            if (tabbedList.getSelectedIndex() == 0) {
-                if (questionsTable.getSelectedRow() != -1) {
-                    removeButton.setEnabled(true);
-                    editButton.setEnabled(true);
-                }
-            } else {
-                removeButton.setEnabled(false);
-                editButton.setEnabled(false);
-            }
-        }
     }
 }
