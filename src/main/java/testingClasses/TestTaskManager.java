@@ -14,7 +14,7 @@ public class TestTaskManager {
     }
 
     public TestTask getCurrentTest() {
-        return testTaskList.get(currentTestIndex);
+        return currentTestIndex != -1 ? testTaskList.get(currentTestIndex) : null;
     }
 
     public void setCurrentTestIndex(int currentTestIndex) {

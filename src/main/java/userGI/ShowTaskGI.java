@@ -12,8 +12,6 @@ import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,20 +34,17 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private TableParameters<Question> questionTableParameters;
 
-    public ShowTaskGI(TeacherManager teacherManager, int currentTestTaskIndex) {
-        super("Редагування тесту", teacherManager);
-        theTestTask = testTaskManager.getCurrentTest();
-        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
-        testTaskManager.setCurrentTestIndex(currentTestTaskIndex);
-        frameSetup();
-    }
-
     public ShowTaskGI(TeacherManager teacherManager) {
         super("Редагування тесту", teacherManager);
-        theTestTask = testTaskManager.getCurrentTest();
-        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
+
+        System.out.println(testTaskManager.getCurrentTest());
+        if (testTaskManager.getCurrentTest() == null) {
+            launchDialog();
+        } else {
+            theTestTask = testTaskManager.getCurrentTest();
+            questionsList = testTaskManager.getCurrentTest().getQuestionsList();
+        }
         frameSetup();
-        launchDialog();
     }
 
     @Override
@@ -75,20 +70,21 @@ public class ShowTaskGI extends MainFrame {
     }
 
     private void launchDialog() {
-        TestTaskNameGI testTaskNameGI = new TestTaskNameGI(this);
-        testTaskNameGI.addWindowListener(new WindowAdapter() {
+        CreateTestTaskGI createTestTaskGI = new CreateTestTaskGI(this);
+        createTestTaskGI.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.exit(0);
+                new TeacherWorkspaceGI(teacherManager);
+                dispose();
             }
 
             @Override
             public void windowClosed(WindowEvent e) {
-                if (testTaskNameGI.getTestTask() == null) {
-                    System.exit(0);
-                } else {
-                    theTestTask = testTaskNameGI.getTestTask();
+                if (testTaskManager.getCurrentTest() == null) {
+                    new TeacherWorkspaceGI(teacherManager);
+                    dispose();
                 }
+                theTestTask = testTaskManager.getCurrentTest();
             }
         });
     }
@@ -112,10 +108,10 @@ public class ShowTaskGI extends MainFrame {
     @Override
     public void fillContainer() {
         prepareQuestionsTable();
-        addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
         prepareBrowsePanel();
-        addOnContainer(new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+        addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
+                new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 

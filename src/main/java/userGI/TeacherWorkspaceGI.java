@@ -41,7 +41,7 @@ public class TeacherWorkspaceGI extends MainFrame {
     public void frameSetup() {
         fillContainer();
         fillToolsPanel();
-        setTabbedItems("Список тестів", "Список студентів");
+        setTabbedItems("Список тестів", "Список груп студентів");
         addListenerToTabbedList(new SelectionListener());
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
@@ -58,12 +58,17 @@ public class TeacherWorkspaceGI extends MainFrame {
 
         BoxPanel box = new BoxPanel(BoxLayout.Y_AXIS);
         box.add(new BoxPanel(addButton, editButton, removeButton, settingsButton));
+
+        addOnToolsPanel(box, new JButton("Готово"));
     }
 
     @Override
     public void fillContainer() {
         prepareTestTasksTable();
         addOnContainer(new JScrollPane(testTaskTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        prepareStudentsGroupTable();
+        addOnContainer(new JScrollPane(studentsGroupTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 
@@ -74,6 +79,7 @@ public class TeacherWorkspaceGI extends MainFrame {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
             settingsButton.setEnabled(true);
+            testTaskManager.setCurrentTestIndex(testTaskTable.getSelectedRow());
         });
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -98,6 +104,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
         addButton.addActionListener(e -> {
+            testTaskManager.setCurrentTestIndex(-1);
+            System.out.println(testTaskManager.getCurrentTest());
             new ShowTaskGI(teacherManager);
             dispose();
         });
@@ -117,7 +125,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         editButton.setToolTipText("Редагувати");
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
-            new ShowTaskGI(teacherManager, testTaskTable.getSelectedRow());
+            new ShowTaskGI(teacherManager);
             dispose();
         });
     }

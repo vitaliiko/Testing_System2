@@ -22,7 +22,7 @@ public abstract class MainFrame extends JFrame {
     protected JList<String> tabbedList;
     private Container container;
     private JPanel toolsPanel;
-    private String[] tabbedItems;
+    private String[] tabbedItems = new String[2];
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu helpMenu;
@@ -40,16 +40,14 @@ public abstract class MainFrame extends JFrame {
     }
 
     public Set<StudentsGroup> initStudents() {
-        Set<StudentsGroup> studentsGroupSet;
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
 
-        studentsGroupSet = new HashSet<>();
-        studentsGroupSet.add(new StudentsGroup("CGC-1466", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CGC-1566", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CGC-1366", "", ""));
-        studentsGroupSet.add(new StudentsGroup("CG-126", "", ""));
-        studentsGroupSet.add(new StudentsGroup("RV-125", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CG-126", "", ""));
+        studentsGroupsList.add(new StudentsGroup("RV-125", "", ""));
 
-        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>(studentsGroupSet);
         new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
         new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
         new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
@@ -58,7 +56,15 @@ public abstract class MainFrame extends JFrame {
         new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
         new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
 
-        return studentsGroupSet;
+        return new HashSet<>(studentsGroupsList);
+    }
+
+    public TeacherManager getTeacherManager() {
+        return teacherManager;
+    }
+
+    public TestTaskManager getTestTaskManager() {
+        return testTaskManager;
     }
 
     public abstract void frameSetup();
@@ -67,29 +73,14 @@ public abstract class MainFrame extends JFrame {
 
     public abstract void fillContainer();
 
-    public void setTabbedItems(String... items) {
-        try {
-            if (items.length == container.getComponentCount() || container.getComponentCount() == 0) {
-                tabbedItems = items;
-            } else {
-                throw new Exception("Count of items must be equals count of components in container");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    public void setTabbedItems(String item1, String item2) {
+        tabbedItems[0] = item1;
+        tabbedItems[1] = item2;
     }
 
     public void addOnContainer(JComponent... components) {
-        try {
-            if (components.length == tabbedItems.length || tabbedItems.length == 0) {
-                for (JComponent component : components) {
-                    container.add(component);
-                }
-            } else {
-                throw new Exception("Count of components must be equals count of items");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        for (JComponent component : components) {
+            container.add(component);
         }
     }
 

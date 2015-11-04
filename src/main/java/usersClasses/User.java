@@ -101,7 +101,7 @@ public abstract class User implements Serializable, Comparable<User> {
 
     @Override
     public String toString() {
-        return userName;
+        return surname + " " + name.charAt(0) + ". " + secondName.charAt(0) + ".";
     }
 
     @Override

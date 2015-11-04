@@ -93,6 +93,6 @@ public class StudentsGroup implements UserDAO, Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return name + ", Факультет " + faculty + ", Кафедра " + department;
     }
 }

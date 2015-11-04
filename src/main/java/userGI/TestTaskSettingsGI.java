@@ -4,6 +4,7 @@ import panelsAndFrames.BoxPanel;
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
+import usersClasses.Teacher;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -134,6 +135,9 @@ public class TestTaskSettingsGI extends JDialog {
             JCheckBox checkBox = new JCheckBox(o.toString(), markedList.contains(o.toString()));
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
+            if (o instanceof Teacher) {
+                checkBox.setSelected(testTask.getAuthorsList().contains(o.toString()));
+            }
             checkBoxPanel.add(checkBox);
         }
         return checkBoxPanel;

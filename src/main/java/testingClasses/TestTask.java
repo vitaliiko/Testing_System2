@@ -6,6 +6,7 @@ import usersClasses.UserDAO;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class TestTask implements Serializable, UserDAO {
@@ -100,8 +101,8 @@ public class TestTask implements Serializable, UserDAO {
         return authorsList;
     }
 
-    public void setAuthorsList(ArrayList<String> authorsList) {
-        this.authorsList = authorsList;
+    public void setAuthorsList(List<String> authorsList) {
+        this.authorsList = (ArrayList<String>) authorsList;
     }
 
     public ArrayList<Question> getQuestionsList() {
@@ -211,6 +212,15 @@ public class TestTask implements Serializable, UserDAO {
 
     @Override
     public String toString() {
-        return taskName;
+        String authors = "\t";
+        if (attribute != PUBLIC_ATR) {
+            int i = 0;
+            authors += "Автори: ";
+            while (i < 3 && i < authorsList.size()) {
+                authors += authorsList.get(i) + (i == 2 || i == authorsList.size() - 1 ? "" : ", ");
+                i++;
+            }
+        }
+        return taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
     }
 }
