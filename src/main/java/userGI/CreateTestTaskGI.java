@@ -1,8 +1,9 @@
 package userGI;
 
 import panelsAndFrames.MainFrame;
-import supporting.IOFileHandling;
 import testingClasses.TestTask;
+import testingClasses.TestTaskManager;
+import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,20 +19,32 @@ public class CreateTestTaskGI extends JDialog {
     private JButton cancelButton;
     private JTextField taskNameField;
     private JTextField subjectNameField;
-    private MainFrame frame;
 
-    public CreateTestTaskGI(JFrame frame) {
+    private TeacherManager teacherManager;
+    private TestTaskManager testTaskManager;
+    private JFrame frame;
+
+    public CreateTestTaskGI(JFrame frame, TeacherManager teacherManager, TestTaskManager testTaskManager) {
         super(frame);
-        this.frame = (MainFrame) frame;
+
+        this.frame = frame;
+        this.teacherManager = teacherManager;
+        this.testTaskManager = testTaskManager;
+
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException |
                 UnsupportedLookAndFeelException | IllegalAccessException e) {
             e.printStackTrace();
         }
+
+        setupDialog();
+    }
+
+    private void setupDialog() {
         setTitle("Створення тесту");
         setModal(true);
-        setSize(new Dimension(400, 140));
+        setSize(new Dimension(400, 120));
         prepareLabelPanel();
         prepareFieldsPanel();
         prepareButtonPanel();
@@ -40,7 +53,7 @@ public class CreateTestTaskGI extends JDialog {
         setVisible(true);
     }
 
-    public void prepareLabelPanel() {
+    private void prepareLabelPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         Border border = new EmptyBorder(8, 5, 4 ,0);
@@ -58,7 +71,7 @@ public class CreateTestTaskGI extends JDialog {
         getContentPane().add(panel, BorderLayout.WEST);
     }
 
-    public void prepareFieldsPanel() {
+    private void prepareFieldsPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -74,7 +87,7 @@ public class CreateTestTaskGI extends JDialog {
         getContentPane().add(panel, BorderLayout.CENTER);
     }
 
-    public void prepareButtonPanel() {
+    private void prepareButtonPanel() {
         JPanel buttonPanel = new JPanel();
         prepareCompleteButton();
         buttonPanel.add(completeButton);
@@ -83,24 +96,26 @@ public class CreateTestTaskGI extends JDialog {
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    public void prepareCompleteButton() {
+    private void prepareCompleteButton() {
         completeButton = new JButton("Створити");
         completeButton.setEnabled(false);
         completeButton.addActionListener(e -> {
             testTask = new TestTask(taskNameField.getText(), subjectNameField.getText(),
-                    frame.getTeacherManager().getCurrentTeacher().toString());
-            frame.getTestTaskManager().addTest(testTask);
-            frame.getTestTaskManager().setCurrentTestIndex(frame.getTestTaskManager().getTestTaskList().size() - 1);
+                    teacherManager.getCurrentTeacher().toString());
+            testTaskManager.addTest(testTask);
+            testTaskManager.saveTests();
+            frame.dispose();
+            new ShowTaskGI(teacherManager, testTaskManager.getCurrentTestIndex());
             dispose();
         });
     }
 
-    public void prepareCancelButton() {
+    private void prepareCancelButton() {
         cancelButton = new JButton("Відмінити");
-        completeButton.addActionListener(e -> dispose());
+        cancelButton.addActionListener(e -> dispose());
     }
 
-    public class InputListener implements DocumentListener {
+    private class InputListener implements DocumentListener {
         @Override
         public void insertUpdate(DocumentEvent e) {
             if (taskNameField.getText().isEmpty() || subjectNameField.getText().isEmpty()) {

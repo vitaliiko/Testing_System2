@@ -17,7 +17,6 @@ public class TestTask implements Serializable, UserDAO {
 
     private String taskName;
     private String disciplineName;
-    private String creatorName;
     private int attribute;
     private int answersLimit;
     private int questionsLimit;
@@ -33,7 +32,8 @@ public class TestTask implements Serializable, UserDAO {
     public TestTask(String taskName, String disciplineName, String creatorName) {
         this.taskName = taskName;
         this.disciplineName = disciplineName;
-        this.creatorName = creatorName;
+        authorsList = new ArrayList<>();
+        authorsList.add(creatorName);
         attribute = PRIVATE_ATR;
         answersLimit = 5;
         questionsLimit = 30;
@@ -58,11 +58,11 @@ public class TestTask implements Serializable, UserDAO {
     }
 
     public String getCreatorName() {
-        return creatorName;
+        return authorsList.get(0);
     }
 
     public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
+        authorsList.set(0, creatorName);
     }
 
     public int getAttribute() {
@@ -213,14 +213,16 @@ public class TestTask implements Serializable, UserDAO {
     @Override
     public String toString() {
         String authors = "\t";
+
         if (attribute != PUBLIC_ATR) {
+            authors = (authorsList.size() != 1 ? "Автори: " : "Автор: ");
             int i = 0;
-            authors += "Автори: ";
             while (i < 3 && i < authorsList.size()) {
                 authors += authorsList.get(i) + (i == 2 || i == authorsList.size() - 1 ? "" : ", ");
                 i++;
             }
         }
+
         return taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
     }
 }

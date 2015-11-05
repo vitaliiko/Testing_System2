@@ -17,7 +17,7 @@ public class TestTaskManager {
         return currentTestIndex != -1 ? testTaskList.get(currentTestIndex) : null;
     }
 
-    public void setCurrentTestIndex(int currentTestIndex) {
+    public void setCurrentTest(int currentTestIndex) {
         this.currentTestIndex = currentTestIndex;
     }
 
@@ -31,6 +31,7 @@ public class TestTaskManager {
 
     public void addTest(TestTask testTask) {
         testTaskList.add(testTask);
+        currentTestIndex = testTaskList.indexOf(testTask);
     }
 
     public TestTask deleteTest(TestTask testTask) {
@@ -40,5 +41,13 @@ public class TestTaskManager {
 
     public void saveTests() {
         IOFileHandling.saveTestTasks(testTaskList);
+    }
+
+    public int getCurrentTestIndex() {
+        return currentTestIndex;
+    }
+
+    public void setCurrentTestIndex(int currentTestIndex) {
+        this.currentTestIndex = currentTestIndex;
     }
 }

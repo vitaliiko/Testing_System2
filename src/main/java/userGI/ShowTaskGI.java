@@ -34,16 +34,12 @@ public class ShowTaskGI extends MainFrame {
     private JTable questionsTable;
     private TableParameters<Question> questionTableParameters;
 
-    public ShowTaskGI(TeacherManager teacherManager) {
+    public ShowTaskGI(TeacherManager teacherManager, int currentTest) throws HeadlessException {
         super("Редагування тесту", teacherManager);
 
-        System.out.println(testTaskManager.getCurrentTest());
-        if (testTaskManager.getCurrentTest() == null) {
-            launchDialog();
-        } else {
-            theTestTask = testTaskManager.getCurrentTest();
-            questionsList = testTaskManager.getCurrentTest().getQuestionsList();
-        }
+        testTaskManager.setCurrentTest(currentTest);
+        theTestTask = testTaskManager.getCurrentTest();
+        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
         frameSetup();
     }
 
@@ -67,24 +63,13 @@ public class ShowTaskGI extends MainFrame {
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
         setVisible(true);
-    }
 
-    private void launchDialog() {
-        CreateTestTaskGI createTestTaskGI = new CreateTestTaskGI(this);
-        createTestTaskGI.addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 new TeacherWorkspaceGI(teacherManager);
+                System.out.println("closing");
                 dispose();
-            }
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                if (testTaskManager.getCurrentTest() == null) {
-                    new TeacherWorkspaceGI(teacherManager);
-                    dispose();
-                }
-                theTestTask = testTaskManager.getCurrentTest();
             }
         });
     }
@@ -212,8 +197,10 @@ public class ShowTaskGI extends MainFrame {
         completeButton = new JButton("Готово");
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
-            theTestTask.setQuestionsList(questionsList);
+            //theTestTask.setQuestionsList(questionsList);
             testTaskManager.saveTests();
+            new TeacherWorkspaceGI(teacherManager);
+            dispose();
         });
     }
 

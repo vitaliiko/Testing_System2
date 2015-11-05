@@ -13,17 +13,17 @@ public class Start {
     public static void main(String[] args) {
 
 //        initTeacherSet();
-        initTestTask();
+//        initTestTask();
 //        createShowTaskWindow();
-//        crateAuthenticationWindow();
-        createTeacherWorkspace();
+        crateAuthenticationWindow();
+//        createTeacherWorkspace();
     }
 
     public static void createShowTaskWindow() {
         TeacherManager teacherManager = new TeacherManager();
         teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
         try {
-            new ShowTaskGI(teacherManager);
+            //new ShowTaskGI(teacherManager);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +40,16 @@ public class Start {
     }
 
     public static void initTestTask() {
+
+
+        ArrayList<TestTask> testTasks = new ArrayList<>();
+        testTasks.add(createTestObject("111", "222", "333"));
+        testTasks.add(createTestObject("222", "222", "333"));
+        testTasks.add(createTestObject("000", "222", "333"));
+        IOFileHandling.saveTestTasks(testTasks);
+    }
+
+    public static TestTask createTestObject(String... names) {
         ArrayList<String> answersList = new ArrayList<>();
         answersList.add("11111111111111111111111111111111111111111111");
         answersList.add("2222222222222222222222222222222222222222222");
@@ -63,15 +73,11 @@ public class Start {
         authorsList.add("Іванов І. І.");
         authorsList.add("Петров І. І.");
 
-        TestTask testTask = new TestTask("111", "222", "333");
+        TestTask testTask = new TestTask(names[0], names[1], names[2]);
         testTask.setQuestionsList(questions);
         testTask.setAuthorsList(authorsList);
 
-        ArrayList<TestTask> testTasks = new ArrayList<>();
-        testTasks.add(testTask);
-        testTasks.add(testTask);
-        testTasks.add(testTask);
-        IOFileHandling.saveTestTasks(testTasks);
+        return testTask;
     }
 
     public static void initTeacherSet() {

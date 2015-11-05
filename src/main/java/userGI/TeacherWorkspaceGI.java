@@ -5,9 +5,7 @@ import panelsAndFrames.MainFrame;
 import supporting.IOFileHandling;
 import supporting.TableParameters;
 import testingClasses.TestTask;
-import testingClasses.TestTaskManager;
 import usersClasses.Student;
-import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
@@ -17,6 +15,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class TeacherWorkspaceGI extends MainFrame {
@@ -34,6 +34,7 @@ public class TeacherWorkspaceGI extends MainFrame {
 
     public TeacherWorkspaceGI(TeacherManager teacherManager) {
         super("Робоче середовище", teacherManager);
+        System.out.println("Hello!");
         frameSetup();
     }
 
@@ -79,7 +80,7 @@ public class TeacherWorkspaceGI extends MainFrame {
             removeButton.setEnabled(true);
             editButton.setEnabled(true);
             settingsButton.setEnabled(true);
-            testTaskManager.setCurrentTestIndex(testTaskTable.getSelectedRow());
+            testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
         });
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -103,12 +104,7 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void prepareAddButton() {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
-        addButton.addActionListener(e -> {
-            testTaskManager.setCurrentTestIndex(-1);
-            System.out.println(testTaskManager.getCurrentTest());
-            new ShowTaskGI(teacherManager);
-            dispose();
-        });
+        addButton.addActionListener(e -> new CreateTestTaskGI(this, teacherManager, testTaskManager));
     }
 
     private void prepareRemoveButton() {
@@ -125,7 +121,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         editButton.setToolTipText("Редагувати");
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
-            new ShowTaskGI(teacherManager);
+            new ShowTaskGI(teacherManager, testTaskManager.getCurrentTestIndex());
             dispose();
         });
     }
