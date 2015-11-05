@@ -2,7 +2,6 @@ import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
 import userGI.AuthenticationGI;
-import userGI.ShowTaskGI;
 import userGI.TeacherWorkspaceGI;
 import usersClasses.*;
 
@@ -13,7 +12,7 @@ public class Start {
     public static void main(String[] args) {
 
 //        initTeacherSet();
-//        initTestTask();
+        initTestTask();
 //        createShowTaskWindow();
         crateAuthenticationWindow();
 //        createTeacherWorkspace();
@@ -43,9 +42,9 @@ public class Start {
 
 
         ArrayList<TestTask> testTasks = new ArrayList<>();
-        testTasks.add(createTestObject("111", "222", "333"));
-        testTasks.add(createTestObject("222", "222", "333"));
-        testTasks.add(createTestObject("000", "222", "333"));
+        testTasks.add(createTestObject("111", "222"));
+        testTasks.add(createTestObject("222", "222"));
+        testTasks.add(createTestObject("000", "222"));
         IOFileHandling.saveTestTasks(testTasks);
     }
 
@@ -70,12 +69,13 @@ public class Start {
         questions.add(new Question("dfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdfdfdfdf dfdfdfdfdfdfdfdfdf dfdfdfdfdfdf dfdfdfdfdfdf dfdfdf dfdfdf dfdfdf", answersList, rightAnswersList));
 
         List<String> authorsList = new ArrayList<>();
-        authorsList.add("Іванов І. І.");
-        authorsList.add("Петров І. І.");
+        authorsList.add("Іванов Іван Іванович");
+        authorsList.add("Петров Іван Іванович");
 
-        TestTask testTask = new TestTask(names[0], names[1], names[2]);
+        TestTask testTask = new TestTask(names[0], names[1], authorsList.get(0));
         testTask.setQuestionsList(questions);
         testTask.setAuthorsList(authorsList);
+        testTask.setAttribute(TestTask.PRIVATE_ATR);
 
         return testTask;
     }

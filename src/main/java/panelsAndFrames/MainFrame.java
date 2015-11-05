@@ -121,6 +121,7 @@ public abstract class MainFrame extends JFrame {
     private void prepareTabbedList() {
         tabbedList = new JList<>(tabbedItems);
         tabbedList.setFont(new Font("Arial", Font.BOLD, 12));
+        //tabbedList.setSelectedIndex(0);
         tabbedList.addListSelectionListener(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
                 ((CardLayout) container.getLayout()).first(container);

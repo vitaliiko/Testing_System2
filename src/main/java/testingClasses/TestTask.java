@@ -1,6 +1,7 @@
 package testingClasses;
 
 import usersClasses.Student;
+import usersClasses.Teacher;
 import usersClasses.User;
 import usersClasses.UserDAO;
 
@@ -11,9 +12,9 @@ import java.util.Set;
 
 public class TestTask implements Serializable, UserDAO {
 
-    private static final int PUBLIC_ATR = 0;
-    private static final int PRIVATE_ATR = 1;
-    private static final int VIEW_ONLY_ATR = 3;
+    public static final int PUBLIC_ATR = 0;
+    public static final int PRIVATE_ATR = 1;
+    public static final int READ_ONLY_ATR = 2;
 
     private String taskName;
     private String disciplineName;
@@ -32,13 +33,8 @@ public class TestTask implements Serializable, UserDAO {
     public TestTask(String taskName, String disciplineName, String creatorName) {
         this.taskName = taskName;
         this.disciplineName = disciplineName;
-        authorsList = new ArrayList<>();
         authorsList.add(creatorName);
-        attribute = PRIVATE_ATR;
-        answersLimit = 5;
-        questionsLimit = 30;
-        timeLimit = 60;
-        attemptsLimit = 2;
+        setDefaultSettings();
     }
 
     public String getTaskName() {
@@ -143,6 +139,26 @@ public class TestTask implements Serializable, UserDAO {
 
     public void setNotAllowedStudentsList(ArrayList<Student> notAllowedStudentsList) {
         this.notAllowedStudentsList = notAllowedStudentsList;
+    }
+
+    public boolean isAuthor(Teacher teacher) {
+        return authorsList.contains(teacher.getUserName()) || attribute != PRIVATE_ATR;
+    }
+
+    public boolean isCreator(Teacher teacher) {
+        return authorsList.indexOf(teacher.getUserName()) == 0;
+    }
+
+    public boolean canReadOnly(Teacher teacher) {
+        return !authorsList.contains(teacher.getUserName()) && attribute == READ_ONLY_ATR;
+    }
+
+    private void setDefaultSettings() {
+        attribute = PRIVATE_ATR;
+        answersLimit = 5;
+        questionsLimit = 30;
+        timeLimit = 60;
+        attemptsLimit = 2;
     }
 
     public ArrayList<String> createQuestionGroupsNames() {

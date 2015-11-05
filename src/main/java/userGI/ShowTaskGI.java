@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ShowTaskGI extends MainFrame {
 
-    private TestTask theTestTask;
+    private TestTask testTask;
     private ArrayList<Question> questionsList = new ArrayList<>();
 
     private JPanel browsePanel;
@@ -38,7 +38,7 @@ public class ShowTaskGI extends MainFrame {
         super("Редагування тесту", teacherManager);
 
         testTaskManager.setCurrentTest(currentTest);
-        theTestTask = testTaskManager.getCurrentTest();
+        testTask = testTaskManager.getCurrentTest();
         questionsList = testTaskManager.getCurrentTest().getQuestionsList();
         frameSetup();
     }
@@ -48,11 +48,16 @@ public class ShowTaskGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Редагування", "Перегляд");
+        if (testTask.canReadOnly(teacherManager.getCurrentTeacher())) {
+            tabbedList.setSelectedIndex(1);
+            tabbedList.setEnabled(false);
+            addButton.setEnabled(false);
+        }
         addListenerToTabbedList(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
                 if (questionsTable.getSelectedRow() != -1) {
-                    removeButton.setEnabled(true);
-                    editButton.setEnabled(true);
+                    removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
+                    editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentTeacher()));
                 }
             } else {
                 removeButton.setEnabled(false);
@@ -145,7 +150,7 @@ public class ShowTaskGI extends MainFrame {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
         addButton.addActionListener(e -> {
-            AddQuestionGI addQuestionGI = new AddQuestionGI(theTestTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(testTask.getAnswersLimit());
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -174,7 +179,7 @@ public class ShowTaskGI extends MainFrame {
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
             int index = questionsTable.getSelectedRow();
-            AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), theTestTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), testTask.getAnswersLimit());
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -189,6 +194,7 @@ public class ShowTaskGI extends MainFrame {
     private void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
+        settingsButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
         settingsButton.addActionListener(e ->
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
@@ -197,7 +203,7 @@ public class ShowTaskGI extends MainFrame {
         completeButton = new JButton("Готово");
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
-            //theTestTask.setQuestionsList(questionsList);
+            //testTask.setQuestionsList(questionsList);
             testTaskManager.saveTests();
             new TeacherWorkspaceGI(teacherManager);
             dispose();
@@ -208,13 +214,13 @@ public class ShowTaskGI extends MainFrame {
         questionTableParameters = new TableParameters<>(questionsList);
         questionsTable = createTable(questionTableParameters);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
-            removeButton.setEnabled(true);
-            editButton.setEnabled(true);
+            removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
+            editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentTeacher()));
         });
         questionsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2 && editButton.isEnabled()) {
                     editButton.doClick();
                 }
             }

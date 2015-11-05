@@ -77,15 +77,15 @@ public class TeacherWorkspaceGI extends MainFrame {
         testTaskTableParameters = new TableParameters<>(testTaskManager.getTestTaskList());
         testTaskTable = createTable(testTaskTableParameters);
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {
-            removeButton.setEnabled(true);
-            editButton.setEnabled(true);
-            settingsButton.setEnabled(true);
             testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
+            removeButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentTeacher()));
+            editButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentTeacher()));
+            settingsButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentTeacher()));
         });
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2 && editButton.isEnabled()) {
                     editButton.doClick();
                 }
             }
