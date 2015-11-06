@@ -1,7 +1,7 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.ImagePanel;
+import components.BoxPanel;
+import components.ImagePanel;
 import supporting.ImageUtils;
 
 import javax.swing.*;

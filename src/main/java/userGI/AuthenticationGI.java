@@ -1,19 +1,15 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.LabelComponentPanel;
-import supporting.IOFileHandling;
+import components.AutoCompleteComboBox;
+import components.BoxPanel;
+import components.LabelComponentPanel;
 import supporting.Message;
-import testingClasses.TestTaskManager;
-import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -66,7 +62,7 @@ public class AuthenticationGI extends JFrame {
         setVisible(true);
     }
 
-    public void prepareCenterPanel() {
+    private void prepareCenterPanel() {
         centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         prepareLoginPanel();
@@ -75,7 +71,7 @@ public class AuthenticationGI extends JFrame {
         centerPanel.add(signUpPanel);
     }
 
-    public void prepareLoginPanel() {
+    private void prepareLoginPanel() {
         loginPanel = new JPanel();
         loginPanel.setLayout(new BorderLayout());
         JPanel fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
@@ -94,15 +90,15 @@ public class AuthenticationGI extends JFrame {
         loginPanel.add(new BoxPanel(loginButton, createNewButton), BorderLayout.SOUTH);
     }
 
-    public void prepareUsernameBox() {
-        teacherNamesBox = new JComboBox<>(teacherManager.getTeachersNamesList().toArray());
+    private void prepareUsernameBox() {
+        teacherNamesBox = new AutoCompleteComboBox<>(teacherManager.getTeachersNamesList().toArray());
         teacherNamesBox.setSelectedIndex(-1);
         teacherNamesBox.setEditable(true);
         ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
                 addDocumentListener(new LoginTypeListener());
     }
 
-    public void prepareLoginButton() {
+    private void prepareLoginButton() {
         loginButton = new JButton("Вхід");
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
@@ -118,7 +114,7 @@ public class AuthenticationGI extends JFrame {
         });
     }
 
-    public void prepareCreateNewButton() {
+    private void prepareCreateNewButton() {
         createNewButton = new JButton("Новий обліковий запис");
         createNewButton.addActionListener(e -> {
             loginPanel.setVisible(false);
@@ -131,7 +127,7 @@ public class AuthenticationGI extends JFrame {
         });
     }
 
-    public void prepareSighUpPanel() {
+    private void prepareSighUpPanel() {
         signUpPanel = new JPanel();
         signUpPanel.setLayout(new BorderLayout());
         signUpPanel.setVisible(false);
@@ -147,7 +143,7 @@ public class AuthenticationGI extends JFrame {
         signUpPanel.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
-    public void prepareFieldsPanel() {
+    private void prepareFieldsPanel() {
         fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
         SignUpTypeListener signUpTypeListener = new SignUpTypeListener();
 
@@ -172,7 +168,7 @@ public class AuthenticationGI extends JFrame {
         fieldsPanel.add(new LabelComponentPanel("Повторіть пароль: ", secondPasswordField));
     }
 
-    public void prepareSignUpButton() {
+    private void prepareSignUpButton() {
         signUpButton = new JButton("Зареєструватися");
         signUpButton.setEnabled(false);
         signUpButton.addActionListener(e -> {
@@ -199,7 +195,7 @@ public class AuthenticationGI extends JFrame {
         });
     }
 
-    public void prepareCancelButton() {
+    private void prepareCancelButton() {
         cancelButton = new JButton("Відмінити");
         cancelButton.addActionListener(e -> {
             signUpPanel.setVisible(false);
@@ -212,7 +208,7 @@ public class AuthenticationGI extends JFrame {
         });
     }
 
-    public void clearFields() {
+    private void clearFields() {
         nameField.setText("");
         surnameField.setText("");
         secondNameField.setText("");
@@ -223,7 +219,7 @@ public class AuthenticationGI extends JFrame {
         passwordField.setEnabled(true);
     }
 
-    public class SignUpTypeListener implements DocumentListener {
+    private class SignUpTypeListener implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {

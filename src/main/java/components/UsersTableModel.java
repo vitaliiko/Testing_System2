@@ -1,10 +1,4 @@
-package panelsAndFrames;
-
-import usersClasses.StudentManager;
-
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
-import java.util.ArrayList;
+package components;
 
 //public class UsersTableModel implements TableModel {
 

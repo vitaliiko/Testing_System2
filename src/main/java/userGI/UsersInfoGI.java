@@ -2,18 +2,7 @@ package userGI;
 
 
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.UserInfoPanel;
-import supporting.Message;
-import usersClasses.User;
-
 import javax.swing.*;
-import javax.swing.table.TableModel;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class UsersInfoGI extends JFrame {
 

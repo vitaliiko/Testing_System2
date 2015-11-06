@@ -1,8 +1,7 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import supporting.IOFileHandling;
-import panelsAndFrames.AnswerBoxPanel;
+import components.BoxPanel;
+import components.AnswerBoxPanel;
 import supporting.ImageUtils;
 import testingClasses.Question;
 

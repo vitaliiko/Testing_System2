@@ -1,7 +1,7 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.LabelComponentPanel;
+import components.BoxPanel;
+import components.LabelComponentPanel;
 import supporting.Message;
 import usersClasses.Teacher;
 import usersClasses.TeacherManager;

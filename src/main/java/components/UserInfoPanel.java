@@ -1,4 +1,4 @@
-package panelsAndFrames;
+package components;
 
 import usersClasses.User;
 

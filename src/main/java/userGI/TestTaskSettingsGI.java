@@ -1,6 +1,6 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
+import components.BoxPanel;
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;

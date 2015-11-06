@@ -1,7 +1,7 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.MainFrame;
+import components.BoxPanel;
+import components.MainFrame;
 import supporting.IOFileHandling;
 import supporting.TableParameters;
 import testingClasses.TestTask;
@@ -15,8 +15,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 
 public class TeacherWorkspaceGI extends MainFrame {

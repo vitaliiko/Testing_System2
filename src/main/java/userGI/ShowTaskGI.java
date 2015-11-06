@@ -1,8 +1,8 @@
 package userGI;
 
-import panelsAndFrames.BoxPanel;
-import panelsAndFrames.ImagePanel;
-import panelsAndFrames.MainFrame;
+import components.BoxPanel;
+import components.ImagePanel;
+import components.MainFrame;
 import supporting.IOFileHandling;
 import supporting.ImageUtils;
 import supporting.TableParameters;
