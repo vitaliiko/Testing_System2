@@ -14,8 +14,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public abstract class MainFrame extends JFrame {
 
@@ -56,7 +56,7 @@ public abstract class MainFrame extends JFrame {
         new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
         new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
 
-        return new HashSet<>(studentsGroupsList);
+        return new TreeSet<>(studentsGroupsList);
     }
 
     public TeacherManager getTeacherManager() {

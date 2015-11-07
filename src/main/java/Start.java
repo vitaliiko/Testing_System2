@@ -14,8 +14,8 @@ public class Start {
 //        initTeacherSet();
         initTestTask();
 //        createShowTaskWindow();
-        crateAuthenticationWindow();
-//        createTeacherWorkspace();
+//        crateAuthenticationWindow();
+        createTeacherWorkspace();
     }
 
     public static void createShowTaskWindow() {
