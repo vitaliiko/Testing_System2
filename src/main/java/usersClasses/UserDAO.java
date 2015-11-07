@@ -2,17 +2,15 @@ package usersClasses;
 
 import java.util.Set;
 
-public interface UserDAO {
+public interface UserDAO<T> {
 
-    <T extends User> Set<T> getAllUsers();
+    Set<T> getAllUsers();
 
-    User getUser(int index);
+    T getUser(int index);
 
-    void updateUser(User user);
+    void updateUser(T user);
 
-    void deleteUser(User user);
+    void deleteUser(T user);
 
-    int addUser(User user);
-
-    int getUserIndex(User user);
+    void addUser(T user);
 }
