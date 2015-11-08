@@ -1,4 +1,4 @@
-package userGI;
+package teacherGI;
 
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;

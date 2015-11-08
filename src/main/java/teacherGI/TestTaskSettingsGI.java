@@ -1,4 +1,4 @@
-package userGI;
+package teacherGI;
 
 import components.BoxPanel;
 import testingClasses.TestTask;
