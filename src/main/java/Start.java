@@ -1,8 +1,8 @@
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
-import userGI.AuthenticationGI;
-import userGI.TeacherWorkspaceGI;
+import teacherGI.TeacherAuthGI;
+import teacherGI.TeacherWorkspaceGI;
 import usersClasses.*;
 
 import java.util.*;
@@ -12,11 +12,34 @@ public class Start {
     public static void main(String[] args) {
 
 //        initTeacherSet();
-        initTestTask();
+//        initTestTask();
 //        createShowTaskWindow();
 //        crateAuthenticationWindow();
-        createTeacherWorkspace();
+//        createTeacherWorkspace();
+
+        initStudents();
     }
+
+    public static void initStudents() {
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
+
+        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CG-126", "", ""));
+        studentsGroupsList.add(new StudentsGroup("RV-125", "", ""));
+
+        new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0));
+        new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1));
+        new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
+        new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
+
+        IOFileHandling.saveStuentsGroupSet(new TreeSet<>(studentsGroupsList));
+    }
+
 
     public static void createShowTaskWindow() {
         TeacherManager teacherManager = new TeacherManager();
@@ -35,12 +58,10 @@ public class Start {
     }
 
     public static void crateAuthenticationWindow() {
-        new AuthenticationGI();
+        new TeacherAuthGI();
     }
 
     public static void initTestTask() {
-
-
         ArrayList<TestTask> testTasks = new ArrayList<>();
         testTasks.add(createTestObject("111", "222"));
         testTasks.add(createTestObject("222", "222"));

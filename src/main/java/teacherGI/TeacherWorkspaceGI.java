@@ -131,7 +131,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
 
-    public class SelectionListener implements ListSelectionListener {
+    private class SelectionListener implements ListSelectionListener {
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
