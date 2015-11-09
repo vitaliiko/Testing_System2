@@ -76,7 +76,7 @@ public class TeacherAuthGI extends JFrame {
         JPanel fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         prepareUsernameBox();
-        fieldsPanel.add(new LabelComponentPanel("ПІП: ", teacherNamesBox), BorderLayout.EAST);
+        fieldsPanel.add(new LabelComponentPanel("ПІП: ", teacherNamesBox));
 
         passwordField = new JPasswordField(COLUMNS_COUNT);
         passwordField.getDocument().addDocumentListener(new LoginTypeListener());

@@ -40,10 +40,12 @@ public class StudentManager extends Validator {
     }
 
     public boolean authorizedStudent(String userName, char[] password, StudentsGroup studentsGroup) {
-        for (Student student : studentsGroup.getAllUsers()) {
-            if (student.isMatches(userName, password)) {
-                currentStudent = student;
-                return true;
+        if (studentsGroup != null) {
+            for (Student student : studentsGroup.getAllUsers()) {
+                if (student.isMatches(userName, password)) {
+                    currentStudent = student;
+                    return true;
+                }
             }
         }
         return false;

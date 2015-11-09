@@ -1,3 +1,4 @@
+import studentGI.StudentAuthGI;
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
@@ -15,8 +16,9 @@ public class Start {
 //        initTestTask();
 //        initStudents();
 //        createShowTaskWindow();
-        crateAuthenticationWindow();
+//        crateAuthenticationWindow();
 //        createTeacherWorkspace();
+        createStudentAuthGI();
 
     }
 
@@ -114,5 +116,9 @@ public class Start {
         teacherSet.add(new Teacher("Лук\'яненко", "Іван", "Іванович", "5"));
         teacherSet.add(new Teacher("Мироненко", "Іван", "Іванович", new char[]{'5', '4', '3', '2', '1'}));
         IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
+    }
+
+    public static void createStudentAuthGI() {
+        new StudentAuthGI();
     }
 }

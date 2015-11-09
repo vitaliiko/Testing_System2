@@ -21,8 +21,8 @@ public class StudentAuthGI extends JFrame {
     private JPanel loginPanel;
     private JPanel signUpPanel;
     private JPanel fieldsPanel;
-    private JComboBox<Object> teacherNamesBox;
     private JComboBox<Object> groupsBox;
+    private JTextField nameField;
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton cancelButton;
@@ -31,10 +31,16 @@ public class StudentAuthGI extends JFrame {
     private StudentManager studentManager;
 
     public StudentAuthGI() throws HeadlessException {
-        super("����");
+        super("Вхід");
         studentManager = new StudentManager();
 
         FrameUtils.setLookAndFill();
+
+        prepareLoginPanel();
+        getContentPane().add(loginPanel, BorderLayout.CENTER);
+        messageLabel = Message.prepareMessageLabel(Message.LOGIN);
+        getContentPane().add(messageLabel, BorderLayout.NORTH);
+        setupFrame();
     }
 
     private void setupFrame() {
@@ -50,17 +56,22 @@ public class StudentAuthGI extends JFrame {
         loginPanel = new JPanel(new BorderLayout());
         JPanel fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
-        prepareUsernameBox();
-        fieldsPanel.add(new LabelComponentPanel("ϲ�: ", teacherNamesBox), BorderLayout.EAST);
+        prepareGroupsBox();
+        fieldsPanel.add(new LabelComponentPanel("Група: ", groupsBox));
+
+        nameField = new JTextField(COLUMNS_COUNT);
+        nameField.getDocument().addDocumentListener(new LoginTypeListener());
+        fieldsPanel.add(new LabelComponentPanel("ПІП: ", nameField));
 
         passwordField = new JPasswordField(COLUMNS_COUNT);
         passwordField.getDocument().addDocumentListener(new LoginTypeListener());
-        fieldsPanel.add(new LabelComponentPanel("������: ", passwordField));
+        fieldsPanel.add(new LabelComponentPanel("Пароль: ", passwordField));
 
         loginPanel.add(fieldsPanel, BorderLayout.EAST);
 
         prepareLoginButton();
-        loginPanel.add(new BoxPanel(loginButton), BorderLayout.SOUTH);
+        prepareCancelButton();
+        loginPanel.add(new BoxPanel(loginButton, cancelButton), BorderLayout.SOUTH);
     }
 
     private void prepareGroupsBox() {
@@ -69,50 +80,40 @@ public class StudentAuthGI extends JFrame {
         groupsBox.setEditable(true);
         ((JTextField) groupsBox.getEditor().getEditorComponent()).getDocument().
                 addDocumentListener(new LoginTypeListener());
-        groupsBox.addItemListener(e -> {
-            StudentsGroup studentsGroup = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
-            if (studentsGroup != null) {
-                teacherNamesBox.removeAll();
-                studentsGroup.getAllUsers().forEach(teacherNamesBox::addItem);
-                teacherNamesBox.setEnabled(true);
-            } else {
-                teacherNamesBox.setEnabled(false);
-            }
-        });
-    }
 
-    private void prepareUsernameBox() {
-        teacherNamesBox = new AutoCompleteComboBox<>(new String[]{""});
-        teacherNamesBox.setEnabled(false);
-        teacherNamesBox.setSelectedIndex(-1);
-        teacherNamesBox.setEditable(true);
-        ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
-                addDocumentListener(new LoginTypeListener());
     }
 
     private void prepareLoginButton() {
-        loginButton = new JButton("����");
+        loginButton = new JButton("Вхід");
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
-            String userName = ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText();
-            if (studentManager.authorizedStudent(userName, passwordField.getPassword(),
-                    studentManager.getStudentGroup((String) groupsBox.getSelectedItem()))) {
-                setVisible(false);
-                new StudentWorkspaceGI(studentManager);
-                dispose();
+            StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
+            if (group != null) {
+                if (studentManager.authorizedStudent(nameField.getText(), passwordField.getPassword(), group)) {
+                    setVisible(false);
+                    new StudentWorkspaceGI(studentManager);
+                    dispose();
+                } else {
+                    messageLabel.setIcon(Message.WARNING_IMAGE);
+                    messageLabel.setText(Message.WRONG_USER);
+                }
             } else {
                 messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(Message.WRONG_USER);
+                messageLabel.setText(Message.WRONG_GROUP);
             }
         });
     }
 
-    public class LoginTypeListener implements DocumentListener {
+    private void prepareCancelButton() {
+        cancelButton = new JButton("Відмінити");
+        cancelButton.addActionListener(e -> dispose());
+    }
+
+    private class LoginTypeListener implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            loginButton.setEnabled(passwordField.getPassword().length != 0 &&
-                    teacherNamesBox.getSelectedItem() != null);
+            loginButton.setEnabled(groupsBox.getSelectedItem() != null && !nameField.getText().isEmpty());
         }
 
         @Override
