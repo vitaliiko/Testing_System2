@@ -1,9 +1,9 @@
-package userGI;
+package teacherGI;
 
 import components.BoxPanel;
 import components.MainFrame;
 import supporting.IOFileHandling;
-import supporting.TableParameters;
+import components.TableParameters;
 import testingClasses.TestTask;
 import usersClasses.Student;
 import usersClasses.StudentsGroup;
@@ -32,7 +32,6 @@ public class TeacherWorkspaceGI extends MainFrame {
 
     public TeacherWorkspaceGI(TeacherManager teacherManager) {
         super("Робоче середовище", teacherManager);
-        System.out.println("Hello!");
         frameSetup();
     }
 
@@ -132,7 +131,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
 
-    public class SelectionListener implements ListSelectionListener {
+    private class SelectionListener implements ListSelectionListener {
 
         @Override
         public void valueChanged(ListSelectionEvent e) {

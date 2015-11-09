@@ -3,10 +3,9 @@ package usersClasses;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-public class StudentsGroup implements UserDAO, Serializable {
+public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable<StudentsGroup> {
 
     private String name;
     private String faculty;
@@ -44,36 +43,33 @@ public class StudentsGroup implements UserDAO, Serializable {
     }
 
     @Override
-    public <T extends User> Set<T> getAllUsers() {
-        return (Set<T>) studentsSet;
-    }
-
-    @Override
     public Student getUser(int index) {
         return new ArrayList<>(studentsSet).get(index);
     }
 
     @Override
-    public void updateUser(User user) {
+    public Set<Student> getAllUsers() {
+        return studentsSet;
+    }
+
+    @Override
+    public void updateUser(Student user) {
 
     }
 
     @Override
-    public void deleteUser(User user) {
-        Student student = (Student) user;
-        studentsSet.remove(student);
+    public void deleteUser(Student user) {
+        studentsSet.remove(user);
     }
 
     @Override
-    public int addUser(User user) {
-        studentsSet.add((Student) user);
-        return new ArrayList<>(studentsSet).indexOf(user);
+    public void addUser(Student user) {
+        studentsSet.add(user);
     }
 
     @Override
-    public int getUserIndex(User user) {
-        Student student = (Student) user;
-        return new ArrayList<>(studentsSet).indexOf(student);
+    public int compareTo(StudentsGroup o) {
+        return name.compareTo(o.getName());
     }
 
     @Override

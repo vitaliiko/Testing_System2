@@ -1,21 +1,15 @@
 package components;
 
-import supporting.TableParameters;
+import teacherGI.AccountSettingsGI;
+import teacherGI.TeacherAuthGI;
 import testingClasses.TestTaskManager;
-import userGI.AccountSettingsGI;
-import userGI.AuthenticationGI;
-import usersClasses.Student;
 import usersClasses.StudentManager;
-import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public abstract class MainFrame extends JFrame {
 
@@ -35,28 +29,16 @@ public abstract class MainFrame extends JFrame {
         super(title);
         this.teacherManager = teacherManager;
         testTaskManager = new TestTaskManager();
-        studentManager = new StudentManager(initStudents());
+        studentManager = new StudentManager();
         mainFrameSetup();
     }
 
-    public Set<StudentsGroup> initStudents() {
-        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
-
-        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CG-126", "", ""));
-        studentsGroupsList.add(new StudentsGroup("RV-125", "", ""));
-
-        new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1));
-        new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
-        new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
-
-        return new HashSet<>(studentsGroupsList);
+    public MainFrame(String title, StudentManager studentManager) throws HeadlessException {
+        super(title);
+        this.studentManager = studentManager;
+        testTaskManager = new TestTaskManager();
+        teacherManager = new TeacherManager();
+        mainFrameSetup();
     }
 
     public TeacherManager getTeacherManager() {
@@ -90,12 +72,7 @@ public abstract class MainFrame extends JFrame {
     }
 
     private void mainFrameSetup() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException |
-                UnsupportedLookAndFeelException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        FrameUtils.setLookAndFill();
         prepareMenuBar();
         setJMenuBar(menuBar);
         prepareContainer();
@@ -164,7 +141,7 @@ public abstract class MainFrame extends JFrame {
         JMenuItem logoutItem = new JMenuItem("Вихід");
         logoutItem.setIcon(new ImageIcon("resources/logout.png"));
         logoutItem.addActionListener(e -> {
-            new AuthenticationGI();
+            new TeacherAuthGI();
             dispose();
         });
         fileMenu.add(logoutItem);
