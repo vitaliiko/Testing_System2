@@ -5,7 +5,6 @@ import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
 import supporting.Message;
-import teacherGI.TeacherWorkspaceGI;
 import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;
 
@@ -19,8 +18,6 @@ public class StudentAuthGI extends JFrame {
     private static final int COLUMNS_COUNT = 35;
 
     private JPanel loginPanel;
-    private JPanel signUpPanel;
-    private JPanel fieldsPanel;
     private JComboBox<Object> groupsBox;
     private JTextField nameField;
     private JPasswordField passwordField;
@@ -89,7 +86,7 @@ public class StudentAuthGI extends JFrame {
         loginButton.addActionListener(e -> {
             StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
             if (group != null) {
-                if (studentManager.authorizedStudent(nameField.getText(), passwordField.getPassword(), group)) {
+                if (studentManager.authorizeUser(nameField.getText(), passwordField.getPassword(), group)) {
                     setVisible(false);
                     new StudentWorkspaceGI(studentManager);
                     dispose();

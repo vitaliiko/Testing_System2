@@ -48,7 +48,7 @@ public class ShowTaskGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Редагування", "Перегляд");
-        if (testTask.canReadOnly(teacherManager.getCurrentTeacher())) {
+        if (testTask.canReadOnly(teacherManager.getCurrentUser())) {
             tabbedList.setSelectedIndex(1);
             tabbedList.setEnabled(false);
             addButton.setEnabled(false);
@@ -56,8 +56,8 @@ public class ShowTaskGI extends MainFrame {
         addListenerToTabbedList(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
                 if (questionsTable.getSelectedRow() != -1) {
-                    removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
-                    editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentTeacher()));
+                    removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
+                    editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentUser()));
                 }
             } else {
                 removeButton.setEnabled(false);
@@ -193,7 +193,7 @@ public class ShowTaskGI extends MainFrame {
     private void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
-        settingsButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
+        settingsButton.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
         settingsButton.addActionListener(e ->
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }
@@ -213,8 +213,8 @@ public class ShowTaskGI extends MainFrame {
         questionTableParameters = new TableParameters<>(questionsList);
         questionsTable = createTable(questionTableParameters);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
-            removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentTeacher()));
-            editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentTeacher()));
+            removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
+            editButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentUser()));
         });
         questionsTable.addMouseListener(new MouseAdapter() {
             @Override

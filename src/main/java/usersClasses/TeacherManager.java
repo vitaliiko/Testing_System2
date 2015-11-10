@@ -5,10 +5,11 @@ import supporting.Message;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TeacherManager extends Validator {
+public class TeacherManager extends Validator implements Manager<Teacher> {
 
     private Set<Teacher> teacherSet;
     private ArrayList<String> teachersNamesList;
@@ -20,39 +21,44 @@ public class TeacherManager extends Validator {
                 this.teacherSet.stream().map(Teacher::getUserName).collect(Collectors.toList()));
     }
 
-    public Set<Teacher> getTeacherSet() {
+    @Override
+    public Set<Teacher> getUserSet() {
         return teacherSet;
     }
 
-    public ArrayList<String> getTeachersNamesList() {
+    @Override
+    public List<String> getUsersNameList() {
         return teachersNamesList;
     }
 
-    public Teacher getCurrentTeacher() {
+    @Override
+    public Teacher getCurrentUser() {
         return currentTeacher;
     }
 
-    public void saveTeacherSet() {
+    @Override
+    public void saveUserSet() {
         IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
     }
 
-    public void createTeacher(String surname, String name, String secondName, char[] password)
-            throws IOException {
+    @Override
+    public void createUser(String surname, String name, String secondName, char[] password) throws IOException {
         validateName(surname, name, secondName);
         validatePassword(password);
         if (!teacherSet.add(new Teacher(surname, name, secondName, password))) {
             throw new IOException(Message.EXIST_USER);
         }
-        IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
+        saveUserSet();
     }
 
-    public void updateCurrentTeacherInfo(String surname, String name, String secondName, String telephone, String mail)
+    @Override
+    public void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
             throws IOException {
         validateName(name, surname, secondName);
 
         String userName = surname + " " + name + " " + secondName;
         if (!currentTeacher.getUserName().equals(userName)) {
-            checkUserName(userName);
+            checkUsername(userName);
         }
 
         currentTeacher.setName(name);
@@ -70,24 +76,29 @@ public class TeacherManager extends Validator {
         }
     }
 
-    public void checkUserName(String userName) throws IOException {
+    @Override
+    public boolean checkUsername(String username) throws IOException {
         for (Teacher teacher : teacherSet) {
-            if (teacher.getUserName().equals(userName)) {
+            if (teacher.getUserName().equals(username)) {
                 throw new IOException(Message.EXIST_USER);
             }
         }
+        return true;
     }
 
-    public void deleteTeacher(Teacher teacher) {
-        teacherSet.remove(teacher);
+    @Override
+    public void deleteUser(Teacher user) {
+        teacherSet.remove(user);
     }
 
-    public void deleteCurrentTeacher() {
+    @Override
+    public void deleteCurrentUser() {
         teacherSet.remove(currentTeacher);
         currentTeacher = null;
     }
 
-    public boolean authorizedTeacher(String userName, char[] password) {
+    @Override
+    public boolean authorizeUser(String userName, char[] password) {
         for (Teacher teacher : teacherSet) {
             if (teacher.isMatches(userName, password)) {
                 currentTeacher = teacher;

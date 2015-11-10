@@ -1,8 +1,8 @@
 package components;
 
-import teacherGI.AccountSettingsGI;
 import teacherGI.TeacherAuthGI;
 import testingClasses.TestTaskManager;
+import usersClasses.Student;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -148,7 +148,13 @@ public abstract class MainFrame extends JFrame {
 
         JMenuItem accountSettingsItem = new JMenuItem("Налаштування облікового запису");
         accountSettingsItem.setIcon(new ImageIcon("resources/account.png"));
-        accountSettingsItem.addActionListener(e -> new AccountSettingsGI(this, teacherManager));
+        accountSettingsItem.addActionListener(e -> {
+            if (teacherManager.getCurrentUser() == null) {
+                new AccountSettingsGI<>(this, studentManager);
+            } else {
+                new AccountSettingsGI<>(this, teacherManager);
+            }
+        });
         fileMenu.add(accountSettingsItem);
 
         fileMenu.addSeparator();

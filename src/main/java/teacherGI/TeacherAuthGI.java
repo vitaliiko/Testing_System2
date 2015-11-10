@@ -90,7 +90,7 @@ public class TeacherAuthGI extends JFrame {
     }
 
     private void prepareUsernameBox() {
-        teacherNamesBox = new AutoCompleteComboBox<>(teacherManager.getTeachersNamesList().toArray());
+        teacherNamesBox = new AutoCompleteComboBox<>(teacherManager.getUsersNameList().toArray());
         teacherNamesBox.setSelectedIndex(-1);
         teacherNamesBox.setEditable(true);
         ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
@@ -102,7 +102,7 @@ public class TeacherAuthGI extends JFrame {
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
             String userName = ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getText();
-            if (teacherManager.authorizedTeacher(userName, passwordField.getPassword())) {
+            if (teacherManager.authorizeUser(userName, passwordField.getPassword())) {
                 setVisible(false);
                 new TeacherWorkspaceGI(teacherManager);
                 dispose();
@@ -171,7 +171,7 @@ public class TeacherAuthGI extends JFrame {
         signUpButton.addActionListener(e -> {
             try {
                 if (Arrays.equals(firstPasswordField.getPassword(), secondPasswordField.getPassword())) {
-                    teacherManager.createTeacher(surnameField.getText(), nameField.getText(), secondNameField.getText(),
+                    teacherManager.createUser(surnameField.getText(), nameField.getText(), secondNameField.getText(),
                             firstPasswordField.getPassword());
                 } else {
                     throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);

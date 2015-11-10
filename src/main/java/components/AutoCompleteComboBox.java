@@ -19,12 +19,16 @@ public class AutoCompleteComboBox<E> extends JComboBox<E> {
 
     @Override
     public void setSelectedIndex(int index) {
-        super.setSelectedIndex(index);
+        try {
+            super.setSelectedIndex(index);
 
-        if (getItemAt(index) != null) {
-            inputField.setText(getItemAt(index).toString());
-            inputField.setSelectionEnd(caretPos + inputField.getText().length());
-            inputField.moveCaretPosition(caretPos);
+            if (getItemAt(index) != null) {
+                inputField.setText(getItemAt(index).toString());
+                inputField.setSelectionEnd(caretPos + inputField.getText().length());
+                inputField.moveCaretPosition(caretPos);
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 

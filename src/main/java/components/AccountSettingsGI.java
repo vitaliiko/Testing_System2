@@ -1,10 +1,7 @@
-package teacherGI;
+package components;
 
-import components.BoxPanel;
-import components.LabelComponentPanel;
 import supporting.Message;
-import usersClasses.Teacher;
-import usersClasses.TeacherManager;
+import usersClasses.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,12 +11,12 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class AccountSettingsGI extends JDialog {
+public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDialog {
 
     private static final int COLUMNS_COUNT = 26;
 
-    private Teacher teacher;
-    private TeacherManager teacherManager;
+    private U user;
+    private M manager;
     private JFrame frame;
 
     private JPanel fieldsPanel;
@@ -36,21 +33,18 @@ public class AccountSettingsGI extends JDialog {
     private JButton cancelButton;
     private JButton removeButton;
     private JLabel messageLabel;
+    private JLabel passwordLabel;
     private TypeListener typeListener;
 
-    public AccountSettingsGI(Frame frame, TeacherManager teacherManager) {
+    public AccountSettingsGI(JFrame frame, M manager) {
         super(frame, "Налаштування облікового запису");
-        this.frame = (JFrame) frame;
-        this.teacherManager = teacherManager;
-        teacher = teacherManager.getCurrentTeacher();
+        this.frame = frame;
+        this.manager = manager;
+        user = manager.getCurrentUser();
+
         typeListener = new TypeListener();
 
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException |
-                UnsupportedLookAndFeelException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
+        FrameUtils.setLookAndFill();
 
         messageLabel = Message.prepareMessageLabel(Message.SETTINGS);
         getContentPane().add(messageLabel, BorderLayout.NORTH);
@@ -61,6 +55,10 @@ public class AccountSettingsGI extends JDialog {
         prepareCancelButton();
         getContentPane().add(new BoxPanel(saveButton, cancelButton), BorderLayout.SOUTH);
 
+        dialogSetup();
+    }
+
+    private void dialogSetup() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 430));
         setIconImage(new ImageIcon("resources/account.png").getImage());
@@ -73,23 +71,23 @@ public class AccountSettingsGI extends JDialog {
     public void prepareFieldsPanel() {
         fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
-        surnameField = new JTextField(teacher.getSurname(), COLUMNS_COUNT);
+        surnameField = new JTextField(user.getSurname(), COLUMNS_COUNT);
         surnameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("Прізвище: ", surnameField));
 
-        nameField = new JTextField(teacher.getName(), COLUMNS_COUNT);
+        nameField = new JTextField(user.getName(), COLUMNS_COUNT);
         nameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("Ім\'я: ", nameField));
 
-        secondNameField = new JTextField(teacher.getSecondName(), COLUMNS_COUNT);
+        secondNameField = new JTextField(user.getSecondName(), COLUMNS_COUNT);
         secondNameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("По-батькові: ", secondNameField));
 
-        telephoneField = new JTextField(teacher.getTelephoneNum(), COLUMNS_COUNT);
+        telephoneField = new JTextField(user.getTelephoneNum(), COLUMNS_COUNT);
         telephoneField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("Телефон: ", telephoneField));
 
-        mailField = new JTextField(teacher.getMailAddress(), COLUMNS_COUNT);
+        mailField = new JTextField(user.getMailAddress(), COLUMNS_COUNT);
         mailField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("E-mail: ", mailField));
 
@@ -104,8 +102,8 @@ public class AccountSettingsGI extends JDialog {
         removeButton = new JButton("Видалити обліковий запис");
         removeButton.setHorizontalAlignment(SwingConstants.CENTER);
         removeButton.addActionListener(e -> {
-            teacherManager.deleteCurrentTeacher();
-            teacherManager.saveTeacherSet();
+            manager.deleteCurrentUser();
+            manager.saveUserSet();
             dispose();
             frame.dispose();
         });
@@ -116,12 +114,13 @@ public class AccountSettingsGI extends JDialog {
         passwordPanel.setBorder(new EmptyBorder(8, 0, 0, 0));
         passwordPanel.add(new JSeparator());
 
-        JLabel label = new JLabel("Змінити пароль");
-        label.setHorizontalAlignment(JLabel.CENTER);
-        passwordPanel.add(label);
+        passwordLabel = new JLabel(user.isPasswordEmpty() ? "Додати пароль" : "Змінити пароль");
+        passwordLabel.setHorizontalAlignment(JLabel.CENTER);
+        passwordPanel.add(passwordLabel);
 
         currentPasswordField = new JPasswordField(COLUMNS_COUNT);
         currentPasswordField.getDocument().addDocumentListener(typeListener);
+        currentPasswordField.setEnabled(!user.isPasswordEmpty());
         passwordPanel.add(new LabelComponentPanel("Поточний пароль: ", currentPasswordField));
 
         newPasswordField = new JPasswordField(COLUMNS_COUNT);
@@ -138,15 +137,15 @@ public class AccountSettingsGI extends JDialog {
         saveButton.setEnabled(false);
         saveButton.addActionListener(e -> {
             try {
-                teacherManager.updateCurrentTeacherInfo(surnameField.getText(), nameField.getText(),
+                manager.updateCurrentUserInfo(surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), telephoneField.getText(), mailField.getText());
 
-                if (isNotPasswordsFieldsEmpty()) {
+                if (isNotPasswordFieldsEmpty()) {
                     checkPassword();
                 }
                 messageLabel.setIcon(null);
                 messageLabel.setText(Message.SAVED);
-                teacherManager.saveTeacherSet();
+                manager.saveUserSet();
                 currentPasswordField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");
@@ -155,18 +154,20 @@ public class AccountSettingsGI extends JDialog {
                 messageLabel.setIcon(Message.WARNING_IMAGE);
                 messageLabel.setText(e1.getMessage());
             }
+            currentPasswordField.setEnabled(true);
+            passwordLabel.setText("Змінити пароль");
         });
     }
 
     public void checkPassword() throws IOException {
-        if (!teacher.isPasswordsMatches(currentPasswordField.getPassword())){
+        if (!user.isPasswordEmpty() && !user.isPasswordsMatches(currentPasswordField.getPassword())) {
             throw new IOException(Message.INCORRECT_PASSWORD);
         }
         if (!Arrays.equals(newPasswordField.getPassword(), repeatPasswordField.getPassword())) {
             throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);
         }
-        if (teacherManager.validatePassword(newPasswordField.getPassword())) {
-            teacher.setPassword(newPasswordField.getPassword());
+        if (((Validator) manager).validatePassword(newPasswordField.getPassword())) {
+            user.setPassword(newPasswordField.getPassword());
         }
     }
 
@@ -175,16 +176,24 @@ public class AccountSettingsGI extends JDialog {
         cancelButton.addActionListener(e -> dispose());
     }
 
-    private boolean isPasswordsFieldsEmpty() {
-        return currentPasswordField.getPassword().length == 0 &&
-                    newPasswordField.getPassword().length == 0 &&
+    private boolean isPasswordFieldsEmpty() {
+        if (user.isPasswordEmpty()) {
+            return newPasswordField.getPassword().length == 0 &&
                     repeatPasswordField.getPassword().length == 0;
+        }
+        return currentPasswordField.getPassword().length == 0 &&
+                newPasswordField.getPassword().length == 0 &&
+                repeatPasswordField.getPassword().length == 0;
     }
 
-    private boolean isNotPasswordsFieldsEmpty() {
-        return currentPasswordField.getPassword().length != 0 &&
-                    newPasswordField.getPassword().length != 0 &&
+    private boolean isNotPasswordFieldsEmpty() {
+        if (user.isPasswordEmpty()) {
+            return newPasswordField.getPassword().length != 0 &&
                     repeatPasswordField.getPassword().length != 0;
+        }
+        return currentPasswordField.getPassword().length != 0 &&
+                newPasswordField.getPassword().length != 0 &&
+                repeatPasswordField.getPassword().length != 0;
     }
 
     private boolean isNotFieldsEmpty() {
@@ -197,7 +206,7 @@ public class AccountSettingsGI extends JDialog {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            saveButton.setEnabled(isNotFieldsEmpty() && (isNotPasswordsFieldsEmpty() || isPasswordsFieldsEmpty()));
+            saveButton.setEnabled(isNotFieldsEmpty() && (isNotPasswordFieldsEmpty() || isPasswordFieldsEmpty()));
         }
 
         @Override

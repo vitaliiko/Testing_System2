@@ -1,4 +1,5 @@
 import studentGI.StudentAuthGI;
+import studentGI.StudentWorkspaceGI;
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
@@ -10,20 +11,22 @@ import java.util.*;
 
 public class Start {
 
+    private static ArrayList<StudentsGroup> studentsGroupsList;
+
     public static void main(String[] args) {
 
 //        initTeacherSet();
 //        initTestTask();
-//        initStudents();
 //        createShowTaskWindow();
 //        crateAuthenticationWindow();
 //        createTeacherWorkspace();
-        createStudentAuthGI();
-
+//        createStudentAuthGI();
+//        initStudents();
+        createStudentWorkspace();
     }
 
     public static void initStudents() {
-        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
+        studentsGroupsList = new ArrayList<>();
 
         studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
         studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
@@ -45,7 +48,7 @@ public class Start {
 
     public static void createShowTaskWindow() {
         TeacherManager teacherManager = new TeacherManager();
-        teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
+        teacherManager.authorizeUser("Іванов Іван Іванович", "00000".toCharArray());
         try {
             //new ShowTaskGI(teacherManager);
         } catch (Exception e) {
@@ -53,9 +56,16 @@ public class Start {
         }
     }
 
+    public static void createStudentWorkspace() {
+        initStudents();
+        StudentManager studentManager = new StudentManager();
+        studentManager.authorizeUser("Іванов Іван Іванович", "".toCharArray(), studentsGroupsList.get(0));
+        new StudentWorkspaceGI(studentManager);
+    }
+
     public static void createTeacherWorkspace() {
         TeacherManager teacherManager = new TeacherManager();
-        teacherManager.authorizedTeacher("Іванов Іван Іванович", "00000".toCharArray());
+        teacherManager.authorizeUser("Іванов Іван Іванович", "00000".toCharArray());
         new TeacherWorkspaceGI(teacherManager);
     }
 

@@ -76,6 +76,10 @@ public abstract class User implements Serializable, Comparable<User> {
         this.telephoneNum = telephoneNum;
     }
 
+    public boolean isPasswordEmpty() {
+        return password.isEmpty();
+    }
+
     public boolean isMatches(String userName, char[] password) {
         return this.userName.equals(userName) && this.password.equals(PasswordDigest.hashPassword(password));
     }

@@ -30,7 +30,7 @@ public class StudentWorkspaceGI extends MainFrame {
     public void frameSetup() {
         fillContainer();
         fillToolsPanel();
-        setTabbedItems("Список тестів", "Статистика");
+        setTabbedItems("РЎРїРёСЃРѕРє С‚РµСЃС‚С–РІ", "РЎРєР»Р°РґРµРЅС– С‚РµСЃС‚Рё");
         addListenerToTabbedList(new SelectionListener());
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
@@ -53,9 +53,8 @@ public class StudentWorkspaceGI extends MainFrame {
     private void prepareTestTasksTable() {
         testTaskTableParameters = new TableParameters<>(testTaskManager.getTestTaskList());
         testTaskTable = createTable(testTaskTableParameters);
-        testTaskTable.getSelectionModel().addListSelectionListener(e -> {
-            testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
-        });
+        testTaskTable.getSelectionModel().addListSelectionListener(e ->
+                testTaskManager.setCurrentTest(testTaskTable.getSelectedRow()));
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -70,10 +69,10 @@ public class StudentWorkspaceGI extends MainFrame {
         labelPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         completedTestsCount = new JLabel("0");
-        labelPanel.add(new BoxPanel(new JLabel("Кількість складених тестів: "), completedTestsCount));
+        labelPanel.add(new BoxPanel(new JLabel("КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ: "), completedTestsCount));
 
         notCompletedTestCount = new JLabel(String.valueOf(testTaskTable.getRowCount()));
-        labelPanel.add(new BoxPanel(new JLabel("Кількість тестів, що необхідно скласти: "), notCompletedTestCount));
+        labelPanel.add(new BoxPanel(new JLabel("КіпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: "), notCompletedTestCount));
     }
 
     private class SelectionListener implements ListSelectionListener {

@@ -145,7 +145,7 @@ public class TestTaskSettingsGI extends JDialog {
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
         authorsPanel = createCheckBoxPanel(
-                new ArrayList<>(teacherManager.getTeacherSet()));
+                new ArrayList<>(teacherManager.getUserSet()));
         generalTabPanel.add(createScrollPane(authorsPanel, "Автори"), BorderLayout.SOUTH);
     }
 
