@@ -1,6 +1,6 @@
 package components;
 
-import supporting.Message;
+import supporting.SingleMessage;
 import usersClasses.*;
 
 import javax.swing.*;
@@ -32,7 +32,6 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
     private JButton saveButton;
     private JButton cancelButton;
     private JButton removeButton;
-    private JLabel messageLabel;
     private JLabel passwordLabel;
     private TypeListener typeListener;
 
@@ -46,8 +45,7 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
 
         FrameUtils.setLookAndFill();
 
-        messageLabel = Message.prepareMessageLabel(Message.SETTINGS);
-        getContentPane().add(messageLabel, BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getInstance(SingleMessage.SETTINGS), BorderLayout.NORTH);
         prepareFieldsPanel();
         getContentPane().add(fieldsPanel, BorderLayout.EAST);
 
@@ -143,16 +141,14 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
                 if (isNotPasswordFieldsEmpty()) {
                     checkPassword();
                 }
-                messageLabel.setIcon(null);
-                messageLabel.setText(Message.SAVED);
+                SingleMessage.setDefaultMessage(SingleMessage.SAVED);
                 manager.saveUserSet();
                 currentPasswordField.setText("");
                 newPasswordField.setText("");
                 repeatPasswordField.setText("");
                 saveButton.setEnabled(false);
             } catch (IOException e1) {
-                messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(e1.getMessage());
+                SingleMessage.setWarningMessage(e1.getMessage());
             }
             currentPasswordField.setEnabled(true);
             passwordLabel.setText("Змінити пароль");
@@ -161,10 +157,10 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
 
     public void checkPassword() throws IOException {
         if (!user.isPasswordEmpty() && !user.isPasswordsMatches(currentPasswordField.getPassword())) {
-            throw new IOException(Message.INCORRECT_PASSWORD);
+            throw new IOException(SingleMessage.INCORRECT_PASSWORD);
         }
         if (!Arrays.equals(newPasswordField.getPassword(), repeatPasswordField.getPassword())) {
-            throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);
+            throw new IOException(SingleMessage.PASSWORDS_DOES_NOT_MATCH);
         }
         if (((Validator) manager).validatePassword(newPasswordField.getPassword())) {
             user.setPassword(newPasswordField.getPassword());

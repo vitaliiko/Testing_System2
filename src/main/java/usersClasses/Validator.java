@@ -1,6 +1,6 @@
 package usersClasses;
 
-import supporting.Message;
+import supporting.SingleMessage;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -8,41 +8,41 @@ import java.util.regex.Pattern;
 
 public abstract class Validator {
 
-    private static final String NAME_REG = "^[¿-ﬂ™Ø≤][‡-ˇ¿-ﬂ-'ø≥∫]{2,}$";
+    private static final String NAME_REG = "^[–ê-–Ø–Ü–á–Ñ][–∞-—è–ê-–Ø–Ü—ñ–á—ó–Ñ—î-]{2,}$";
     private static final String PASSWORD_REG = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*-_]).{8,24})";
     private static final String TEL_NUM_REG = "^[\\d]{10}$";
     private static final String MAIL_REG = "^[a-zA-Z0-9\\._%+-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,4}$";
 
     public boolean validateName(String surname, String name, String secondName) throws IOException {
         if (!validate(name, NAME_REG) || !validate(surname, NAME_REG) || !validate(secondName, NAME_REG)) {
-            throw new IOException(Message.WRONG_NAME);
+            throw new IOException(SingleMessage.WRONG_NAME);
         }
         return true;
     }
 
     public boolean validatePassword(char[] password) throws IOException {
         if (password.length < 8) {
-            throw new IOException(Message.SHORT_PASSWORD);
+            throw new IOException(SingleMessage.SHORT_PASSWORD);
         }
         if (password.length > 24) {
-            throw new IOException(Message.LONG_PASSWORD);
+            throw new IOException(SingleMessage.LONG_PASSWORD);
         }
         if (!validate(String.valueOf(password), PASSWORD_REG)) {
-            throw new IOException(Message.WRONG_PASSWORD);
+            throw new IOException(SingleMessage.WRONG_PASSWORD);
         }
         return true;
     }
 
     public boolean validateTelephone(String telephone) throws IOException {
         if (!validate(telephone, TEL_NUM_REG)) {
-            throw new IOException(Message.WRONG_TEL);
+            throw new IOException(SingleMessage.WRONG_TEL);
         }
         return true;
     }
 
     public boolean validateMail(String mail) throws IOException {
         if (!validate(mail, MAIL_REG)) {
-            throw new IOException(Message.WRONG_MAIL);
+            throw new IOException(SingleMessage.WRONG_MAIL);
         }
         return true;
     }

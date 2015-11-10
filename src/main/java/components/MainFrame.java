@@ -2,7 +2,6 @@ package components;
 
 import teacherGI.TeacherAuthGI;
 import testingClasses.TestTaskManager;
-import usersClasses.Student;
 import usersClasses.StudentManager;
 import usersClasses.TeacherManager;
 
@@ -30,7 +29,7 @@ public abstract class MainFrame extends JFrame {
         this.teacherManager = teacherManager;
         testTaskManager = new TestTaskManager();
         studentManager = new StudentManager();
-        mainFrameSetup();
+        prepareComponents();
     }
 
     public MainFrame(String title, StudentManager studentManager) throws HeadlessException {
@@ -38,18 +37,26 @@ public abstract class MainFrame extends JFrame {
         this.studentManager = studentManager;
         testTaskManager = new TestTaskManager();
         teacherManager = new TeacherManager();
-        mainFrameSetup();
+        prepareComponents();
     }
 
-    public TeacherManager getTeacherManager() {
-        return teacherManager;
+    private void prepareComponents() {
+        FrameUtils.setLookAndFill();
+        prepareMenuBar();
+        setJMenuBar(menuBar);
+        prepareContainer();
+        getContentPane().add(container, BorderLayout.CENTER);
+        prepareToolsPanel();
+        getContentPane().add(toolsPanel, BorderLayout.WEST);
     }
 
-    public TestTaskManager getTestTaskManager() {
-        return testTaskManager;
+    public void frameSetup() {
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(700, 400));
+        setSize(new Dimension(924, 520));
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
-
-    public abstract void frameSetup();
 
     public abstract void fillToolsPanel();
 
@@ -69,17 +76,6 @@ public abstract class MainFrame extends JFrame {
     public void addOnToolsPanel(JComponent northComponent, JComponent southComponent) {
         toolsPanel.add(northComponent, BorderLayout.NORTH);
         toolsPanel.add(southComponent, BorderLayout.SOUTH);
-    }
-
-    private void mainFrameSetup() {
-        FrameUtils.setLookAndFill();
-        prepareMenuBar();
-        setJMenuBar(menuBar);
-        prepareContainer();
-        getContentPane().add(container, BorderLayout.CENTER);
-        prepareToolsPanel();
-        getContentPane().add(toolsPanel, BorderLayout.WEST);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void prepareContainer() {

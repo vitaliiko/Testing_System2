@@ -40,11 +40,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Список тестів", "Список груп студентів");
-        addListenerToTabbedList(new SelectionListener());
-        setMinimumSize(new Dimension(700, 400));
-        setSize(new Dimension(924, 520));
-        setLocationRelativeTo(null);
-        setVisible(true);
+        addListenerToTabbedList(e -> {});
+        super.frameSetup();
     }
 
     @Override
@@ -129,13 +126,5 @@ public class TeacherWorkspaceGI extends MainFrame {
         settingsButton.setEnabled(false);
         settingsButton.addActionListener(e ->
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
-    }
-
-    private class SelectionListener implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-
-        }
     }
 }

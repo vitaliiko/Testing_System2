@@ -64,10 +64,6 @@ public class ShowTaskGI extends MainFrame {
                 editButton.setEnabled(false);
             }
         });
-        setMinimumSize(new Dimension(700, 400));
-        setSize(new Dimension(924, 520));
-        setLocationRelativeTo(null);
-        setVisible(true);
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -76,6 +72,7 @@ public class ShowTaskGI extends MainFrame {
                 dispose();
             }
         });
+        super.frameSetup();
     }
 
     @Override

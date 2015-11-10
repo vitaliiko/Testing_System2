@@ -1,7 +1,7 @@
 package usersClasses;
 
 import supporting.IOFileHandling;
-import supporting.Message;
+import supporting.SingleMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class TeacherManager extends Validator implements Manager<Teacher> {
         validateName(surname, name, secondName);
         validatePassword(password);
         if (!teacherSet.add(new Teacher(surname, name, secondName, password))) {
-            throw new IOException(Message.EXIST_USER);
+            throw new IOException(SingleMessage.EXIST_USER);
         }
         saveUserSet();
     }
@@ -80,7 +80,7 @@ public class TeacherManager extends Validator implements Manager<Teacher> {
     public boolean checkUsername(String username) throws IOException {
         for (Teacher teacher : teacherSet) {
             if (teacher.getUserName().equals(username)) {
-                throw new IOException(Message.EXIST_USER);
+                throw new IOException(SingleMessage.EXIST_USER);
             }
         }
         return true;

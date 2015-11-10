@@ -7,8 +7,6 @@ import testingClasses.TestTask;
 import usersClasses.StudentManager;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,11 +29,8 @@ public class StudentWorkspaceGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Список тестів", "Складені тести");
-        addListenerToTabbedList(new SelectionListener());
-        setMinimumSize(new Dimension(700, 400));
-        setSize(new Dimension(924, 520));
-        setLocationRelativeTo(null);
-        setVisible(true);
+        addListenerToTabbedList(e -> {});
+        super.frameSetup();
     }
 
     @Override
@@ -73,13 +68,5 @@ public class StudentWorkspaceGI extends MainFrame {
 
         notCompletedTestCount = new JLabel(String.valueOf(testTaskTable.getRowCount()));
         labelPanel.add(new BoxPanel(new JLabel("ʳ������ �����, �� ��������� �������: "), notCompletedTestCount));
-    }
-
-    private class SelectionListener implements ListSelectionListener {
-
-        @Override
-        public void valueChanged(ListSelectionEvent e) {
-
-        }
     }
 }

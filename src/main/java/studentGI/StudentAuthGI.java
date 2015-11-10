@@ -4,7 +4,7 @@ import components.AutoCompleteComboBox;
 import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
-import supporting.Message;
+import supporting.SingleMessage;
 import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;
 
@@ -23,7 +23,6 @@ public class StudentAuthGI extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton cancelButton;
-    private JLabel messageLabel;
 
     private StudentManager studentManager;
 
@@ -35,8 +34,7 @@ public class StudentAuthGI extends JFrame {
 
         prepareLoginPanel();
         getContentPane().add(loginPanel, BorderLayout.CENTER);
-        messageLabel = Message.prepareMessageLabel(Message.LOGIN);
-        getContentPane().add(messageLabel, BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getInstance(SingleMessage.LOGIN), BorderLayout.NORTH);
         setupFrame();
     }
 
@@ -91,12 +89,10 @@ public class StudentAuthGI extends JFrame {
                     new StudentWorkspaceGI(studentManager);
                     dispose();
                 } else {
-                    messageLabel.setIcon(Message.WARNING_IMAGE);
-                    messageLabel.setText(Message.WRONG_USER);
+                    SingleMessage.setWarningMessage(SingleMessage.WRONG_USER);
                 }
             } else {
-                messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(Message.WRONG_GROUP);
+                SingleMessage.setWarningMessage(SingleMessage.WRONG_GROUP);
             }
         });
     }

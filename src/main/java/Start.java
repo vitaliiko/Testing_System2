@@ -18,11 +18,11 @@ public class Start {
 //        initTeacherSet();
 //        initTestTask();
 //        createShowTaskWindow();
-//        crateAuthenticationWindow();
+        crateAuthenticationWindow();
 //        createTeacherWorkspace();
 //        createStudentAuthGI();
 //        initStudents();
-        createStudentWorkspace();
+//        createStudentWorkspace();
     }
 
     public static void initStudents() {

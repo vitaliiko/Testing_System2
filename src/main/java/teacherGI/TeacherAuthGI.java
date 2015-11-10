@@ -4,7 +4,7 @@ import components.AutoCompleteComboBox;
 import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
-import supporting.Message;
+import supporting.SingleMessage;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -33,7 +33,6 @@ public class TeacherAuthGI extends JFrame {
     private JButton signUpButton;
     private JButton cancelButton;
     private JButton createNewButton;
-    private JLabel messageLabel;
 
     private Dimension loginDimension = new Dimension(350, 170);
     private Dimension signUpDimension = new Dimension(400, 270);
@@ -47,8 +46,7 @@ public class TeacherAuthGI extends JFrame {
 
         prepareContainer();
         getContentPane().add(container, BorderLayout.CENTER);
-        messageLabel = Message.prepareMessageLabel(Message.LOGIN);
-        getContentPane().add(messageLabel, BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getInstance(SingleMessage.LOGIN), BorderLayout.NORTH);
 
         setupFrame();
     }
@@ -107,8 +105,7 @@ public class TeacherAuthGI extends JFrame {
                 new TeacherWorkspaceGI(teacherManager);
                 dispose();
             } else {
-                messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(Message.WRONG_USER);
+                SingleMessage.setWarningMessage(SingleMessage.WRONG_USER);
             }
         });
     }
@@ -118,8 +115,7 @@ public class TeacherAuthGI extends JFrame {
         createNewButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).last(container);
             clearFields();
-            messageLabel.setIcon(null);
-            messageLabel.setText(Message.CREATE);
+            SingleMessage.setDefaultMessage(SingleMessage.CREATE);
             setSize(signUpDimension);
             setTitle("Реєстрація");
         });
@@ -174,19 +170,17 @@ public class TeacherAuthGI extends JFrame {
                     teacherManager.createUser(surnameField.getText(), nameField.getText(), secondNameField.getText(),
                             firstPasswordField.getPassword());
                 } else {
-                    throw new IOException(Message.PASSWORDS_DOES_NOT_MATCH);
+                    throw new IOException(SingleMessage.PASSWORDS_DOES_NOT_MATCH);
                 }
                 ((CardLayout) container.getLayout()).first(container);
-                messageLabel.setIcon(null);
-                messageLabel.setText(Message.ADD_USER_SUC);
+                SingleMessage.setDefaultMessage(SingleMessage.ADD_USER_SUC);
                 teacherNamesBox.addItem(secondNameField.getText());
                 teacherNamesBox.setSelectedItem(secondNameField.getText());
                 passwordField.setText(String.valueOf(firstPasswordField.getPassword()));
                 loginButton.setEnabled(true);
                 setSize(loginDimension);
             } catch (IOException exception) {
-                messageLabel.setIcon(Message.WARNING_IMAGE);
-                messageLabel.setText(exception.getMessage());
+                SingleMessage.setWarningMessage(exception.getMessage());
             }
         });
     }
@@ -196,8 +190,7 @@ public class TeacherAuthGI extends JFrame {
         cancelButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).first(container);
             clearFields();
-            messageLabel.setIcon(null);
-            messageLabel.setText(Message.LOGIN);
+            SingleMessage.setDefaultMessage(SingleMessage.LOGIN);
             setSize(loginDimension);
             setTitle("Вхід");
         });
