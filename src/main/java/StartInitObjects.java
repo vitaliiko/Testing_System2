@@ -1,32 +1,25 @@
-import studentGI.StudentAuthGI;
-import studentGI.StudentWorkspaceGI;
 import supporting.IOFileHandling;
 import testingClasses.Question;
 import testingClasses.TestTask;
-import teacherGI.TeacherAuthGI;
-import teacherGI.TeacherWorkspaceGI;
-import usersClasses.*;
+import usersClasses.Student;
+import usersClasses.StudentsGroup;
+import usersClasses.Teacher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-public class Start {
-
-    private static ArrayList<StudentsGroup> studentsGroupsList;
+public class StartInitObjects {
 
     public static void main(String[] args) {
-
-//        initTeacherSet();
-//        initTestTask();
-//        createShowTaskWindow();
-        crateAuthenticationWindow();
-//        createTeacherWorkspace();
-//        createStudentAuthGI();
-//        initStudents();
-//        createStudentWorkspace();
+        initStudents();
+        initTeacherSet();
+        initTestTask();
     }
 
     public static void initStudents() {
-        studentsGroupsList = new ArrayList<>();
+        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
 
         studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
         studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
@@ -43,42 +36,6 @@ public class Start {
         new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
 
         IOFileHandling.saveStuentsGroupSet(new TreeSet<>(studentsGroupsList));
-    }
-
-
-    public static void createShowTaskWindow() {
-        TeacherManager teacherManager = new TeacherManager();
-        teacherManager.authorizeUser("Іванов Іван Іванович", "00000".toCharArray());
-        try {
-            //new ShowTaskGI(teacherManager);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void createStudentWorkspace() {
-        initStudents();
-        StudentManager studentManager = new StudentManager();
-        studentManager.authorizeUser("Іванов Іван Іванович", "".toCharArray(), studentsGroupsList.get(0));
-        new StudentWorkspaceGI(studentManager);
-    }
-
-    public static void createTeacherWorkspace() {
-        TeacherManager teacherManager = new TeacherManager();
-        teacherManager.authorizeUser("Іванов Іван Іванович", "00000".toCharArray());
-        new TeacherWorkspaceGI(teacherManager);
-    }
-
-    public static void crateAuthenticationWindow() {
-        new TeacherAuthGI();
-    }
-
-    public static void initTestTask() {
-        ArrayList<TestTask> testTasks = new ArrayList<>();
-        testTasks.add(createTestObject("111", "222"));
-        testTasks.add(createTestObject("222", "222"));
-        testTasks.add(createTestObject("000", "222"));
-        IOFileHandling.saveTestTasks(testTasks);
     }
 
     public static TestTask createTestObject(String... names) {
@@ -128,7 +85,11 @@ public class Start {
         IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
     }
 
-    public static void createStudentAuthGI() {
-        new StudentAuthGI();
+    public static void initTestTask() {
+        ArrayList<TestTask> testTasks = new ArrayList<>();
+        testTasks.add(createTestObject("111", "222"));
+        testTasks.add(createTestObject("222", "222"));
+        testTasks.add(createTestObject("000", "222"));
+        IOFileHandling.saveTestTasks(testTasks);
     }
 }
