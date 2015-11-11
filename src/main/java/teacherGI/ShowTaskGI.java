@@ -1,11 +1,8 @@
 package teacherGI;
 
-import components.BoxPanel;
-import components.ImagePanel;
-import components.MainFrame;
+import components.*;
 import supporting.IOFileHandling;
 import supporting.ImageUtils;
-import components.TableParameters;
 import testingClasses.Question;
 import testingClasses.TestTask;
 import usersClasses.TeacherManager;
@@ -112,32 +109,18 @@ public class ShowTaskGI extends MainFrame {
         }
     }
 
-    private JTextArea prepareTextArea(String text) {
-        JTextArea textArea = new JTextArea();
-        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
-        textArea.setText(text);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setOpaque(false);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setAutoscrolls(false);
-        return textArea;
-    }
-
-    private JPanel createQuestionPanel(int index, Question theQuestion) {
+    private JPanel createQuestionPanel(int index, Question question) {
         JPanel questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        questionPanel.add(prepareTextArea(index + ". " + theQuestion.getTask()));
-        if (theQuestion.getImageInByte() != null) {
-            questionPanel.add(new ImagePanel(ImageUtils.imageFromByteArr(theQuestion.getImageInByte())));
+        questionPanel.add(QuestionPanel.createTextArea(index + ". " + question.getTask()));
+        if (question.getImageInByte() != null) {
+            questionPanel.add(new ImagePanel(ImageUtils.imageFromByteArr(question.getImageInByte())));
         }
-        for (int i = 0; i < theQuestion.getAnswersList().size(); i++) {
-            String s = theQuestion.getAnswersList().get(i);
-            JTextArea answerArea = prepareTextArea(s);
+        for (String s : question.getAnswersList()) {
+            JTextArea answerArea = QuestionPanel.createTextArea(s);
             answerArea.setBorder(new EmptyBorder(5, 40, 3, 0));
-            if (theQuestion.getRightAnswersList().contains(s)) {
+            if (question.getRightAnswersList().contains(s)) {
                 answerArea.setForeground(Color.GREEN);
             }
             questionPanel.add(answerArea);

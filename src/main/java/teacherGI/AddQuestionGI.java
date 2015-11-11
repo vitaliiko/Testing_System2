@@ -203,9 +203,6 @@ public class AddQuestionGI extends JFrame {
     public void prepareAnswersPanel() {
         answersPanel = new BoxPanel(BoxLayout.Y_AXIS);
         answersPanel.setBorder(new TitledBorder("Варіанти відповідей"));
-        JScrollPane scrollPane = new JScrollPane(answersPanel);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         answersBoxList = new ArrayList<>();
         for (int i = 0; i < answersLimit; i++) {
             AnswerBoxPanel answerBoxPanel = new AnswerBoxPanel();

@@ -49,6 +49,10 @@ public class TestTaskWrapper implements Serializable {
         this.points = points;
     }
 
+    public void createCard() {
+
+    }
+
     @Override
     public String toString() {
         return testTask.getTaskName() + " " + status;
