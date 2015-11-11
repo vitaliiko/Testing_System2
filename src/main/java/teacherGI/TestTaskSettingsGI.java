@@ -3,10 +3,7 @@ package teacherGI;
 import components.BoxPanel;
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;
-import usersClasses.StudentManager;
-import usersClasses.Teacher;
-import usersClasses.TeacherManager;
-import usersClasses.User;
+import usersClasses.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -111,21 +108,27 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setDisciplineName(disciplineField.getText());
         testTask.setAttribute(attributeBox.getSelectedIndex());
 
-        List<String> authorsList = new ArrayList<>();
-        for (int i = 2; i < authorsPanel.getComponentCount(); i++) {
-            JCheckBox checkBox = (JCheckBox) authorsPanel.getComponent(i);
-            if (checkBox.isSelected()) {
-                authorsList.add(checkBox.getText());
-            }
-        }
-        testTask.setAuthorsList(authorsList);
+        testTask.setAuthorsList(createDataListFromCheckBoxPanel(authorsPanel));
 
         testTask.setAnswersLimit((Integer) answersLimit.getValue());
         testTask.setQuestionsLimit((Integer) questionsLimit.getValue());
         testTask.setTimeLimit((Integer) timeLimit.getValue());
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
 
+        testTask.setStudentGroupsList(createDataListFromCheckBoxPanel(studentsGroupPanel));
+
         testTaskManager.saveTests();
+    }
+
+    private List<String> createDataListFromCheckBoxPanel(JPanel panel) {
+        List<String> dataList = new ArrayList<>();
+        for (int i = 2; i < panel.getComponentCount(); i++) {
+            JCheckBox checkBox = (JCheckBox) panel.getComponent(i);
+            if (checkBox.isSelected()) {
+                dataList.add(checkBox.getText());
+            }
+        }
+        return dataList;
     }
 
     private void prepareCancelButton() {
@@ -160,10 +163,7 @@ public class TestTaskSettingsGI extends JDialog {
         return panel;
     }
 
-    private <T extends User> JPanel createCheckBoxPanel(ArrayList<T> dataList) {
-        JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
-        checkBoxPanel.setBackground(Color.WHITE);
-
+    private void createCheckAllBox(JPanel checkBoxPanel) {
         JCheckBox checkAll = new JCheckBox("Відмітити усіх");
         checkAll.setBackground(Color.WHITE);
         checkAll.setFocusable(false);
@@ -175,13 +175,23 @@ public class TestTaskSettingsGI extends JDialog {
         });
         checkBoxPanel.add(checkAll);
         checkBoxPanel.add(new JSeparator());
+    }
+
+    private <T extends DataList> JPanel createCheckBoxPanel(ArrayList<T> dataList) {
+        JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        checkBoxPanel.setBackground(Color.WHITE);
+
+        createCheckAllBox(checkBoxPanel);
 
         for (T o : dataList) {
-            JCheckBox checkBox = new JCheckBox(o.getUserName());
+            JCheckBox checkBox = new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
             if (o instanceof Teacher) {
-                checkBox.setSelected(testTask.getAuthorsList().contains(o.getUserName()));
+                checkBox.setSelected(testTask.getAuthorsList().contains(((Teacher) o).getUserName()));
+            }
+            if (o instanceof StudentsGroup) {
+                checkBox.setSelected(testTask.getStudentGroupsList().contains(((StudentsGroup) o).getName()));
             }
             checkBoxPanel.add(checkBox);
         }
@@ -264,9 +274,8 @@ public class TestTaskSettingsGI extends JDialog {
         label.setHorizontalAlignment(JLabel.LEFT);
         studentsTabPanel.add(label, BorderLayout.NORTH);
 
-//        studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()),
-//                testTask.getStudentGroupsList());
-//        studentsTabPanel.add(createScrollPane(studentsGroupPanel, "Групи студентів"), BorderLayout.CENTER);
+        studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()));
+        studentsTabPanel.add(createScrollPane(studentsGroupPanel, "Групи студентів"), BorderLayout.CENTER);
     }
 
     private JButton createButtonAsLink(String title) {

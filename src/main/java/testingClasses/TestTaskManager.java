@@ -1,6 +1,8 @@
 package testingClasses;
 
 import supporting.IOFileHandling;
+import usersClasses.Student;
+import usersClasses.StudentsGroup;
 
 import java.util.ArrayList;
 
@@ -8,6 +10,10 @@ public class TestTaskManager {
 
     private ArrayList<TestTask> testTaskList;
     private int currentTestIndex;
+
+    public TestTaskManager() {
+        testTaskList = IOFileHandling.loadTestTasks();
+    }
 
     public ArrayList<TestTask> getTestTaskList() {
         return testTaskList;
@@ -19,10 +25,6 @@ public class TestTaskManager {
 
     public void setCurrentTest(int currentTestIndex) {
         this.currentTestIndex = currentTestIndex;
-    }
-
-    public TestTaskManager() {
-        testTaskList = IOFileHandling.loadTestTasks();
     }
 
     public TestTask getTest(int index) {
@@ -49,5 +51,30 @@ public class TestTaskManager {
 
     public void setCurrentTestIndex(int currentTestIndex) {
         this.currentTestIndex = currentTestIndex;
+    }
+
+    private boolean haveWrapper(TestTask testTask, Student student) {
+        for (TestTaskWrapper testTaskWrapper : student.getTestTaskWrapperList()) {
+            if (testTaskWrapper.getTestTask().equals(testTask)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void wrappingTests(Student student) {
+        String groupName = student.getGroupName();
+        for (TestTask testTask : testTaskList) {
+            if (testTask.getStudentGroupsList().contains(groupName) && !haveWrapper(testTask, student)) {
+                student.addTestTaskWrapper(new TestTaskWrapper(testTask));
+            }
+        }
+
+        for (TestTaskWrapper testTaskWrapper : student.getTestTaskWrapperList()) {
+            if (testTaskWrapper.getStatus() <= TestTaskWrapper.BAD &&
+                    !testTaskWrapper.getTestTask().getStudentGroupsList().contains(student.getGroupName())) {
+                testTaskWrapper.setStatus(TestTaskWrapper.FAIL);
+            }
+        }
     }
 }

@@ -63,11 +63,11 @@ public class TableParameters<T> extends JTextArea implements TableModel, TableCe
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
-        this.setFont(new Font("Arial", Font.PLAIN, 12));
+        setFont(new Font("Arial", Font.PLAIN, 12));
 
         String data = value.toString();
-        int lineWidth = this.getFontMetrics(this.getFont()).stringWidth(data);
-        int lineHeight = this.getFontMetrics(this.getFont()).getHeight();
+        int lineWidth = getFontMetrics(getFont()).stringWidth(data);
+        int lineHeight = getFontMetrics(getFont()).getHeight();
         int rowWidth = table.getCellRect(row, column, true).width;
 
         int newRowHeight = (lineWidth / rowWidth) * (lineHeight) + lineHeight * 2;
@@ -75,13 +75,13 @@ public class TableParameters<T> extends JTextArea implements TableModel, TableCe
             table.setRowHeight(row, newRowHeight);
         }
         if (isSelected) {
-            this.setBackground(table.getSelectionBackground());
-            this.setForeground(table.getSelectionForeground());
+            setBackground(table.getSelectionBackground());
+            setForeground(table.getSelectionForeground());
         } else {
-            this.setBackground(table.getBackground());
-            this.setForeground(table.getForeground());
+            setBackground(table.getBackground());
+            setForeground(table.getForeground());
         }
-        this.setText(data);
+        setText(data);
         return this;
     }
 }

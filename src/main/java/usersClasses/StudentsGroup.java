@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable<StudentsGroup> {
+public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable<StudentsGroup>, DataList {
 
     private String name;
     private String faculty;

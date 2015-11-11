@@ -15,6 +15,7 @@ public class TestTask implements Serializable {
 
     private String taskName;
     private String disciplineName;
+    private String description;
     private int attribute;
     private int answersLimit;
     private int questionsLimit;
@@ -54,8 +55,12 @@ public class TestTask implements Serializable {
         return authorsList.get(0);
     }
 
-    public void setCreatorName(String creatorName) {
-        authorsList.set(0, creatorName);
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public int getAttribute() {
@@ -126,8 +131,8 @@ public class TestTask implements Serializable {
         return studentGroupsList;
     }
 
-    public void setStudentGroupsList(ArrayList<String> studentGroupsList) {
-        this.studentGroupsList = studentGroupsList;
+    public void setStudentGroupsList(List<String> studentGroupsList) {
+        this.studentGroupsList = (ArrayList<String>) studentGroupsList;
     }
 
     public ArrayList<Student> getNotAllowedStudentsList() {
@@ -192,5 +197,26 @@ public class TestTask implements Serializable {
         }
 
         return taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TestTask testTask = (TestTask) o;
+
+        return taskName.equals(testTask.taskName) &&
+                disciplineName.equals(testTask.disciplineName) &&
+                getCreatorName().equals(((TestTask) o).getCreatorName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = taskName.hashCode();
+        result = 31 * result + disciplineName.hashCode();
+        result = 31 * result + getCreatorName().hashCode();
+        return result;
     }
 }

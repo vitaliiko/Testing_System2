@@ -4,6 +4,7 @@ import components.BoxPanel;
 import components.MainFrame;
 import components.TableParameters;
 import testingClasses.TestTask;
+import testingClasses.TestTaskWrapper;
 import usersClasses.StudentManager;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.awt.event.MouseEvent;
 public class StudentWorkspaceGI extends MainFrame {
 
     private JTable testTaskTable;
-    private TableParameters<TestTask> testTaskTableParameters;
+    private TableParameters<TestTaskWrapper> testTaskTableParameters;
     private JPanel labelPanel;
     private JLabel completedTestsCount;
     private JLabel notCompletedTestCount;
@@ -46,7 +47,8 @@ public class StudentWorkspaceGI extends MainFrame {
     }
 
     private void prepareTestTasksTable() {
-        testTaskTableParameters = new TableParameters<>(testTaskManager.getTestTaskList());
+        testTaskManager.wrappingTests(studentManager.getCurrentUser());
+        testTaskTableParameters = new TableParameters<>(studentManager.getCurrentUser().getTestTaskWrapperList());
         testTaskTable = createTable(testTaskTableParameters);
         testTaskTable.getSelectionModel().addListSelectionListener(e ->
                 testTaskManager.setCurrentTest(testTaskTable.getSelectedRow()));

@@ -2,7 +2,7 @@ package usersClasses;
 
 import java.io.Serializable;
 
-public abstract class User implements Serializable, Comparable<User> {
+public abstract class User implements Serializable, Comparable<User>, DataList {
 
     private String surname;
     private String name;
