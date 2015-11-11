@@ -11,7 +11,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDialog {
+public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends JDialog {
 
     private static final int COLUMNS_COUNT = 26;
 
@@ -69,6 +69,10 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
     public void prepareFieldsPanel() {
         fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
+        if (user instanceof Student) {
+            fieldsPanel.add(new LabelComponentPanel("Група: ", new JLabel(((Student) user).getGroupName())));
+        }
+
         surnameField = new JTextField(user.getSurname(), COLUMNS_COUNT);
         surnameField.getDocument().addDocumentListener(typeListener);
         fieldsPanel.add(new LabelComponentPanel("Прізвище: ", surnameField));
@@ -90,7 +94,9 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
         fieldsPanel.add(new LabelComponentPanel("E-mail: ", mailField));
 
         prepareRemoveButton();
-        fieldsPanel.add(new BoxPanel(removeButton));
+        JPanel removePanel = new BoxPanel(removeButton);
+        removePanel.setBorder(new EmptyBorder(0, 110, 0, 0));
+        fieldsPanel.add(removePanel);
 
         preparePasswordPanel();
         fieldsPanel.add(passwordPanel);
@@ -98,7 +104,7 @@ public class AccountSettingsGI<U extends User, M extends Manager<U>> extends JDi
 
     public void prepareRemoveButton(){
         removeButton = new JButton("Видалити обліковий запис");
-        removeButton.setHorizontalAlignment(SwingConstants.CENTER);
+        removeButton.setVisible(user instanceof Teacher);
         removeButton.addActionListener(e -> {
             manager.deleteCurrentUser();
             manager.saveUserSet();

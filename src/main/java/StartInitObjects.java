@@ -12,6 +12,8 @@ import java.util.TreeSet;
 
 public class StartInitObjects {
 
+    public static final ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
+
     public static void main(String[] args) {
         initStudents();
         initTeacherSet();
@@ -19,8 +21,6 @@ public class StartInitObjects {
     }
 
     public static void initStudents() {
-        ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
-
         studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
         studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
         studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
@@ -42,7 +42,7 @@ public class StartInitObjects {
         ArrayList<String> answersList = new ArrayList<>();
         answersList.add("11111111111111111111111111111111111111111111");
         answersList.add("2222222222222222222222222222222222222222222");
-        answersList.add("333333333333333333333333333333333333333333");
+        answersList.add("333333333333333333333333333333 333333 333333333 333333333333333 33333333333333333 3333333333 3333333333333 3333333333 33333333333333333 3333333333 333333333 3333333333333 3333333333 333333333333 33333333333333 333333333 333333");
 
         ArrayList<String> rightAnswersList = new ArrayList<>();
         rightAnswersList.add("2222222222222222222222222222222222222222222");

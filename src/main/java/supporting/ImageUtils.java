@@ -12,7 +12,7 @@ import java.io.IOException;
 public class ImageUtils {
 
     public static final int MAX_IMAGE_WIDTH = 500;
-    public static final int MAX_IMAGE_HEIGHT = 400;
+    public static final int MAX_IMAGE_HEIGHT = 500;
 
     public final static String jpeg = "jpeg";
     public final static String jpg = "jpg";

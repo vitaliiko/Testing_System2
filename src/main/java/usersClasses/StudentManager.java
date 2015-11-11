@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class StudentManager extends Validator implements Manager<Student> {
+public class StudentManager extends Validator implements UserManager<Student> {
 
     private Set<StudentsGroup> studentsGroupSet;
     private StudentsGroup studentsGroup;

@@ -94,16 +94,19 @@ public class ShowTaskGI extends MainFrame {
     @Override
     public void fillContainer() {
         prepareQuestionsTable();
-        prepareBrowsePanel();
+
+        browsePanel = new JPanel();
+        browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
+        repaintBrowsePanel();
+
         addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
                 new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
-    private void prepareBrowsePanel() {
-        browsePanel = new JPanel();
-        browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
+    private void repaintBrowsePanel() {
+        browsePanel.removeAll();
         for (int i = 0; i < questionsList.size(); i++) {
             browsePanel.add(createQuestionPanel(i + 1, questionsList.get(i)));
         }
@@ -132,7 +135,8 @@ public class ShowTaskGI extends MainFrame {
         }
         for (int i = 0; i < theQuestion.getAnswersList().size(); i++) {
             String s = theQuestion.getAnswersList().get(i);
-            JTextArea answerArea = prepareTextArea("\t" + ((char) (65 + i)) + ". " + s);
+            JTextArea answerArea = prepareTextArea(s);
+            answerArea.setBorder(new EmptyBorder(5, 40, 3, 0));
             if (theQuestion.getRightAnswersList().contains(s)) {
                 answerArea.setForeground(Color.GREEN);
             }
@@ -153,6 +157,8 @@ public class ShowTaskGI extends MainFrame {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.add(addQuestionGI.getQuestion());
                         questionsCountLabel.setText(String.valueOf(questionsList.size()));
+                        browsePanel.add(createQuestionPanel(questionsList.size(),
+                                questionsList.get(questionsList.size() - 1)));
                     }
                 }
             });
@@ -166,6 +172,7 @@ public class ShowTaskGI extends MainFrame {
         removeButton.addActionListener(e -> {
             questionsList.remove(questionsTable.getSelectedRow());
             questionsCountLabel.setText(String.valueOf(questionsList.size()));
+            repaintBrowsePanel();
         });
     }
 
@@ -181,6 +188,7 @@ public class ShowTaskGI extends MainFrame {
                 public void windowClosed(WindowEvent e) {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.set(index, addQuestionGI.getQuestion());
+                        repaintBrowsePanel();
                     }
                 }
             });

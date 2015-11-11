@@ -1,5 +1,6 @@
 package components;
 
+import studentGI.StudentAuthGI;
 import teacherGI.TeacherAuthGI;
 import testingClasses.TestTaskManager;
 import usersClasses.StudentManager;
@@ -137,7 +138,11 @@ public abstract class MainFrame extends JFrame {
         JMenuItem logoutItem = new JMenuItem("Вихід");
         logoutItem.setIcon(new ImageIcon("resources/logout.png"));
         logoutItem.addActionListener(e -> {
-            new TeacherAuthGI();
+            if (teacherManager.getCurrentUser() == null) {
+                new StudentAuthGI();
+            } else {
+                new TeacherAuthGI();
+            }
             dispose();
         });
         fileMenu.add(logoutItem);
