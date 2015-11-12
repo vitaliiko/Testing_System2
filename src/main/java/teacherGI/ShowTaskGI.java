@@ -113,12 +113,12 @@ public class ShowTaskGI extends MainFrame {
         JPanel questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        questionPanel.add(QuestionPanel.createTextArea(index + ". " + question.getTask()));
+        questionPanel.add(FrameUtils.createTextArea(index + ". " + question.getTask()));
         if (question.getImageInByte() != null) {
             questionPanel.add(new ImagePanel(ImageUtils.imageFromByteArr(question.getImageInByte())));
         }
         for (String s : question.getAnswersList()) {
-            JTextArea answerArea = QuestionPanel.createTextArea(s);
+            JTextArea answerArea = FrameUtils.createTextArea(s);
             answerArea.setBorder(new EmptyBorder(5, 40, 3, 0));
             if (question.getRightAnswersList().contains(s)) {
                 answerArea.setForeground(Color.GREEN);

@@ -23,7 +23,7 @@ public class QuestionPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(new EmptyBorder(5, 5, 5, 5));
 
-        add(QuestionPanel.createTextArea(index + ". " + question.getTask()));
+        add(FrameUtils.createTextArea(index + ". " + question.getTask()));
         if (question.getImageInByte() != null) {
             add(new ImagePanel(ImageUtils.imageFromByteArr(question.getImageInByte())));
         }
@@ -32,18 +32,5 @@ public class QuestionPanel extends JPanel {
         for (String s : question.getAnswersList()) {
 
         }
-    }
-
-    public static JTextArea createTextArea(String text) {
-        JTextArea textArea = new JTextArea();
-        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
-        textArea.setText(text);
-        textArea.setLineWrap(true);
-        textArea.setWrapStyleWord(true);
-        textArea.setOpaque(false);
-        textArea.setEditable(false);
-        textArea.setFocusable(false);
-        textArea.setAutoscrolls(false);
-        return textArea;
     }
 }

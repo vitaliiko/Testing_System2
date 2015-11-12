@@ -19,7 +19,7 @@ public class AnswerRadioBoxPanel extends JPanel {
         checkBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         add(checkBox);
 
-        add(QuestionPanel.createTextArea(text));
+        add(FrameUtils.createTextArea(text));
     }
 
     public AnswerRadioBoxPanel(ButtonGroup buttonGroup, String text) {
@@ -28,7 +28,7 @@ public class AnswerRadioBoxPanel extends JPanel {
         buttonGroup.add(radioButton);
         add(radioButton);
 
-        add(QuestionPanel.createTextArea(text));
+        add(FrameUtils.createTextArea(text));
     }
 
     public String getText() {

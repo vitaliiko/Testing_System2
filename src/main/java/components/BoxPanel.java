@@ -10,6 +10,7 @@ public class BoxPanel extends JPanel {
     public BoxPanel(int axis) {
         checkAxis(axis);
         setLayout(new BoxLayout(this, axis));
+        setOpaque(false);
     }
 
     public BoxPanel(BorderLayout borderLayout) {
@@ -20,11 +21,13 @@ public class BoxPanel extends JPanel {
         for (JComponent component : components) {
             add(component);
         }
+        setOpaque(false);
     }
 
     public BoxPanel(JComponent component, Border border) {
         add(component);
         setBorder(border);
+        setOpaque(false);
     }
 
     public BoxPanel(int axis, JComponent... components) {
@@ -33,12 +36,14 @@ public class BoxPanel extends JPanel {
         for (JComponent component : components) {
             add(component);
         }
+        setOpaque(false);
     }
 
     public BoxPanel(JComponent component, String constraint) {
         checkConstraint(constraint);
         setLayout(new BorderLayout());
         add(component, constraint);
+        setOpaque(false);
     }
 
     public void add(JComponent... components) {

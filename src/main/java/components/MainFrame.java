@@ -57,6 +57,7 @@ public abstract class MainFrame extends JFrame {
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
         setVisible(true);
+        tabbedList.setSelectedIndex(0);
     }
 
     public abstract void fillToolsPanel();

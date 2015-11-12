@@ -20,7 +20,7 @@ public class AnswerBoxPanel extends JPanel {
         textArea.setLineWrap(true);
         textArea.setEnabled(false);
         add(new JScrollPane(textArea,
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 

@@ -21,6 +21,7 @@ public class TestTask implements Serializable {
     private int questionsLimit;
     private int timeLimit;
     private int attemptsLimit;
+    private int minPoint;
 
     private ArrayList<Question> questionsList = new ArrayList<>();
     private ArrayList<ArrayList<Question>> questionGroupsList = new ArrayList<>();
@@ -119,6 +120,14 @@ public class TestTask implements Serializable {
         this.attemptsLimit = attemptsLimit;
     }
 
+    public int getMinPoint() {
+        return minPoint;
+    }
+
+    public void setMinPoint(int minPoint) {
+        this.minPoint = minPoint;
+    }
+
     public ArrayList<ArrayList<Question>> getQuestionGroupsList() {
         return questionGroupsList;
     }
@@ -161,6 +170,7 @@ public class TestTask implements Serializable {
         questionsLimit = 30;
         timeLimit = 60;
         attemptsLimit = 2;
+        minPoint = 60;
     }
 
     public ArrayList<String> createQuestionGroupsNames() {

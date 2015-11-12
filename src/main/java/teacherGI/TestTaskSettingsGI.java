@@ -38,6 +38,7 @@ public class TestTaskSettingsGI extends JDialog {
     private JSpinner questionsLimit;
     private JSpinner timeLimit;
     private JSpinner attemptLimit;
+    private JSpinner pointLimit;
     private JButton saveButton;
     private JButton applyButton;
     private JButton cancelButton;
@@ -108,19 +109,20 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setDisciplineName(disciplineField.getText());
         testTask.setAttribute(attributeBox.getSelectedIndex());
 
-        testTask.setAuthorsList(createDataListFromCheckBoxPanel(authorsPanel));
+        testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel));
 
         testTask.setAnswersLimit((Integer) answersLimit.getValue());
         testTask.setQuestionsLimit((Integer) questionsLimit.getValue());
         testTask.setTimeLimit((Integer) timeLimit.getValue());
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
+        testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        testTask.setStudentGroupsList(createDataListFromCheckBoxPanel(studentsGroupPanel));
+        testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel));
 
         testTaskManager.saveTests();
     }
 
-    private List<String> createDataListFromCheckBoxPanel(JPanel panel) {
+    private List<String> makeDataListFromCheckBoxPanel(JPanel panel) {
         List<String> dataList = new ArrayList<>();
         for (int i = 2; i < panel.getComponentCount(); i++) {
             JCheckBox checkBox = (JCheckBox) panel.getComponent(i);
@@ -180,6 +182,7 @@ public class TestTaskSettingsGI extends JDialog {
     private <T extends DataList> JPanel createCheckBoxPanel(ArrayList<T> dataList) {
         JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
         checkBoxPanel.setBackground(Color.WHITE);
+        checkBoxPanel.setOpaque(true);
 
         createCheckAllBox(checkBoxPanel);
 
@@ -235,10 +238,11 @@ public class TestTaskSettingsGI extends JDialog {
         limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel limitPanel = new JPanel(new BorderLayout());
-        limitPanel.add(createLabelPanel("<html>Максимальна кількість<br>варіантів відповідей:</html>",
-                "<html>Максимальна кількість<br>запитань у тесті:</html>",
-                "<html>Максимальна кількість<br>часу, хв.:</html>",
-                "<html>Максимальна кількість<br>спроб:</html>"), BorderLayout.WEST);
+        limitPanel.add(createLabelPanel("Максимальна кількість варіантів відповідей:",
+                "Максимальна кількість запитань у тесті:",
+                "Максимальна кількість часу, хв.:",
+                "Максимальна кількість спроб:",
+                "Мінімальна кількість балів для сдачі тесту:"), BorderLayout.WEST);
         limitPanel.add(createSpinners(), BorderLayout.CENTER);
         limitPanel.setBorder(new TitledBorder("Обмеження"));
         limitPanel.setBackground(Color.WHITE);
@@ -246,7 +250,7 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private JPanel createSpinners() {
-        JPanel spinners = new JPanel(new GridLayout(4, 1, 0, 6));
+        JPanel spinners = new JPanel(new GridLayout(5, 1, 0, 6));
         spinners.setBackground(Color.WHITE);
         spinners.setBorder(new EmptyBorder(0, 5, 8, 0));
 
@@ -261,6 +265,9 @@ public class TestTaskSettingsGI extends JDialog {
 
         attemptLimit = new JSpinner(new SpinnerNumberModel(testTask.getAttemptsLimit(), 0, 3, 1));
         spinners.add(attemptLimit);
+
+        pointLimit = new JSpinner(new SpinnerNumberModel(testTask.getMinPoint(), 50, 80, 5));
+        spinners.add(pointLimit);
 
         return spinners;
     }
