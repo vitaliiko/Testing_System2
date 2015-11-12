@@ -2,17 +2,18 @@ package testingClasses;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Question implements Serializable {
 
     private String imageName;
     private byte[] imageInByte;
     private String task;
-    private ArrayList<String> answersList;
-    private ArrayList<String> rightAnswersList;
+    private List<String> answersList;
+    private List<String> rightAnswersList;
 
-    public Question(String imageName, byte[] imageInByte, String task, ArrayList<String> answersList,
-                    ArrayList<String> rightAnswersList) {
+    public Question(String imageName, byte[] imageInByte, String task, List<String> answersList,
+                    List<String> rightAnswersList) {
         this.imageName = imageName;
         this.imageInByte = imageInByte;
         this.task = task;
@@ -20,7 +21,7 @@ public class Question implements Serializable {
         this.rightAnswersList = rightAnswersList;
     }
 
-    public Question(String task, ArrayList<String> answersList, ArrayList<String> rightAnswersList) {
+    public Question(String task, List<String> answersList, List<String> rightAnswersList) {
         this.task = task;
         this.answersList = answersList;
         this.rightAnswersList = rightAnswersList;
@@ -52,7 +53,7 @@ public class Question implements Serializable {
         this.task = task;
     }
 
-    public ArrayList<String> getAnswersList() {
+    public List<String> getAnswersList() {
         return answersList;
     }
 
@@ -60,7 +61,7 @@ public class Question implements Serializable {
         this.answersList = answersList;
     }
 
-    public ArrayList<String> getRightAnswersList() {
+    public List<String> getRightAnswersList() {
         return rightAnswersList;
     }
 

@@ -114,4 +114,19 @@ public class IOFileHandling {
         }
         return studentsGroupSet;
     }
+
+    public static List<String> readFromFile(String fileName) {
+        String interLine;
+        List<String> stringList = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            while ((interLine = reader.readLine()) != null) {
+                stringList.add(interLine);
+            }
+        } catch (IOException e) {
+            JOptionPane.showConfirmDialog(null, "File does not exist", "ACHTUNG!",
+                    JOptionPane.DEFAULT_OPTION);
+        }
+        return stringList;
+    }
 }

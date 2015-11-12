@@ -23,11 +23,11 @@ public class TestTask implements Serializable {
     private int attemptsLimit;
     private int minPoint;
 
-    private ArrayList<Question> questionsList = new ArrayList<>();
-    private ArrayList<ArrayList<Question>> questionGroupsList = new ArrayList<>();
-    private ArrayList<String> authorsList = new ArrayList<>();
-    private ArrayList<String> studentGroupsList = new ArrayList<>();
-    private ArrayList<Student> notAllowedStudentsList = new ArrayList<>();
+    private List<Question> questionsList = new ArrayList<>();
+    private List<ArrayList<Question>> questionGroupsList = new ArrayList<>();
+    private List<String> authorsList = new ArrayList<>();
+    private List<String> studentGroupsList = new ArrayList<>();
+    private List<Student> notAllowedStudentsList = new ArrayList<>();
 
     public TestTask(String taskName, String disciplineName, String creatorName) {
         this.taskName = taskName;
@@ -96,7 +96,7 @@ public class TestTask implements Serializable {
         this.timeLimit = timeLimit;
     }
 
-    public ArrayList<String> getAuthorsList() {
+    public List<String> getAuthorsList() {
         return authorsList;
     }
 
@@ -104,11 +104,11 @@ public class TestTask implements Serializable {
         this.authorsList = (ArrayList<String>) authorsList;
     }
 
-    public ArrayList<Question> getQuestionsList() {
+    public List<Question> getQuestionsList() {
         return questionsList;
     }
 
-    public void setQuestionsList(ArrayList<Question> questionsList) {
+    public void setQuestionsList(List<Question> questionsList) {
         this.questionsList = questionsList;
     }
 
@@ -128,7 +128,7 @@ public class TestTask implements Serializable {
         this.minPoint = minPoint;
     }
 
-    public ArrayList<ArrayList<Question>> getQuestionGroupsList() {
+    public List<ArrayList<Question>> getQuestionGroupsList() {
         return questionGroupsList;
     }
 
@@ -136,7 +136,7 @@ public class TestTask implements Serializable {
         this.questionGroupsList = questionGroupsList;
     }
 
-    public ArrayList<String> getStudentGroupsList() {
+    public List<String> getStudentGroupsList() {
         return studentGroupsList;
     }
 
@@ -144,7 +144,7 @@ public class TestTask implements Serializable {
         this.studentGroupsList = (ArrayList<String>) studentGroupsList;
     }
 
-    public ArrayList<Student> getNotAllowedStudentsList() {
+    public List<Student> getNotAllowedStudentsList() {
         return notAllowedStudentsList;
     }
 

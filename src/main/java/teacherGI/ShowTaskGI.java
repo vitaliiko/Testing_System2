@@ -36,7 +36,7 @@ public class ShowTaskGI extends MainFrame {
 
         testTaskManager.setCurrentTest(currentTest);
         testTask = testTaskManager.getCurrentTest();
-        questionsList = testTaskManager.getCurrentTest().getQuestionsList();
+        questionsList = (ArrayList<Question>) testTaskManager.getCurrentTest().getQuestionsList();
         frameSetup();
     }
 

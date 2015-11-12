@@ -1,10 +1,12 @@
 import supporting.IOFileHandling;
+import supporting.ImageUtils;
 import testingClasses.Question;
 import testingClasses.TestTask;
 import usersClasses.Student;
 import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +92,68 @@ public class StartInitObjects {
         testTasks.add(createTestObject("111", "222"));
         testTasks.add(createTestObject("222", "222"));
         testTasks.add(createTestObject("000", "222"));
+        try {
+            testTasks.add(createTests("tests/test.txt", "testing test", "Іванов Іван Іванович"));
+        } catch (IOException e) {
+            e.getMessage();
+        }
         IOFileHandling.saveTestTasks(testTasks);
+    }
+
+    public static TestTask createTests(String fileName, String testName, String creatorName) throws IOException {
+        List<String> stringList = IOFileHandling.readFromFile(fileName);
+        if (stringList == null) {
+            throw new IOException("fuck");
+        }
+
+        int i = 0;
+        String task = null;
+        byte[] image = null;
+        String imageName = null;
+        List<String> answers = new ArrayList<>();
+        List<String> rightAnswers = new ArrayList<>();
+        List<Question> questions = new ArrayList<>();
+        for (String s : stringList) {
+            switch (i) {
+                case 0: {
+                    task = s;
+                    i++;
+                    break;
+                }
+                case 1: {
+                    if (!s.isEmpty()) {
+                        image = ImageUtils.imageInByteArr("E:\\Intellij\\Testing_System2\\tests\\" + s);
+                        imageName = "E:\\Intellij\\Testing_System2\\tests\\" + s;
+                    }
+                    i++;
+                    break;
+                }
+                default: {
+                    if (s.equals("***")) {
+                        if (image != null) {
+                            questions.add(new Question(imageName, image, task, answers, rightAnswers));
+                        } else {
+                            questions.add(new Question(task, answers, rightAnswers));
+                        }
+                        image = null;
+                        answers = new ArrayList<>();
+                        rightAnswers = new ArrayList<>();
+                        i = 0;
+                    } else {
+                        if (s.startsWith("*")) {
+                            s = s.replace("*", "");
+                            answers.add(s);
+                            rightAnswers.add(s);
+                        } else {
+                            answers.add(s);
+                        }
+                    }
+                }
+            }
+        }
+
+        TestTask testTask = new TestTask(testName, "Дисципліна", creatorName);
+        testTask.setQuestionsList(questions);
+        return testTask;
     }
 }
