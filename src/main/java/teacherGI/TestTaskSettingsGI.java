@@ -165,7 +165,7 @@ public class TestTaskSettingsGI extends JDialog {
         return panel;
     }
 
-    private void createCheckAllBox(JPanel checkBoxPanel) {
+    private JCheckBox createCheckAllBox(JPanel checkBoxPanel) {
         JCheckBox checkAll = new JCheckBox("Відмітити усіх");
         checkAll.setBackground(Color.WHITE);
         checkAll.setFocusable(false);
@@ -175,8 +175,7 @@ public class TestTaskSettingsGI extends JDialog {
                 ((JCheckBox) checkBoxPanel.getComponent(i)).setSelected(checkAll.isSelected());
             }
         });
-        checkBoxPanel.add(checkAll);
-        checkBoxPanel.add(new JSeparator());
+        return checkAll;
     }
 
     private <T extends DataList> JPanel createCheckBoxPanel(ArrayList<T> dataList) {
@@ -184,8 +183,11 @@ public class TestTaskSettingsGI extends JDialog {
         checkBoxPanel.setBackground(Color.WHITE);
         checkBoxPanel.setOpaque(true);
 
-        createCheckAllBox(checkBoxPanel);
+        JCheckBox checkAllBox = createCheckAllBox(checkBoxPanel);
+        checkBoxPanel.add(checkAllBox);
+        checkBoxPanel.add(new JSeparator());
 
+        int selectedCount = 0;
         for (T o : dataList) {
             JCheckBox checkBox = new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
             checkBox.setBackground(Color.WHITE);
@@ -196,7 +198,13 @@ public class TestTaskSettingsGI extends JDialog {
             if (o instanceof StudentsGroup) {
                 checkBox.setSelected(testTask.getStudentGroupsList().contains(((StudentsGroup) o).getName()));
             }
+            if (checkBox.isSelected()) {
+                selectedCount++;
+            }
             checkBoxPanel.add(checkBox);
+        }
+        if (selectedCount == dataList.size()) {
+            checkAllBox.setSelected(true);
         }
         return checkBoxPanel;
     }
