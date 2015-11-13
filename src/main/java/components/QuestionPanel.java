@@ -7,6 +7,8 @@ import testingClasses.Question;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class QuestionPanel extends JPanel {
 
@@ -28,9 +30,24 @@ public class QuestionPanel extends JPanel {
             add(new ImagePanel(ImageUtils.imageFromByteArr(question.getImageInByte())));
         }
 
-
-        for (String s : question.getAnswersList()) {
-
+        Random random = new Random();
+        List<String> answerList = new ArrayList<>();
+        answerList.addAll(question.getAnswersList());
+        if (question.getRightAnswersList().size() == 1) {
+            ButtonGroup buttonGroup = new ButtonGroup();
+            while (answerList.size() > 0) {
+                String answer = answerList.get(random.nextInt(answerList.size()));
+                add(new AnswerRadioBoxPanel(buttonGroup, answer));
+                answerList.remove(answer);
+            }
+        } else {
+            while (answerList.size() > 0) {
+                String answer = answerList.get(random.nextInt(answerList.size()));
+                add(new AnswerRadioBoxPanel(answer));
+                answerList.remove(answer);
+            }
         }
+
+        add(new JSeparator());
     }
 }

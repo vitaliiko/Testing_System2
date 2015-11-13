@@ -21,7 +21,7 @@ public class ShowTaskGI extends MainFrame {
     private TestTask testTask;
     private ArrayList<Question> questionsList = new ArrayList<>();
 
-    private JPanel browsePanel;
+    private JPanel browseQuestionsPanel;
     private JButton addButton;
     private JButton removeButton;
     private JButton editButton;
@@ -92,20 +92,20 @@ public class ShowTaskGI extends MainFrame {
     public void fillContainer() {
         prepareQuestionsTable();
 
-        browsePanel = new JPanel();
-        browsePanel.setLayout(new BoxLayout(browsePanel, BoxLayout.Y_AXIS));
+        browseQuestionsPanel = new JPanel();
+        browseQuestionsPanel.setLayout(new BoxLayout(browseQuestionsPanel, BoxLayout.Y_AXIS));
         repaintBrowsePanel();
 
         addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-                new JScrollPane(browsePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                new JScrollPane(browseQuestionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
     private void repaintBrowsePanel() {
-        browsePanel.removeAll();
+        browseQuestionsPanel.removeAll();
         for (int i = 0; i < questionsList.size(); i++) {
-            browsePanel.add(createQuestionPanel(i + 1, questionsList.get(i)));
+            browseQuestionsPanel.add(createQuestionPanel(i + 1, questionsList.get(i)));
         }
     }
 
@@ -140,7 +140,7 @@ public class ShowTaskGI extends MainFrame {
                     if (addQuestionGI.getQuestion() != null) {
                         questionsList.add(addQuestionGI.getQuestion());
                         questionsCountLabel.setText(String.valueOf(questionsList.size()));
-                        browsePanel.add(createQuestionPanel(questionsList.size(),
+                        browseQuestionsPanel.add(createQuestionPanel(questionsList.size(),
                                 questionsList.get(questionsList.size() - 1)));
                     }
                 }

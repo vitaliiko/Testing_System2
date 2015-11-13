@@ -1,6 +1,13 @@
 package testingClasses;
 
+import components.BoxPanel;
+import components.QuestionPanel;
+
+import javax.swing.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class TestTaskWrapper implements Serializable {
 
@@ -14,6 +21,8 @@ public class TestTaskWrapper implements Serializable {
     private int attemptsLeft;
     private int status;
     private int points;
+
+    private List<QuestionPanel> questionPanelList = new ArrayList<>();
 
     public TestTaskWrapper(TestTask testTask) {
         this.testTask = testTask;
@@ -49,8 +58,21 @@ public class TestTaskWrapper implements Serializable {
         this.points = points;
     }
 
-    public void createCard() {
-
+    public JPanel createCard() {
+        Random random = new Random();
+        JPanel panel = new BoxPanel(BoxLayout.Y_AXIS);
+        List<Question> questionList = new ArrayList<>();
+        questionList.addAll(testTask.getQuestionsList());
+        int i = 1;
+        while (questionList.size() > 0) {
+            Question question = questionList.get(random.nextInt(questionList.size()));
+            QuestionPanel questionPanel = new QuestionPanel(i, question);
+            i++;
+            questionList.remove(question);
+            questionPanelList.add(questionPanel);
+            panel.add(questionPanel);
+        }
+        return panel;
     }
 
     @Override

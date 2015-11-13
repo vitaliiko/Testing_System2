@@ -56,7 +56,7 @@ public class StudentWorkspaceGI extends MainFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-
+                    new PassingTheTestGI(studentManager.getCurrentUser().getTestTaskWrapperList().get(testTaskTable.getSelectedRow()).createCard());
                 }
             }
         });

@@ -3,6 +3,7 @@ package components;
 import javafx.scene.control.RadioButton;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.util.*;
@@ -18,8 +19,7 @@ public class AnswerRadioBoxPanel extends JPanel {
         checkBox = new JCheckBox("");
         checkBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         add(checkBox);
-
-        add(FrameUtils.createTextArea(text));
+        add(createTextArea(text));
     }
 
     public AnswerRadioBoxPanel(ButtonGroup buttonGroup, String text) {
@@ -27,8 +27,16 @@ public class AnswerRadioBoxPanel extends JPanel {
         radioButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonGroup.add(radioButton);
         add(radioButton);
+        add(createTextArea(text));
+    }
 
-        add(FrameUtils.createTextArea(text));
+    private JTextArea createTextArea(String text) {
+        int height = (text.length() / 90 + (text.length() % 90 > 0 ? 1 : 0)) * 17;
+        textArea = FrameUtils.createTextArea(text);
+        textArea.setMinimumSize(new Dimension(200, 20));
+        textArea.setPreferredSize(new Dimension(600, height));
+        add(textArea);
+        return textArea;
     }
 
     public String getText() {
