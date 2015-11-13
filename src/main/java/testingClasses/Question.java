@@ -1,10 +1,12 @@
 package testingClasses;
 
+import usersClasses.DataList;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Question implements Serializable {
+public class Question implements Serializable, DataList {
 
     private String imageName;
     private byte[] imageInByte;
