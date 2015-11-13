@@ -58,6 +58,10 @@ public class TestTaskWrapper implements Serializable {
         this.points = points;
     }
 
+    public List<QuestionPanel> getQuestionPanelList() {
+        return questionPanelList;
+    }
+
     public JPanel createCard() {
         Random random = new Random();
         JPanel panel = new BoxPanel(BoxLayout.Y_AXIS);

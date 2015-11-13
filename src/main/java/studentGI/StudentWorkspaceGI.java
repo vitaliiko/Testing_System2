@@ -22,6 +22,7 @@ public class StudentWorkspaceGI extends MainFrame {
 
     public StudentWorkspaceGI(StudentManager studentManager) throws HeadlessException {
         super("title", studentManager);
+        this.studentManager.saveUserSet();
         frameSetup();
     }
 
@@ -56,7 +57,9 @@ public class StudentWorkspaceGI extends MainFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    new PassingTheTestGI(studentManager.getCurrentUser().getTestTaskWrapperList().get(testTaskTable.getSelectedRow()).createCard());
+                    TestTaskWrapper testTaskWrapper = studentManager.getCurrentUser().getTestTaskWrapperList().
+                            get(testTaskTable.getSelectedRow());
+                    new PassingTheTestGI(testTaskWrapper.createCard(), testTaskWrapper.getTestTask().getTimeLimit());
                 }
             }
         });
@@ -69,6 +72,7 @@ public class StudentWorkspaceGI extends MainFrame {
         labelPanel.add(new BoxPanel(new JLabel("ʳ������ ��������� �����: "), completedTestsCount));
 
         notCompletedTestCount = new JLabel(String.valueOf(testTaskTable.getRowCount()));
-        labelPanel.add(new BoxPanel(new JLabel("ʳ������ �����, �� ��������� �������: "), notCompletedTestCount));
+        labelPanel.add(new BoxPanel(new JLabel("ʳ������ �����, �� ��������� �������: "),
+                notCompletedTestCount));
     }
 }

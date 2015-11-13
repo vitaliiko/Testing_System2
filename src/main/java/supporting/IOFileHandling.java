@@ -91,7 +91,7 @@ public class IOFileHandling {
         return usersSet;
     }
 
-    public static void saveStuentsGroupSet(Set<StudentsGroup> studentsGroupSet) {
+    public static void saveStudentsGroupSet(Set<StudentsGroup> studentsGroupSet) {
         try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(STUDENTS_SER));
             os.writeObject(studentsGroupSet);

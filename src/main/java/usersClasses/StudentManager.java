@@ -34,7 +34,7 @@ public class StudentManager extends Validator implements UserManager<Student> {
 
     @Override
     public void saveUserSet() {
-
+        IOFileHandling.saveStudentsGroupSet(studentsGroupSet);
     }
 
     @Override

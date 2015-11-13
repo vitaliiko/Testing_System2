@@ -40,7 +40,7 @@ public class StudentAuthGI extends JFrame {
 
     private void setupFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(new Dimension(350, 200));
+        setSize(new Dimension(350, 220));
         setIconImage(new ImageIcon("resources/icon.png").getImage());
         setResizable(false);
         setLocationRelativeTo(null);

@@ -37,7 +37,7 @@ public class StartInitObjects {
         new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
         new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
 
-        IOFileHandling.saveStuentsGroupSet(new TreeSet<>(studentsGroupsList));
+        IOFileHandling.saveStudentsGroupSet(new TreeSet<>(studentsGroupsList));
     }
 
     public static TestTask createTestObject(String... names) {
