@@ -16,7 +16,7 @@ public class AnswerBoxPanel extends JPanel {
         add(checkBox);
 
         textArea = new JTextArea(4, 30);
-        textArea.setFont(new Font("Arial", Font.PLAIN, 12));
+        textArea.setFont(FrameUtils.MAIN_FONT);
         textArea.setLineWrap(true);
         textArea.setEnabled(false);
         add(new JScrollPane(textArea,

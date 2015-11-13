@@ -63,7 +63,7 @@ public class TableParameters<T> extends JTextArea implements TableModel, TableCe
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
-        setFont(new Font("Arial", Font.PLAIN, 12));
+        setFont(FrameUtils.MAIN_FONT);
 
         String data = value.toString();
         int lineWidth = getFontMetrics(getFont()).stringWidth(data);

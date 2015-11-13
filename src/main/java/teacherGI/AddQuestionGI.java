@@ -2,6 +2,7 @@ package teacherGI;
 
 import components.BoxPanel;
 import components.AnswerBoxPanel;
+import components.FrameUtils;
 import supporting.ImageUtils;
 import testingClasses.Question;
 
@@ -168,7 +169,7 @@ public class AddQuestionGI extends JFrame {
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         questionArea = new JTextArea(5, 40);
-        questionArea.setFont(new Font("Arial", Font.PLAIN, 12));
+        questionArea.setFont(FrameUtils.MAIN_FONT);
         questionArea.setLineWrap(true);
         questionArea.setBorder(new EmptyBorder(5, 5, 5, 5));
         questionArea.getDocument().addDocumentListener(new DocumentListener() {
