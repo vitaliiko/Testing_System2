@@ -76,6 +76,7 @@ public class TestTaskWrapper implements Serializable {
             questionPanelList.add(questionPanel);
             panel.add(questionPanel);
         }
+        attemptsLeft--;
         return panel;
     }
 

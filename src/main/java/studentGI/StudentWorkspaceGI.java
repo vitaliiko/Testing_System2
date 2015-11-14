@@ -3,7 +3,6 @@ package studentGI;
 import components.BoxPanel;
 import components.MainFrame;
 import components.TableParameters;
-import testingClasses.TestTask;
 import testingClasses.TestTaskWrapper;
 import usersClasses.StudentManager;
 
@@ -19,6 +18,8 @@ public class StudentWorkspaceGI extends MainFrame {
     private JPanel labelPanel;
     private JLabel completedTestsCount;
     private JLabel notCompletedTestCount;
+    private JButton startButton;
+    private JButton viewResultButton;
 
     public StudentWorkspaceGI(StudentManager studentManager) throws HeadlessException {
         super("title", studentManager);
@@ -37,7 +38,8 @@ public class StudentWorkspaceGI extends MainFrame {
 
     @Override
     public void fillToolsPanel() {
-
+        prepareButtons();
+        addOnToolsPanel(new BoxPanel(viewResultButton, startButton), new JPanel());
     }
 
     @Override
@@ -51,28 +53,36 @@ public class StudentWorkspaceGI extends MainFrame {
         testTaskManager.wrappingTests(studentManager.getCurrentUser());
         testTaskTableParameters = new TableParameters<>(studentManager.getCurrentUser().getTestTaskWrapperList());
         testTaskTable = createTable(testTaskTableParameters);
-        testTaskTable.getSelectionModel().addListSelectionListener(e ->
-                testTaskManager.setCurrentTest(testTaskTable.getSelectedRow()));
+        testTaskTable.getSelectionModel().addListSelectionListener(e -> {
+            testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
+            startButton.setEnabled(true);
+            viewResultButton.setEnabled(true);
+        });
         testTaskTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
-                    TestTaskWrapper testTaskWrapper = studentManager.getCurrentUser().getTestTaskWrapperList().
-                            get(testTaskTable.getSelectedRow());
-                    new PassingTheTestGI(testTaskWrapper.createCard(), testTaskWrapper.getTestTask().getTimeLimit());
+                    startButton.doClick();
                 }
             }
         });
+    }
+
+    private void prepareButtons() {
+        startButton = new JButton("Старт");
+        startButton.setEnabled(false);
+        startButton.addActionListener(e ->
+                new StartTestGI(this, studentManager.getCurrentUser().getTestTaskWrapperList().
+                        get(testTaskTable.getSelectedRow())));
+
+        viewResultButton = new JButton("Переглянути результат");
+        viewResultButton.setEnabled(false);
     }
 
     private void prepareLabelPanel() {
         labelPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         completedTestsCount = new JLabel("0");
-        labelPanel.add(new BoxPanel(new JLabel("ʳ������ ��������� �����: "), completedTestsCount));
-
-        notCompletedTestCount = new JLabel(String.valueOf(testTaskTable.getRowCount()));
-        labelPanel.add(new BoxPanel(new JLabel("ʳ������ �����, �� ��������� �������: "),
-                notCompletedTestCount));
+        labelPanel.add(new BoxPanel(new JLabel("Тестів складено: "), completedTestsCount));
     }
 }

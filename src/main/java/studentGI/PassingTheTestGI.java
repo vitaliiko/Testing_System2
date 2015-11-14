@@ -1,21 +1,23 @@
 package studentGI;
 
-import components.AnswerRadioBoxPanel;
 import components.BoxPanel;
+import components.LabelComponentPanel;
 import components.QuestionPanel;
+import testingClasses.TestTaskWrapper;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Calendar;
-import java.util.Date;
 
 public class PassingTheTestGI extends JWindow {
 
-    private JPanel progressPanel;
+
+    private JPanel toolsPanel;
     private JPanel emptyPanel;
     private JPanel questionsPanel;
+    private JPanel progressPanel;
     private JProgressBar progressBar;
     private JButton completeButton;
     private JLabel progressLabel;
@@ -23,9 +25,9 @@ public class PassingTheTestGI extends JWindow {
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private int timeLimit;
 
-    public PassingTheTestGI(JPanel questionsPanel, int timeLimit) {
-        this.questionsPanel = questionsPanel;
-        this.timeLimit = timeLimit * 60;
+    public PassingTheTestGI(TestTaskWrapper testTaskWrapper) {
+        questionsPanel = testTaskWrapper.createCard();
+        timeLimit = testTaskWrapper.getTestTask().getTimeLimit() * 60;
         gd.setFullScreenWindow(this);
         JScrollPane scrollPane = new JScrollPane(questionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -33,8 +35,8 @@ public class PassingTheTestGI extends JWindow {
         addListenersToQuestionPanel();
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
-        prepareProgressPanel();
-        getContentPane().add(progressPanel, BorderLayout.WEST);
+        prepareToolsPanel();
+        getContentPane().add(toolsPanel, BorderLayout.WEST);
         prepareEmptyPanel();
         getContentPane().add(emptyPanel, BorderLayout.EAST);
 
@@ -43,25 +45,41 @@ public class PassingTheTestGI extends JWindow {
 
     }
 
+    private void prepareToolsPanel() {
+        toolsPanel = new JPanel(new BorderLayout());
+        toolsPanel.setPreferredSize(new Dimension(gd.getFullScreenWindow().getWidth() / 5,
+                gd.getFullScreenWindow().getHeight()));
+
+        prepareProgressPanel();
+        toolsPanel.add(progressPanel, BorderLayout.NORTH);
+
+        prepareCompleteButton();
+        toolsPanel.add(new BoxPanel(completeButton), BorderLayout.SOUTH);
+    }
+
     private void prepareProgressPanel() {
         progressPanel = new BoxPanel(BoxLayout.Y_AXIS);
-        progressPanel.setPreferredSize(new Dimension(gd.getFullScreenWindow().getWidth() / 5,
-                gd.getFullScreenWindow().getHeight()));
+        progressPanel.setBorder(new EmptyBorder(15, 5, 0, 5));
+
+        if (timeLimit != 0) {
+            timeLabel = new JLabel(timeLimit / 60 + " хв. " + timeLimit % 60 + " сек.");
+            timeLabel.setFont(new Font("Arial", Font.BOLD, 14));
+            timeLabel.setHorizontalAlignment(JLabel.CENTER);
+            JLabel label = new JLabel("Залишилось часу: ");
+            label.setFont(timeLabel.getFont());
+            label.setHorizontalAlignment(JLabel.CENTER);
+            progressPanel.add(label);
+            progressPanel.add(timeLabel);
+            startTimer();
+        }
+
+        progressLabel = new JLabel("0/" + questionsPanel.getComponentCount());
+        progressLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        progressPanel.add(new LabelComponentPanel("Дано відповідей: ", progressLabel));
 
         progressBar = new JProgressBar(0, questionsPanel.getComponentCount());
         progressBar.setStringPainted(true);
         progressPanel.add(progressBar);
-
-        progressLabel = new JLabel("0/" + questionsPanel.getComponentCount());
-        progressPanel.add(progressLabel);
-
-        if (timeLimit != 0) {
-            prepareTimer();
-            progressPanel.add(timeLabel);
-        }
-
-        prepareCompleteButton();
-        progressPanel.add(completeButton);
     }
 
     private void prepareEmptyPanel() {
@@ -80,8 +98,7 @@ public class PassingTheTestGI extends JWindow {
         });
     }
 
-    private void prepareTimer() {
-        timeLabel = new JLabel();
+    private void startTimer() {
         Timer timer = new Timer(1000, e -> {
             timeLimit--;
             timeLabel.setText(String.valueOf(timeLimit / 60 + " хв. " + timeLimit % 60 + " сек."));

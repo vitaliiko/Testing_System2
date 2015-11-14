@@ -1,14 +1,8 @@
 package components;
 
-import javafx.scene.control.RadioButton;
-
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.*;
-import java.util.List;
 
 public class AnswerRadioBoxPanel extends JPanel {
 

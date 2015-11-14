@@ -122,8 +122,8 @@ public class StartInitObjects {
                 }
                 case 1: {
                     if (!s.isEmpty()) {
-                        image = ImageUtils.imageInByteArr("E:\\Intellij\\Testing_System2\\tests\\" + s);
-                        imageName = "E:\\Intellij\\Testing_System2\\tests\\" + s;
+                        image = ImageUtils.imageInByteArr("tests\\" + s);
+                        imageName = "tests\\" + s;
                     }
                     i++;
                     break;
