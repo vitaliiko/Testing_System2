@@ -144,7 +144,9 @@ public class TestTaskSettingsGI extends JDialog {
         List<String> dataList = new ArrayList<>();
         for (int i = 2; i < panel.getComponentCount(); i++) {
             JCheckBox checkBox = (JCheckBox) panel.getComponent(i);
-            if (checkBox.isSelected()) {
+            if (!checkBox.isEnabled()) {
+                dataList.add(0, checkBox.getText());
+            } else if (checkBox.isSelected()) {
                 dataList.add(checkBox.getText());
             }
         }
@@ -201,7 +203,10 @@ public class TestTaskSettingsGI extends JDialog {
         checkAll.addItemListener(e -> {
             checkAll.setText(checkAll.isSelected() ? "Зняти усіх" : "Відмітити усіх");
             for (int i = 2; i < checkBoxPanel.getComponentCount(); i++) {
-                ((JCheckBox) checkBoxPanel.getComponent(i)).setSelected(checkAll.isSelected());
+                JCheckBox checkBox = (JCheckBox) checkBoxPanel.getComponent(i);
+                if (checkBox.isEnabled()) {
+                    checkBox.setSelected(checkAll.isSelected());
+                }
             }
         });
         return checkAll;
@@ -212,27 +217,20 @@ public class TestTaskSettingsGI extends JDialog {
         checkBoxPanel.setBackground(Color.WHITE);
         checkBoxPanel.setOpaque(true);
 
-        JCheckBox checkAllBox = null;
-        if (!(dataList.get(0) instanceof Question)) {
-            checkAllBox = createCheckAllBox(checkBoxPanel);
-            checkBoxPanel.add(checkAllBox);
-            checkBoxPanel.add(new JSeparator());
-        }
+        JCheckBox checkAllBox = createCheckAllBox(checkBoxPanel);
+        checkBoxPanel.add(checkAllBox);
+        checkBoxPanel.add(new JSeparator());
 
-        int componentsCount = 1;
         int selectedCount = 0;
         for (T o : dataList) {
-            JCheckBox checkBox;
-            if (o instanceof Question) {
-                checkBox = new JCheckBox(componentsCount + ". " + ((Question) o).getTask());
-                componentsCount++;
-            } else {
-                checkBox = new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
-            }
+            JCheckBox checkBox =
+                    new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
             if (o instanceof Teacher) {
-                checkBox.setSelected(testTask.getAuthorsList().contains(((Teacher) o).getUserName()));
+                String teacherName = ((Teacher) o).getUserName();
+                checkBox.setSelected(testTask.getAuthorsList().contains(teacherName));
+                checkBox.setEnabled(testTask.getAuthorsList().indexOf(teacherName) != 0);
             }
             if (o instanceof StudentsGroup) {
                 checkBox.setSelected(testTask.getStudentGroupsList().contains(((StudentsGroup) o).getName()));
@@ -244,6 +242,22 @@ public class TestTaskSettingsGI extends JDialog {
         }
         if (selectedCount == dataList.size() && checkAllBox != null) {
             checkAllBox.setSelected(true);
+        }
+        return checkBoxPanel;
+    }
+
+    private JPanel createQuestionCheckBoxPanel(List<Question> questions) {
+        JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        checkBoxPanel.setBackground(Color.WHITE);
+        checkBoxPanel.setOpaque(true);
+
+        int componentsCount = 1;
+        for (Question question : questions) {
+            JCheckBox checkBox = new JCheckBox(componentsCount + ". " + question.getTask());
+            componentsCount++;
+            checkBox.setBackground(Color.WHITE);
+            checkBox.setFocusable(false);
+            checkBoxPanel.add(checkBox);
         }
         return checkBoxPanel;
     }
@@ -337,7 +351,7 @@ public class TestTaskSettingsGI extends JDialog {
         questionsTabPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionsTabPanel.setBorder(new EmptyBorder(5, 7, 5, 7));
 
-        questionsGroupPanel = createCheckBoxPanel(testTask.getQuestionsList());
+        questionsGroupPanel = createQuestionCheckBoxPanel(testTask.getQuestionsList());
         for (Component c : questionsGroupPanel.getComponents()) {
             ((JCheckBox) c).addActionListener(e -> addQuestionsButton.setEnabled(areTwoBoxesSelected()));
         }

@@ -4,6 +4,7 @@ import components.BoxPanel;
 import components.AnswerBoxPanel;
 import components.FrameUtils;
 import supporting.ImageUtils;
+import supporting.SingleMessage;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;
@@ -17,7 +18,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Paths;
+import java.util.*;
+import java.util.List;
 
 public class AddQuestionGI extends JFrame {
 
@@ -29,7 +32,7 @@ public class AddQuestionGI extends JFrame {
     private JPanel buttonsPanel;
     private JTextField imageNameField;
     private JTextArea questionArea;
-    private JButton openButton;
+    private JButton openImageButton;
     private JButton browseImageButton;
     private JButton completeButton;
     private JButton cancelButton;
@@ -45,8 +48,8 @@ public class AddQuestionGI extends JFrame {
             e.printStackTrace();
         }
         this.answersLimit = answersLimit;
-        prepareImagePanel();
-        getContentPane().add(imagePanel, BorderLayout.NORTH);
+
+        getContentPane().add(SingleMessage.getInstance("Заповніть порожні поля"), BorderLayout.NORTH);
         prepareQuestionPanel();
         getContentPane().add(questionPanel, BorderLayout.CENTER);
         prepareButtonsPanel();
@@ -57,6 +60,7 @@ public class AddQuestionGI extends JFrame {
     public AddQuestionGI(Question question, int answersLimit) {
         this(answersLimit);
         setTitle("Редагування");
+        this.question = question;
         imageNameField.setText(question.getImageName());
         questionArea.setText(question.getTask());
         int i = 0;
@@ -67,16 +71,14 @@ public class AddQuestionGI extends JFrame {
             answersBoxList.get(i).setSelected(question.getRightAnswersList().contains(s));
             i++;
         }
-        if (i <= answersBoxList.size() - 1) {
-            answersBoxList.get(i).setEnabledTextArea(true);
-        }
+        SingleMessage.setDefaultMessage("Редагування запитання");
     }
 
     public Question getQuestion() {
         return question;
     }
 
-    public void setupWindow() {
+    private void setupWindow() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         pack();
         setResizable(false);
@@ -90,10 +92,10 @@ public class AddQuestionGI extends JFrame {
         });
     }
 
-    public void prepareOpenButton() {
-        openButton = new JButton(new ImageIcon("resources/folder.png"));
-        openButton.setToolTipText("Відкрити");
-        openButton.addActionListener(e -> {
+    private void prepareOpenButton() {
+        openImageButton = new JButton(new ImageIcon("resources/folder.png"));
+        openImageButton.setToolTipText("Відкрити");
+        openImageButton.addActionListener(e -> {
             try {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.addChoosableFileFilter(new supporting.ImageFilter());
@@ -105,16 +107,15 @@ public class AddQuestionGI extends JFrame {
                     imageNameField.setText(imagePath);
                 }
             } catch (IndexOutOfBoundsException e1) {
-                JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
-                        "Попередження", JOptionPane.DEFAULT_OPTION);
+                SingleMessage.setWarningMessage("Виникла помилка при завантаженні зображення");
             } catch (IOException e1) {
-                JOptionPane.showConfirmDialog(null, e1.getMessage(), "Попередження", JOptionPane.DEFAULT_OPTION);
+                SingleMessage.setWarningMessage(e1.getMessage());
             }
         });
-        openButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        openImageButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
-    public void prepareBrowseImageButton() {
+    private void prepareBrowseImageButton() {
         browseImageButton = new JButton(new ImageIcon("resources/image.png"));
         browseImageButton.setToolTipText("Перегляд");
         browseImageButton.setEnabled(false);
@@ -132,19 +133,19 @@ public class AddQuestionGI extends JFrame {
         });
     }
 
-    public void prepareImagePanel() {
+    private void prepareImagePanel() {
         JPanel imagePanel = new JPanel();
         imagePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         prepareImageNameField();
         imagePanel.add(imageNameField);
         prepareOpenButton();
-        imagePanel.add(openButton);
+        imagePanel.add(openImageButton);
         prepareBrowseImageButton();
         imagePanel.add(browseImageButton);
         this.imagePanel = new BoxPanel(BoxLayout.Y_AXIS, new JLabel("Оберіть зображення:"), imagePanel);
     }
 
-    public void prepareImageNameField() {
+    private void prepareImageNameField() {
         imageNameField = new JTextField(35);
         imageNameField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -164,22 +165,31 @@ public class AddQuestionGI extends JFrame {
         });
     }
 
-    public void prepareQuestionPanel() {
+    private void prepareQuestionPanel() {
         questionPanel = new BoxPanel(BoxLayout.Y_AXIS);
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        questionArea = new JTextArea(5, 40);
-        questionArea.setFont(FrameUtils.MAIN_FONT);
-        questionArea.setLineWrap(true);
-        questionArea.setBorder(new EmptyBorder(5, 5, 5, 5));
-        questionArea.getDocument().addDocumentListener(new DocumentListener() {
+        prepareImagePanel();
+        questionPanel.add(imagePanel);
+
+        JScrollPane scrollPane = new JScrollPane(questionArea = createTextArea(),
+                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        questionPanel.add(new JLabel("Текст запитання:"));
+        questionPanel.add(scrollPane);
+
+        prepareAnswersPanel();
+        questionPanel.add(answersPanel);
+    }
+
+    private JTextArea createTextArea() {
+        JTextArea textArea = new JTextArea(5, 40);
+        textArea.setFont(FrameUtils.MAIN_FONT);
+        textArea.setLineWrap(true);
+        textArea.setBorder(new EmptyBorder(5, 5, 5, 5));
+        textArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (questionArea.getText().isEmpty()) {
-                    completeButton.setEnabled(false);
-                } else {
-                    completeButton.setEnabled(true);
-                }
+                completeButton.setEnabled(!textArea.getText().isEmpty());
             }
 
             @Override
@@ -192,16 +202,10 @@ public class AddQuestionGI extends JFrame {
                 insertUpdate(e);
             }
         });
-        JScrollPane scrollPane = new JScrollPane(questionArea);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        questionPanel.add(new JLabel("Текст запитання:"));
-        questionPanel.add(scrollPane);
-        prepareAnswersPanel();
-        questionPanel.add(answersPanel);
+        return textArea;
     }
 
-    public void prepareAnswersPanel() {
+    private void prepareAnswersPanel() {
         answersPanel = new BoxPanel(BoxLayout.Y_AXIS);
         answersPanel.setBorder(new TitledBorder("Варіанти відповідей"));
         answersBoxList = new ArrayList<>();
@@ -242,21 +246,23 @@ public class AddQuestionGI extends JFrame {
         }
     }
 
-    public void prepareCompleteButton() {
+    private void prepareCompleteButton() {
         completeButton = new JButton("Готово");
         completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         completeButton.setEnabled(false);
         completeButton.addActionListener(e -> {
             try {
                 question = createQuestion();
-                dispose();
+                if (question != null) {
+                    dispose();
+                }
             } catch (IOException e1) {
                 JOptionPane.showConfirmDialog(null, e1.getMessage(), "Попередження", JOptionPane.DEFAULT_OPTION);
             }
         });
     }
 
-    public void prepareCancelButton() {
+    private void prepareCancelButton() {
         cancelButton = new JButton("Відмінити");
         cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cancelButton.addActionListener(e -> {
@@ -275,7 +281,7 @@ public class AddQuestionGI extends JFrame {
         });
     }
 
-    public void prepareButtonsPanel() {
+    private void prepareButtonsPanel() {
         buttonsPanel = new JPanel();
         prepareCompleteButton();
         buttonsPanel.add(completeButton);
@@ -283,18 +289,23 @@ public class AddQuestionGI extends JFrame {
         buttonsPanel.add(cancelButton);
     }
 
-    public Question createQuestion() throws IOException {
+    private Question createQuestion() throws IOException {
         String task;
         String imageName = null;
         byte[] imageInByte = null;
         ArrayList<String> answersList = new ArrayList<>();
         ArrayList<String> rightAnswersList = new ArrayList<>();
 
-        if (!imageNameField.getText().isEmpty()) {
-            imageName = imageNameField.getText();
+        if (!imageNameField.getText().isEmpty() && question != null && question.getImageName() == null) {
+            imageName = Paths.get(imageNameField.getText()).getFileName().toString();
             imageInByte = ImageUtils.imageInByteArr(imageName);
+        } else if (question != null) {
+            imageName = question.getImageName();
+            imageInByte= question.getImageInByte();
         }
+
         task = questionArea.getText();
+
         for (AnswerBoxPanel answer : answersBoxList) {
             if (!answer.getText().isEmpty()) {
                 if (!answersList.contains(answer.getText())) {
@@ -303,17 +314,23 @@ public class AddQuestionGI extends JFrame {
                         rightAnswersList.add(answer.getText());
                     }
                 } else {
-                    throw new IOException("Два чи більше однакових варіанта відповідей");
+                    SingleMessage.setWarningMessage("Два чи більше однакових варіанта відповідей");
+                    return null;
                 }
             }
         }
+
         if (answersList.size() < 3) {
-            throw new IOException("Кількість варіантів відповідей повинна бути не меншою 3");
+            SingleMessage.setWarningMessage("Кількість варіантів відповідей повинна бути не меншою 3");
+            return null;
         }
         if (rightAnswersList.size() < 1) {
-            throw new IOException("Повинна бути одна або більше правильних відповідей");
+            SingleMessage.setWarningMessage("Повинна бути одна або більше правильних відповідей");
+            return null;
         }
-        if (rightAnswersList.size() == answersList.size()) {
+
+        int answersCount = rightAnswersList.size();
+        if (answersCount != 0 && answersCount == answersList.size()) {
             int option = JOptionPane.showConfirmDialog(
                     null, "Ви відмітили всі відповіді як правильні. Бажаєте продовжити?",
                     null, JOptionPane.YES_NO_OPTION);
