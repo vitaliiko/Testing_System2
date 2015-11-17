@@ -44,7 +44,7 @@ public class TeacherManager extends Validator implements UserManager<Teacher> {
     @Override
     public void createUser(String surname, String name, String secondName, char[] password) throws IOException {
         validateName(surname, name, secondName);
-        validatePassword(password);
+        validatePassword(password, this);
         if (!teacherSet.add(new Teacher(surname, name, secondName, password))) {
             throw new IOException(SingleMessage.EXIST_USER);
         }

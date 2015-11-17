@@ -8,7 +8,7 @@ public class SingleMessage extends JLabel {
 
     private static final ImageIcon WARNING_IMAGE = new ImageIcon("resources/warning.png");
 
-    public static final String WRONG_USER = "Непрвильний логін або пароль";
+    public static final String WRONG_USER_OR_PASS = "Непрвильний логін або пароль";
     public static final String WRONG_GROUP = "Такої групи не існує";
     public static final String EXIST_USER = "Користувач з таким ім'ям вжу існує";
     public static final String ADD_USER_SUC = "Обліковий запис успішно створено!";
@@ -16,11 +16,12 @@ public class SingleMessage extends JLabel {
     public static final String WRONG_USERNAME = "Неправильне ім'я користувача";
     public static final String SHORT_PASSWORD = "Пароль занадто короткий";
     public static final String LONG_PASSWORD = "Пароль занадто довгий";
-    public static final String WRONG_PASSWORD = "<html>Пароль повинен містити великі та<br>малі літери, " +
+    public static final String WRONG_TEACHER_PASSWORD = "<html>Пароль повинен містити великі та<br>малі літери, " +
             "числа та спеціальні символи</html>";
+    public static final String WRONG_STUDENT_PASSWORD = "<html>Пароль повинен містити великі і малі літери та числа</html>";
     public static final String INCORRECT_PASSWORD = "Неправильний пароль";
     public static final String WRONG_NAME = "Прізвище, ім'я або по-батькові містять заборонені символи";
-    public static final String LOGIN = "Здійсніть вхід у свій обліковий запис";
+    public static final String LOGIN = " ";
     public static final String CREATE = "Створення нового облікового запису";
 
     public static final String SETTINGS = "Налаштування облікового запису";
@@ -40,6 +41,10 @@ public class SingleMessage extends JLabel {
         return instance;
     }
 
+    public static SingleMessage getInstance() {
+        return getInstance(" ");
+    }
+
     public static void setDefaultMessage(String message) {
         instance.setText(message);
         instance.setIcon(null);
@@ -48,5 +53,10 @@ public class SingleMessage extends JLabel {
     public static void setWarningMessage(String message) {
         instance.setText(message);
         instance.setIcon(WARNING_IMAGE);
+    }
+
+    public static void setEmptyMessage() {
+        instance.setText(" ");
+        instance.setIcon(null);
     }
 }

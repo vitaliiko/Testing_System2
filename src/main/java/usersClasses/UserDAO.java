@@ -4,7 +4,7 @@ import java.util.Set;
 
 public interface UserDAO<T> {
 
-    Set<T> getAllUsers();
+    Set<T> getUsersSet();
 
     T getUser(int index);
 

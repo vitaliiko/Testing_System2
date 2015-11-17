@@ -5,13 +5,18 @@ import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
 import supporting.SingleMessage;
+import usersClasses.Student;
 import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.IOException;
 
 public class StudentAuthGI extends JFrame {
 
@@ -21,6 +26,7 @@ public class StudentAuthGI extends JFrame {
     private JComboBox<Object> groupsBox;
     private JTextField nameField;
     private JPasswordField passwordField;
+    private JLabel passwordLabel;
     private JButton loginButton;
     private JButton cancelButton;
 
@@ -34,13 +40,13 @@ public class StudentAuthGI extends JFrame {
 
         prepareLoginPanel();
         getContentPane().add(loginPanel, BorderLayout.CENTER);
-        getContentPane().add(SingleMessage.getInstance(SingleMessage.LOGIN), BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getInstance(), BorderLayout.NORTH);
         setupFrame();
     }
 
     private void setupFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(new Dimension(350, 220));
+        setSize(new Dimension(500, 500));
         setIconImage(new ImageIcon("resources/icon.png").getImage());
         setResizable(false);
         setLocationRelativeTo(null);
@@ -49,24 +55,54 @@ public class StudentAuthGI extends JFrame {
 
     private void prepareLoginPanel() {
         loginPanel = new JPanel(new BorderLayout());
+        loginPanel.setBorder(new EmptyBorder(135, 50, 145, 80));
         JPanel fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         prepareGroupsBox();
         fieldsPanel.add(new LabelComponentPanel("Група: ", groupsBox));
 
-        nameField = new JTextField(COLUMNS_COUNT);
-        nameField.getDocument().addDocumentListener(new LoginTypeListener());
+        prepareNameField();
         fieldsPanel.add(new LabelComponentPanel("ПІП: ", nameField));
 
-        passwordField = new JPasswordField(COLUMNS_COUNT);
-        passwordField.getDocument().addDocumentListener(new LoginTypeListener());
+        preparePasswordField();
         fieldsPanel.add(new LabelComponentPanel("Пароль: ", passwordField));
 
         loginPanel.add(fieldsPanel, BorderLayout.EAST);
 
         prepareLoginButton();
         prepareCancelButton();
-        loginPanel.add(new BoxPanel(loginButton, cancelButton), BorderLayout.SOUTH);
+        JPanel buttonsPanel = new BoxPanel(loginButton, cancelButton);
+        buttonsPanel.setBorder(new EmptyBorder(0, 35, 0, 0));
+        loginPanel.add(buttonsPanel, BorderLayout.SOUTH);
+    }
+
+    private void prepareNameField() {
+        nameField = new JTextField(COLUMNS_COUNT);
+        nameField.setEnabled(false);
+        nameField.getDocument().addDocumentListener(new LoginTypeListener());
+        nameField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String studentName = nameField.getText();
+                StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
+                if (group != null) {
+                    for (Student student : group.getUsersSet()) {
+                        if (student.getUserName().equals(studentName) && student.isPasswordEmpty()) {
+                            SingleMessage.setDefaultMessage("Додайте пароль до свого облікового запису");
+                            return;
+                        } else {
+                            SingleMessage.setEmptyMessage();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void preparePasswordField() {
+        passwordField = new JPasswordField(COLUMNS_COUNT);
+        passwordField.setEnabled(false);
+        passwordField.getDocument().addDocumentListener(new LoginTypeListener());
     }
 
     private void prepareGroupsBox() {
@@ -83,16 +119,19 @@ public class StudentAuthGI extends JFrame {
         loginButton.setEnabled(false);
         loginButton.addActionListener(e -> {
             StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
-            if (group != null) {
-                if (studentManager.authorizeUser(nameField.getText(), passwordField.getPassword(), group)) {
-                    setVisible(false);
-                    new StudentWorkspaceGI(studentManager);
-                    dispose();
+            try {
+                if (group != null) {
+                    if (studentManager.authorizeUser(nameField.getText(), passwordField.getPassword(), group)) {
+                        new StudentWorkspaceGI(studentManager);
+                        dispose();
+                    } else {
+                        SingleMessage.setWarningMessage(SingleMessage.WRONG_USER_OR_PASS);
+                    }
                 } else {
-                    SingleMessage.setWarningMessage(SingleMessage.WRONG_USER);
+                    SingleMessage.setWarningMessage(SingleMessage.WRONG_GROUP);
                 }
-            } else {
-                SingleMessage.setWarningMessage(SingleMessage.WRONG_GROUP);
+            } catch (IOException e1) {
+                SingleMessage.setWarningMessage(e1.getMessage());
             }
         });
     }
@@ -106,7 +145,12 @@ public class StudentAuthGI extends JFrame {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            loginButton.setEnabled(groupsBox.getSelectedItem() != null && !nameField.getText().isEmpty());
+            loginButton.setEnabled(groupsBox.getSelectedItem() != null &&
+                    !nameField.getText().isEmpty() &&
+                    passwordField.getPassword().length != 0);
+            String text = ((JTextField) groupsBox.getEditor().getEditorComponent()).getText();
+            nameField.setEnabled(!text.isEmpty());
+            passwordField.setEnabled(!text.isEmpty());
         }
 
         @Override

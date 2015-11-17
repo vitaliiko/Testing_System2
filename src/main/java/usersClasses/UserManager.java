@@ -25,5 +25,5 @@ public interface UserManager<T extends User> {
 
     void deleteCurrentUser();
 
-    boolean authorizeUser(String userName, char[] password);
+    boolean authorizeUser(String userName, char[] password) throws IOException;
 }

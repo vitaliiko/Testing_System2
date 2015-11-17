@@ -48,7 +48,7 @@ public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable
     }
 
     @Override
-    public Set<Student> getAllUsers() {
+    public Set<Student> getUsersSet() {
         return studentsSet;
     }
 

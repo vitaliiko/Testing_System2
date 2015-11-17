@@ -8,6 +8,7 @@ import supporting.SingleMessage;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -34,8 +35,6 @@ public class TeacherAuthGI extends JFrame {
     private JButton cancelButton;
     private JButton createNewButton;
 
-    private Dimension loginDimension = new Dimension(350, 170);
-    private Dimension signUpDimension = new Dimension(400, 270);
     private TeacherManager teacherManager;
 
     public TeacherAuthGI() {
@@ -46,17 +45,17 @@ public class TeacherAuthGI extends JFrame {
 
         prepareContainer();
         getContentPane().add(container, BorderLayout.CENTER);
-        getContentPane().add(SingleMessage.getInstance(SingleMessage.LOGIN), BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getInstance(), BorderLayout.NORTH);
 
         setupFrame();
     }
 
     private void setupFrame() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setSize(loginDimension);
+        setSize(new Dimension(500, 500));
         setIconImage(new ImageIcon("resources/icon.png").getImage());
-        setResizable(false);
         setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 
@@ -71,6 +70,7 @@ public class TeacherAuthGI extends JFrame {
 
     private void prepareLoginPanel() {
         loginPanel = new JPanel(new BorderLayout());
+        loginPanel.setBorder(new EmptyBorder(150, 50, 165, 80));
         JPanel fieldsPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         prepareUsernameBox();
@@ -84,7 +84,9 @@ public class TeacherAuthGI extends JFrame {
 
         prepareLoginButton();
         prepareCreateNewButton();
-        loginPanel.add(new BoxPanel(loginButton, createNewButton), BorderLayout.SOUTH);
+        JPanel buttonsPanel = new BoxPanel(loginButton, createNewButton);
+        buttonsPanel.setBorder(new EmptyBorder(10, 35, 0, 0));
+        loginPanel.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
     private void prepareUsernameBox() {
@@ -105,7 +107,7 @@ public class TeacherAuthGI extends JFrame {
                 new TeacherWorkspaceGI(teacherManager);
                 dispose();
             } else {
-                SingleMessage.setWarningMessage(SingleMessage.WRONG_USER);
+                SingleMessage.setWarningMessage(SingleMessage.WRONG_USER_OR_PASS);
             }
         });
     }
@@ -115,24 +117,23 @@ public class TeacherAuthGI extends JFrame {
         createNewButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).last(container);
             clearFields();
-            SingleMessage.setDefaultMessage(SingleMessage.CREATE);
-            setSize(signUpDimension);
+            SingleMessage.setEmptyMessage();
             setTitle("Реєстрація");
         });
     }
 
     private void prepareSighUpPanel() {
         signUpPanel = new JPanel();
+        signUpPanel.setBorder(new EmptyBorder(95, 50, 110, 80));
         signUpPanel.setLayout(new BorderLayout());
 
         prepareFieldsPanel();
         signUpPanel.add(fieldsPanel, BorderLayout.EAST);
 
-        JPanel buttonsPanel = new JPanel();
         prepareSignUpButton();
-        buttonsPanel.add(signUpButton);
         prepareCancelButton();
-        buttonsPanel.add(cancelButton);
+        JPanel buttonsPanel = new BoxPanel(signUpButton, cancelButton);
+        buttonsPanel.setBorder(new EmptyBorder(10, 35, 0, 0));
         signUpPanel.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
@@ -178,7 +179,6 @@ public class TeacherAuthGI extends JFrame {
                 teacherNamesBox.setSelectedItem(secondNameField.getText());
                 passwordField.setText(String.valueOf(firstPasswordField.getPassword()));
                 loginButton.setEnabled(true);
-                setSize(loginDimension);
             } catch (IOException exception) {
                 SingleMessage.setWarningMessage(exception.getMessage());
             }
@@ -191,7 +191,6 @@ public class TeacherAuthGI extends JFrame {
             ((CardLayout) container.getLayout()).first(container);
             clearFields();
             SingleMessage.setDefaultMessage(SingleMessage.LOGIN);
-            setSize(loginDimension);
             setTitle("Вхід");
         });
     }

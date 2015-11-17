@@ -1,3 +1,4 @@
+import org.omg.PortableInterceptor.ServerRequestInfo;
 import supporting.IOFileHandling;
 import supporting.ImageUtils;
 import testingClasses.Question;
@@ -89,18 +90,20 @@ public class StartInitObjects {
 
     public static void initTestTask() {
         ArrayList<TestTask> testTasks = new ArrayList<>();
-        testTasks.add(createTestObject("111", "222"));
-        testTasks.add(createTestObject("222", "222"));
-        testTasks.add(createTestObject("000", "222"));
+        String[] testNames = {"1 курс. Модульна контрольна робота", "1 курс. Залік", "1 курс. Модульна контрольна робота"};
+        String[] disciplineNames = {"Інформатика", "Інформатика", "Дискратна математика"};
+        String[] creatorNames = {"Іванов Іван Іванович", "Іванов Іван Іванович", "Іваненко Іван Іванович"};
         try {
-            testTasks.add(createTests("tests/test.txt", "testing test", "Іванов Іван Іванович"));
+            for (int i = 0; i < 3; i++) {
+                testTasks.add(createTests("tests/test.txt", testNames[i], disciplineNames[i], creatorNames[i]));
+            }
         } catch (IOException e) {
             e.getMessage();
         }
         IOFileHandling.saveTestTasks(testTasks);
     }
 
-    public static TestTask createTests(String fileName, String testName, String creatorName) throws IOException {
+    public static TestTask createTests(String fileName, String testName, String discipline, String creatorName) throws IOException {
         List<String> stringList = IOFileHandling.readFromFile(fileName);
         if (stringList == null) {
             throw new IOException("fuck");
@@ -152,7 +155,7 @@ public class StartInitObjects {
             }
         }
 
-        TestTask testTask = new TestTask(testName, "Дисципліна", creatorName);
+        TestTask testTask = new TestTask(testName, discipline, creatorName);
         testTask.setQuestionsList(questions);
         return testTask;
     }

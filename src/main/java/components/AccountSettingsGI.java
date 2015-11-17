@@ -168,7 +168,7 @@ public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends
         if (!Arrays.equals(newPasswordField.getPassword(), repeatPasswordField.getPassword())) {
             throw new IOException(SingleMessage.PASSWORDS_DOES_NOT_MATCH);
         }
-        if (((Validator) manager).validatePassword(newPasswordField.getPassword())) {
+        if (((Validator) manager).validatePassword(newPasswordField.getPassword(), manager)) {
             user.setPassword(newPasswordField.getPassword());
         }
     }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class StudentManager extends Validator implements UserManager<Student> {
 
@@ -64,8 +65,15 @@ public class StudentManager extends Validator implements UserManager<Student> {
     }
 
     @Override
-    public boolean authorizeUser(String userName, char[] password) {
-        for (Student student : studentsGroup.getAllUsers()) {
+    public boolean authorizeUser(String userName, char[] password) throws IOException {
+        for (Student student : studentsGroup.getUsersSet()) {
+            if (student.isPasswordEmpty()) {
+                validatePassword(password, this);
+                student.setPassword(password);
+                saveUserSet();
+                currentStudent = student;
+                return true;
+            }
             if (student.isMatches(userName, password)) {
                 currentStudent = student;
                 return true;
@@ -74,20 +82,17 @@ public class StudentManager extends Validator implements UserManager<Student> {
         return false;
     }
 
+    public boolean authorizeUser(String userName, char[] password, StudentsGroup studentsGroup) throws IOException {
+        this.studentsGroup = studentsGroup;
+        return studentsGroup != null && authorizeUser(userName, password);
+    }
+
     public Set<StudentsGroup> getStudentsGroupSet() {
         return studentsGroupSet;
     }
 
-    public void setStudentsGroupSet(Set<StudentsGroup> studentsGroupSet) {
-        this.studentsGroupSet = studentsGroupSet;
-    }
-
     public ArrayList<String> getGroupNamesList() {
-        ArrayList<String> groupNamesList = new ArrayList<>();
-        for (StudentsGroup studentsGroup : studentsGroupSet) {
-            groupNamesList.add(studentsGroup.getName());
-        }
-        return groupNamesList;
+        return studentsGroupSet.stream().map(StudentsGroup::getName).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public StudentsGroup getStudentGroup(String name) {
@@ -97,10 +102,5 @@ public class StudentManager extends Validator implements UserManager<Student> {
             }
         }
         return null;
-    }
-
-    public boolean authorizeUser(String userName, char[] password, StudentsGroup studentsGroup) {
-        this.studentsGroup = studentsGroup;
-        return studentsGroup != null && authorizeUser(userName, password);
     }
 }
