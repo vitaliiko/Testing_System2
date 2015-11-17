@@ -1,6 +1,7 @@
 package components;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class FrameUtils {
@@ -30,5 +31,39 @@ public class FrameUtils {
         textArea.setFocusable(false);
         textArea.setAutoscrolls(false);
         return textArea;
+    }
+
+    public static JPanel createLabelGridPanel(String... strings) {
+        JPanel panel = new JPanel(new GridLayout(strings.length, 1, 0, 6));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
+        for (String s : strings) {
+            JLabel label = new JLabel(s, JLabel.RIGHT);
+            panel.add(label);
+        }
+
+        return panel;
+    }
+
+    public static JPanel createComponentsGridPanel(Component... components) {
+        JPanel panel = new JPanel(new GridLayout(components.length, 1, 0, 6));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
+        for (Component component : components) {
+            panel.add(component);
+        }
+
+        return panel;
+    }
+
+    public static JButton createButtonAsLink(String title) {
+        JButton button = new JButton("<html><u>" + title + "<html>");
+        button.setForeground(new Color(0, 144, 255));
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setOpaque(false);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
     }
 }

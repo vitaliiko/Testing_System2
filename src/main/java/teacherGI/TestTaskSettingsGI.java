@@ -54,7 +54,7 @@ public class TestTaskSettingsGI extends JDialog {
 
     public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
-        super(owner, "Налаштування тесту");
+        super(owner, "Налаштування тесту", true);
         this.teacherManager = teacherManager;
         this.studentManager = studentManager;
         this.testTaskManager = testTaskManager;
@@ -62,18 +62,21 @@ public class TestTaskSettingsGI extends JDialog {
 
         prepareTabbedPanel();
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
+
         prepareSaveButton();
         prepareCancelButton();
         prepareApplyButton();
-
         JPanel buttonsPanel = new BoxPanel(saveButton, cancelButton, applyButton);
         buttonsPanel.setAlignmentX(RIGHT_ALIGNMENT);
         getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
 
+        setupDialog();
+    }
+
+    private void setupDialog() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(415, 420));
         setIconImage(new ImageIcon("resources/settings.png").getImage());
-        setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -162,7 +165,8 @@ public class TestTaskSettingsGI extends JDialog {
         generalTabPanel = new JPanel(new BorderLayout());
         generalTabPanel.setBackground(Color.WHITE);
         generalTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        generalTabPanel.add(createLabelPanel("Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
+        generalTabPanel.add(FrameUtils.createLabelGridPanel("Назва:", "Дисципліна:", "Створив:", "Режим доступу:"),
+                BorderLayout.WEST);
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
         authorsPanel = createCheckBoxPanel(
@@ -183,17 +187,6 @@ public class TestTaskSettingsGI extends JDialog {
         descriptionPanel.add(new JLabel("Опис тестововго завдання"));
         descriptionPanel.add(new JScrollPane(descriptionArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
-    }
-
-    private JPanel createLabelPanel(String... strings) {
-        JPanel panel = new JPanel(new GridLayout(strings.length, 1, 0, 6));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
-        for (String s : strings) {
-            JLabel label = new JLabel(s, JLabel.RIGHT);
-            panel.add(label);
-        }
-        return panel;
     }
 
     private JCheckBox createCheckAllBox(JPanel checkBoxPanel) {
@@ -273,24 +266,17 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private JPanel createGeneralTabComponents() {
-        JPanel componentsPanel = new JPanel(new GridLayout(4, 1, 0, 6));
-        componentsPanel.setBackground(Color.WHITE);
-        componentsPanel.setBorder(new EmptyBorder(0, 5, 8, 0));
-
         nameField = new JTextField(testTask.getTaskName(), COLUMNS_COUNT);
-        componentsPanel.add(nameField);
 
         disciplineField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
-        componentsPanel.add(disciplineField);
 
-        componentsPanel.add(new JLabel(testTask.getCreatorName()));
+        JLabel creatorLabel = new JLabel(testTask.getCreatorName());
 
         String[] attributeItems = {"Загальнодоступний", "З обмеженим доступом", "Лише перегляд"};
         attributeBox = new JComboBox<>(attributeItems);
         attributeBox.setSelectedIndex(testTask.getAttribute());
-        componentsPanel.add(attributeBox);
 
-        return componentsPanel;
+        return FrameUtils.createComponentsGridPanel(nameField, disciplineField, creatorLabel, attributeBox);
     }
 
     private void prepareLimitTabPanel() {
@@ -299,7 +285,7 @@ public class TestTaskSettingsGI extends JDialog {
         limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel limitPanel = new JPanel(new BorderLayout());
-        limitPanel.add(createLabelPanel("Максимальна кількість варіантів відповідей:",
+        limitPanel.add(FrameUtils.createLabelGridPanel("Максимальна кількість варіантів відповідей:",
                 "Максимальна кількість запитань у тесті:",
                 "Максимальна кількість часу, хв.:",
                 "Максимальна кількість спроб:",
@@ -311,26 +297,17 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private JPanel createSpinners() {
-        JPanel spinners = new JPanel(new GridLayout(5, 1, 0, 6));
-        spinners.setBackground(Color.WHITE);
-        spinners.setBorder(new EmptyBorder(0, 5, 8, 0));
-
         answersLimit = new JSpinner(new SpinnerNumberModel(testTask.getAnswersLimit(), 3, 7, 1));
-        spinners.add(answersLimit);
 
         questionsLimit = new JSpinner(new SpinnerNumberModel(testTask.getQuestionsLimit(), 10, 50, 1));
-        spinners.add(questionsLimit);
 
         timeLimit = new JSpinner(new SpinnerNumberModel(testTask.getTimeLimit(), 0, 80, 5));
-        spinners.add(timeLimit);
 
         attemptLimit = new JSpinner(new SpinnerNumberModel(testTask.getAttemptsLimit(), 0, 3, 1));
-        spinners.add(attemptLimit);
 
         pointLimit = new JSpinner(new SpinnerNumberModel(testTask.getMinPoint(), 50, 80, 5));
-        spinners.add(pointLimit);
 
-        return spinners;
+        return FrameUtils.createComponentsGridPanel(answersLimit, questionsLimit, timeLimit, attemptLimit, pointLimit);
     }
 
     private void prepareStudentsTabPanel() {
@@ -419,16 +396,5 @@ public class TestTaskSettingsGI extends JDialog {
             groupName = groupName.substring(0, groupName.length() - 2);
             listModel.addElement(groupName);
         });
-    }
-
-    private JButton createButtonAsLink(String title) {
-        JButton button = new JButton("<html><u>" + title + "<html>");
-        button.setForeground(new Color(0, 144, 255));
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setOpaque(false);
-        button.setMargin(new Insets(0, 0, 0, 0));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return button;
     }
 }
