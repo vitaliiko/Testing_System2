@@ -36,7 +36,7 @@ public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends
     private TypeListener typeListener;
 
     public AccountSettingsGI(JFrame frame, M manager) {
-        super(frame, "Налаштування облікового запису");
+        super(frame, "Налаштування облікового запису", true);
         this.frame = frame;
         this.manager = manager;
         user = manager.getCurrentUser();
@@ -60,7 +60,6 @@ public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setSize(new Dimension(335, 430));
         setIconImage(new ImageIcon("resources/account.png").getImage());
-        setModal(true);
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);

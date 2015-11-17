@@ -4,6 +4,7 @@ import components.BoxPanel;
 import components.QuestionPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,20 +19,27 @@ public class TestTaskWrapper implements Serializable {
     public static final int GOOD = 4;
 
     private TestTask testTask;
+    private JPanel resultPanel;
+    private float points;
+    private int rightAnswersCount;
     private int attemptsLeft;
-    private int status;
-    private int points;
-
-    private List<QuestionPanel> questionPanelList = new ArrayList<>();
+    private int status = NOT_TOOK;
 
     public TestTaskWrapper(TestTask testTask) {
         this.testTask = testTask;
         attemptsLeft = testTask.getAttemptsLimit();
-        status = NOT_TOOK;
     }
 
     public TestTask getTestTask() {
         return testTask;
+    }
+
+    public JPanel getResultPanel() {
+        return resultPanel;
+    }
+
+    public void setResultPanel(JPanel resultPanel) {
+        this.resultPanel = resultPanel;
     }
 
     public int getAttemptsLeft() {
@@ -50,33 +58,60 @@ public class TestTaskWrapper implements Serializable {
         this.status = status;
     }
 
-    public int getPoints() {
+    public float getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(float points) {
         this.points = points;
+        if (points > 90) {
+            status = GOOD;
+        } else if (points > 75) {
+            status = FINE;
+        } else if (points > testTask.getMinPoint()) {
+            status = BAD;
+        }
+        if (points < testTask.getMinPoint()) {
+            status = FAIL;
+        }
     }
 
-    public List<QuestionPanel> getQuestionPanelList() {
-        return questionPanelList;
+    public int getRightAnswersCount() {
+        return rightAnswersCount;
+    }
+
+    public void setRightAnswersCount(int rightAnswersCount) {
+        this.rightAnswersCount = rightAnswersCount;
     }
 
     public JPanel createCard() {
-        Random random = new Random();
         JPanel panel = new BoxPanel(BoxLayout.Y_AXIS);
+        panel.setBackground(Color.WHITE);
+
         List<Question> questionList = new ArrayList<>();
         questionList.addAll(testTask.getQuestionsList());
-        int i = 1;
-        while (questionList.size() > 0) {
-            Question question = questionList.get(random.nextInt(questionList.size()));
-            QuestionPanel questionPanel = new QuestionPanel(i, question);
-            i++;
+        Random random = new Random();
+
+        int questionCount = testTask.getQuestionsLimit();
+        while (questionCount > 0) {
+            Question question = questionList.get(random.nextInt(questionCount--));
+            QuestionPanel questionPanel = new QuestionPanel(30 - questionCount, question);
             questionList.remove(question);
-            questionPanelList.add(questionPanel);
             panel.add(questionPanel);
+            panel.add(new JSeparator());
         }
         return panel;
+    }
+
+    public String getStatusName() {
+        switch (status) {
+            case NOT_TOOK: return "Необхідно здати";
+            case FAIL: return "Незадовільно";
+            case BAD: return "Задовільно";
+            case FINE: return "Добре";
+            case GOOD: return "Відмінно";
+            default: return "";
+        }
     }
 
     @Override

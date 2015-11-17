@@ -16,12 +16,12 @@ public class TestTask implements Serializable {
     private String taskName;
     private String disciplineName;
     private String description;
-    private int attribute;
-    private int answersLimit;
-    private int questionsLimit;
-    private int timeLimit;
-    private int attemptsLimit;
-    private int minPoint;
+    private int attribute = PRIVATE_ATR;
+    private int answersLimit = 5;
+    private int questionsLimit = 20;
+    private int timeLimit = 60;
+    private int attemptsLimit = 2;
+    private int minPoint = 60;
 
     private List<Question> questionsList = new ArrayList<>();
     private List<ArrayList<Question>> questionGroupsList = new ArrayList<>();
@@ -33,7 +33,6 @@ public class TestTask implements Serializable {
         this.taskName = taskName;
         this.disciplineName = disciplineName;
         authorsList.add(creatorName);
-        setDefaultSettings();
     }
 
     public String getTaskName() {
@@ -164,15 +163,6 @@ public class TestTask implements Serializable {
         return !authorsList.contains(teacher.getUserName()) && attribute == READ_ONLY_ATR;
     }
 
-    private void setDefaultSettings() {
-        attribute = PRIVATE_ATR;
-        answersLimit = 4;
-        questionsLimit = 30;
-        timeLimit = 60;
-        attemptsLimit = 2;
-        minPoint = 60;
-    }
-
     public ArrayList<String> createQuestionGroupsNames() {
         ArrayList<String> dataList = new ArrayList<>();
         for (ArrayList<Question> questionGroup : questionGroupsList) {
@@ -206,7 +196,7 @@ public class TestTask implements Serializable {
             }
         }
 
-        return taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
+        return disciplineName + " " + taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
     }
 
     @Override

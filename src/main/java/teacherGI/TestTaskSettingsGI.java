@@ -165,8 +165,8 @@ public class TestTaskSettingsGI extends JDialog {
         generalTabPanel = new JPanel(new BorderLayout());
         generalTabPanel.setBackground(Color.WHITE);
         generalTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        generalTabPanel.add(FrameUtils.createLabelGridPanel("Назва:", "Дисципліна:", "Створив:", "Режим доступу:"),
-                BorderLayout.WEST);
+        generalTabPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT,
+                "Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
         authorsPanel = createCheckBoxPanel(
@@ -285,7 +285,7 @@ public class TestTaskSettingsGI extends JDialog {
         limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         JPanel limitPanel = new JPanel(new BorderLayout());
-        limitPanel.add(FrameUtils.createLabelGridPanel("Максимальна кількість варіантів відповідей:",
+        limitPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Максимальна кількість варіантів відповідей:",
                 "Максимальна кількість запитань у тесті:",
                 "Максимальна кількість часу, хв.:",
                 "Максимальна кількість спроб:",
@@ -332,7 +332,10 @@ public class TestTaskSettingsGI extends JDialog {
         for (Component c : questionsGroupPanel.getComponents()) {
             ((JCheckBox) c).addActionListener(e -> addQuestionsButton.setEnabled(areTwoBoxesSelected()));
         }
-        questionsTabPanel.add(createScrollPaneWithBorder(questionsGroupPanel, "Оберіть запитання"));
+
+        JScrollPane scrollPane = createScrollPaneWithBorder(questionsGroupPanel, "Оберіть запитання");
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        questionsTabPanel.add(scrollPane);
 
         prepareAddQuestionButton();
         questionsTabPanel.add(addQuestionsButton);

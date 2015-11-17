@@ -33,26 +33,37 @@ public class FrameUtils {
         return textArea;
     }
 
-    public static JPanel createLabelGridPanel(String... strings) {
-        JPanel panel = new JPanel(new GridLayout(strings.length, 1, 0, 6));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
+    public static JPanel createLabelGridPanel(int alignment, String... strings) {
+        JPanel panel = createPanel(strings.length, 6);
         for (String s : strings) {
-            JLabel label = new JLabel(s, JLabel.RIGHT);
+            JLabel label = new JLabel(s, alignment);
             panel.add(label);
         }
+        return panel;
+    }
 
+    public static JPanel createLabelGridPanel(int alignment, Font font, int distance, String... strings) {
+        JPanel panel = createPanel(strings.length, distance);
+        for (String s : strings) {
+            JLabel label = new JLabel(s, alignment);
+            label.setFont(font);
+            panel.add(label);
+        }
         return panel;
     }
 
     public static JPanel createComponentsGridPanel(Component... components) {
-        JPanel panel = new JPanel(new GridLayout(components.length, 1, 0, 6));
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
+        JPanel panel = createPanel(components.length, 6);
         for (Component component : components) {
             panel.add(component);
         }
+        return panel;
+    }
 
+    private static JPanel createPanel(int rowCount, int distance) {
+        JPanel panel = new JPanel(new GridLayout(rowCount, 1, 0, distance));
+        panel.setOpaque(false);
+        panel.setBorder(new EmptyBorder(0, 5, 8, 0));
         return panel;
     }
 

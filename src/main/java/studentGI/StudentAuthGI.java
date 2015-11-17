@@ -26,7 +26,6 @@ public class StudentAuthGI extends JFrame {
     private JComboBox<Object> groupsBox;
     private JTextField nameField;
     private JPasswordField passwordField;
-    private JLabel passwordLabel;
     private JButton loginButton;
     private JButton cancelButton;
 
@@ -86,17 +85,21 @@ public class StudentAuthGI extends JFrame {
                 String studentName = nameField.getText();
                 StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
                 if (group != null) {
-                    for (Student student : group.getUsersSet()) {
-                        if (student.getUserName().equals(studentName) && student.isPasswordEmpty()) {
-                            SingleMessage.setDefaultMessage("Додайте пароль до свого облікового запису");
-                            return;
-                        } else {
-                            SingleMessage.setEmptyMessage();
-                        }
-                    }
+                    checkForPassword(group, studentName);
                 }
             }
         });
+    }
+
+    private void checkForPassword(StudentsGroup group, String studentName) {
+        for (Student student : group.getUsersSet()) {
+            if (student.getUserName().equals(studentName) && student.isPasswordEmpty()) {
+                SingleMessage.setDefaultMessage("Додайте пароль до свого облікового запису");
+                return;
+            } else {
+                SingleMessage.setEmptyMessage();
+            }
+        }
     }
 
     private void preparePasswordField() {

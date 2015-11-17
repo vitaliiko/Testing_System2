@@ -1,6 +1,5 @@
 package components;
 
-import javafx.scene.control.ToggleButton;
 import supporting.ImageUtils;
 import testingClasses.Question;
 
@@ -13,9 +12,12 @@ import java.util.List;
 
 public class QuestionPanel extends JPanel {
 
-    public static final Color RED_COLOR = new Color(237, 0, 4);
-    public static final Color GREEN_COLOR = new Color(0, 255, 4);
+    public static final Color RED_COLOR = new Color(237, 194, 189);
+    public static final Color GREEN_COLOR = new Color(216, 255, 208);
 
+    private int rightAnswerCount;
+    private int studentsAnswersCount;
+    private int studentsRightAnswersCount;
     private int index;
     private Question question;
 
@@ -52,8 +54,6 @@ public class QuestionPanel extends JPanel {
                 answerList.remove(answer);
             }
         }
-
-        add(new JSeparator());
     }
 
     public boolean isChoiceMade() {
@@ -73,24 +73,26 @@ public class QuestionPanel extends JPanel {
         }
     }
 
-    public void saveState() {
-        List<String> studentAnswerList = new ArrayList<>();
+    public float saveState() {
         for (Component component : getComponents()) {
             if (component instanceof AnswerRadioBoxPanel) {
                 AnswerRadioBoxPanel answerRadioBoxPanel = (AnswerRadioBoxPanel) component;
                 answerRadioBoxPanel.doDisabled();
+                if (answerRadioBoxPanel.isSelected()) {
+                    studentsAnswersCount++;
+                }
                 if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText())) {
                     answerRadioBoxPanel.setTrue();
                 }
-                if (answerRadioBoxPanel.isSelected()) {
-                    studentAnswerList.add(answerRadioBoxPanel.getText());
+                if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText()) &&
+                        answerRadioBoxPanel.isSelected()) {
+                    studentsRightAnswersCount++;
                 }
             }
         }
-        if (studentAnswerList.containsAll(question.getRightAnswersList())) {
-            setBackground(GREEN_COLOR);
-        } else {
-            setBackground(RED_COLOR);
-        }
+
+        float result = (studentsRightAnswersCount * 2 - studentsAnswersCount) / question.getRightAnswersList().size();
+        setBackground(result == 1 ? GREEN_COLOR : RED_COLOR);
+        return result < 0 ? 0 : result;
     }
 }
