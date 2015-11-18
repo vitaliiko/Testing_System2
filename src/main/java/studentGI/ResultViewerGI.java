@@ -45,11 +45,11 @@ public class ResultViewerGI extends JDialog {
 
         Font font = new Font("Arial", Font.PLAIN, 13);
 
-        statPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, font, 20, "Назва тесту: ", "Дисципліна: ",
+        statPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Назва тесту: ", "Дисципліна: ",
                 "Дано правильних відповідей: ", "Кількість балів: ", "Статус: ", "Спроб залишилось: "),
                 BorderLayout.WEST);
 
-        JPanel infoPanel = FrameUtils.createLabelGridPanel(JLabel.LEFT, font, 10,
+        JPanel infoPanel = FrameUtils.createLabelGridPanel(JLabel.LEFT,
                 testTaskWrapper.getTestTask().getTaskName(),
                 testTaskWrapper.getTestTask().getDisciplineName(),
                 String.valueOf(testTaskWrapper.getRightAnswersCount() +

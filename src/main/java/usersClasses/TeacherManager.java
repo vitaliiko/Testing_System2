@@ -68,12 +68,12 @@ public class TeacherManager extends Validator implements UserManager<Teacher> {
 
         if (!telephone.isEmpty()) {
             validateTelephone(telephone);
-            currentTeacher.setTelephoneNum(telephone);
         }
+        currentTeacher.setTelephoneNum(telephone);
         if (!mail.isEmpty()) {
             validateMail(mail);
-            currentTeacher.setMailAddress(mail);
         }
+        currentTeacher.setMailAddress(mail);
     }
 
     @Override

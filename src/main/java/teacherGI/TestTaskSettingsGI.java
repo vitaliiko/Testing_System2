@@ -279,7 +279,7 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private void prepareLimitTabPanel() {
-        limitTabPanel = new JPanel();
+        limitTabPanel = new JPanel(new BorderLayout());
         limitTabPanel.setBackground(Color.WHITE);
         limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
@@ -292,7 +292,7 @@ public class TestTaskSettingsGI extends JDialog {
         limitPanel.add(createSpinners(), BorderLayout.CENTER);
         limitPanel.setBorder(new TitledBorder("Обмеження"));
         limitPanel.setBackground(Color.WHITE);
-        limitTabPanel.add(limitPanel);
+        limitTabPanel.add(limitPanel, BorderLayout.CENTER);
     }
 
     private JPanel createSpinners() {

@@ -46,7 +46,35 @@ public class StudentManager extends Validator implements UserManager<Student> {
     @Override
     public void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
             throws IOException {
+        validateName(name, surname, secondName);
 
+        String userName = surname + " " + name + " " + secondName;
+        if (!currentStudent.getUserName().equals(userName)) {
+            checkUsername(userName);
+        }
+
+        currentStudent.setName(name);
+        currentStudent.setSurname(surname);
+        currentStudent.setSecondName(secondName);
+        currentStudent.setUserName(userName);
+
+        if (!telephone.isEmpty()) {
+            validateTelephone(telephone);
+        }
+        currentStudent.setTelephoneNum(telephone);
+
+        if (!mail.isEmpty()) {
+            validateMail(mail);
+        }
+        currentStudent.setMailAddress(mail);
+    }
+
+    public void updateCurrentUserInfo(String surname, String name, String secondName, StudentsGroup group,
+                                      String telephone, String mail) throws IOException {
+        if (!currentStudent.getStudentsGroup().equals(group)) {
+            currentStudent.setStudentsGroup(group);
+        }
+        updateCurrentUserInfo(surname, name, secondName, telephone, mail);
     }
 
     @Override

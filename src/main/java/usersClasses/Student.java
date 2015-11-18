@@ -19,6 +19,12 @@ public class Student extends User {
         return studentsGroup;
     }
 
+    public void setStudentsGroup(StudentsGroup studentsGroup) {
+        this.studentsGroup.deleteUser(this);
+        this.studentsGroup = studentsGroup;
+        this.studentsGroup.addUser(this);
+    }
+
     public String getGroupName() {
         return studentsGroup.getName();
     }
