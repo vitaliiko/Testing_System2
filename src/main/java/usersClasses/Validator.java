@@ -1,6 +1,6 @@
 package usersClasses;
 
-import supporting.SingleMessage;
+import components.SingleMessage;
 
 import java.io.IOException;
 import java.util.regex.Matcher;

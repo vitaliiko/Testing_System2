@@ -6,6 +6,7 @@ import usersClasses.Teacher;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TestTask implements Serializable {
 
@@ -140,7 +141,7 @@ public class TestTask implements Serializable {
     }
 
     public void setStudentGroupsList(List<String> studentGroupsList) {
-        this.studentGroupsList = (ArrayList<String>) studentGroupsList;
+        this.studentGroupsList = studentGroupsList;
     }
 
     public List<Student> getNotAllowedStudentsList() {
@@ -176,11 +177,7 @@ public class TestTask implements Serializable {
     }
 
     public ArrayList<String> getQuestionNamesList() {
-        ArrayList<String> questionNamesList = new ArrayList<>();
-        for (Question question : questionsList) {
-            questionNamesList.add(question.getTask());
-        }
-        return questionNamesList;
+        return questionsList.stream().map(Question::getTask).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

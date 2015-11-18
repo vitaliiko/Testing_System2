@@ -18,6 +18,10 @@ public class StudentManager extends Validator implements UserManager<Student> {
         studentsGroupSet = IOFileHandling.loadStudentsGroupSet();
     }
 
+    public void setCurrentStudent(Student currentStudent) {
+        this.currentStudent = currentStudent;
+    }
+
     @Override
     public Set<Student> getUserSet() {
         return null;

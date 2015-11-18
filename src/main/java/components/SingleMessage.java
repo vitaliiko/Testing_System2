@@ -1,4 +1,4 @@
-package supporting;
+package components;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -38,6 +38,7 @@ public class SingleMessage extends JLabel {
         instance.setHorizontalAlignment(JLabel.CENTER);
         instance.setBorder(new EmptyBorder(8, 0, 8, 0));
         instance.setFont(new Font("times new roman", Font.PLAIN, 16));
+        instance.setOpaque(false);
         return instance;
     }
 

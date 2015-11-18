@@ -1,7 +1,7 @@
 package usersClasses;
 
 import supporting.IOFileHandling;
-import supporting.SingleMessage;
+import components.SingleMessage;
 
 import java.io.IOException;
 import java.util.ArrayList;

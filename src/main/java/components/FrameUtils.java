@@ -42,6 +42,15 @@ public class FrameUtils {
         return panel;
     }
 
+    public static JPanel createLabelGridPanel(String... strings) {
+        JPanel panel = createPanel(strings.length, 6);
+        for (String s : strings) {
+            JLabel label = new JLabel(s, JLabel.RIGHT);
+            panel.add(label);
+        }
+        return panel;
+    }
+
     public static JPanel createLabelGridPanel(int alignment, Font font, int distance, String... strings) {
         JPanel panel = createPanel(strings.length, distance);
         for (String s : strings) {

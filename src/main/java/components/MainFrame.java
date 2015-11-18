@@ -56,6 +56,7 @@ public abstract class MainFrame extends JFrame {
         setMinimumSize(new Dimension(700, 400));
         setSize(new Dimension(924, 520));
         setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.WHITE);
         setVisible(true);
         tabbedList.setSelectedIndex(0);
     }
@@ -80,9 +81,14 @@ public abstract class MainFrame extends JFrame {
         toolsPanel.add(southComponent, BorderLayout.SOUTH);
     }
 
+    public void addOnToolsPanel(JComponent northComponent) {
+        toolsPanel.add(northComponent, BorderLayout.NORTH);
+    }
+
     private void prepareContainer() {
         container = new Container();
         container.setLayout(new CardLayout());
+        container.setBackground(Color.WHITE);
     }
 
     private void prepareToolsPanel() {
@@ -90,13 +96,19 @@ public abstract class MainFrame extends JFrame {
         toolsPanel.setLayout(new BorderLayout());
 
         prepareTabbedList();
-        toolsPanel.add(new BoxPanel(tabbedList), BorderLayout.CENTER);
+        toolsPanel.add(tabbedList, BorderLayout.CENTER);
     }
 
     private void prepareTabbedList() {
         tabbedList = new JList<>(tabbedItems);
         tabbedList.setFont(FrameUtils.MAIN_FONT);
-        //tabbedList.setSelectedIndex(0);
+        tabbedList.setFixedCellHeight(50);
+        tabbedList.setBackground(toolsPanel.getBackground());
+        tabbedList.setSelectionBackground(Color.WHITE);
+        tabbedList.setSelectionForeground(Color.BLACK);
+        tabbedList.setFocusable(false);
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer) tabbedList.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.RIGHT);
         tabbedList.addListSelectionListener(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
                 ((CardLayout) container.getLayout()).first(container);

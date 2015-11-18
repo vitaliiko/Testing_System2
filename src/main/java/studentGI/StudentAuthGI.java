@@ -4,7 +4,7 @@ import components.AutoCompleteComboBox;
 import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
-import supporting.SingleMessage;
+import components.SingleMessage;
 import usersClasses.Student;
 import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;

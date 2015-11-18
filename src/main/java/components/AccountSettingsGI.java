@@ -1,6 +1,5 @@
 package components;
 
-import supporting.SingleMessage;
 import usersClasses.*;
 
 import javax.swing.*;

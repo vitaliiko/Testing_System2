@@ -44,7 +44,7 @@ public class ShowTaskGI extends MainFrame {
     public void frameSetup() {
         fillContainer();
         fillToolsPanel();
-        setTabbedItems("Редагування", "Перегляд");
+        setTabbedItems("Редагування ", "Перегляд ");
         if (testTask.canReadOnly(teacherManager.getCurrentUser())) {
             tabbedList.setSelectedIndex(1);
             tabbedList.setEnabled(false);
@@ -93,6 +93,7 @@ public class ShowTaskGI extends MainFrame {
         prepareQuestionsTable();
 
         browseQuestionsPanel = new JPanel();
+        browseQuestionsPanel.setBackground(Color.WHITE);
         browseQuestionsPanel.setLayout(new BoxLayout(browseQuestionsPanel, BoxLayout.Y_AXIS));
         repaintBrowsePanel();
 

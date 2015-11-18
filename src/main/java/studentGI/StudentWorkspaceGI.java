@@ -51,7 +51,9 @@ public class StudentWorkspaceGI extends MainFrame {
     @Override
     public void fillContainer() {
         prepareTestTasksTable();
-        addOnContainer(FrameUtils.createScroll(testTaskTable));
+        JScrollPane tableScroll = FrameUtils.createScroll(testTaskTable);
+        tableScroll.getViewport().setBackground(Color.WHITE);
+        addOnContainer(tableScroll);
     }
 
     private void prepareTestTasksTable() {

@@ -4,7 +4,7 @@ import components.BoxPanel;
 import components.AnswerBoxPanel;
 import components.FrameUtils;
 import supporting.ImageUtils;
-import supporting.SingleMessage;
+import components.SingleMessage;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;
@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.List;
 
 public class AddQuestionGI extends JFrame {
 
@@ -134,15 +133,12 @@ public class AddQuestionGI extends JFrame {
     }
 
     private void prepareImagePanel() {
-        JPanel imagePanel = new JPanel();
-        imagePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         prepareImageNameField();
-        imagePanel.add(imageNameField);
         prepareOpenButton();
-        imagePanel.add(openImageButton);
         prepareBrowseImageButton();
-        imagePanel.add(browseImageButton);
-        this.imagePanel = new BoxPanel(BoxLayout.Y_AXIS, new JLabel("Оберіть зображення:"), imagePanel);
+        imagePanel = new BoxPanel(new JLabel("Оберіть зображення: "), imageNameField,
+                openImageButton, browseImageButton);
+        imagePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
     }
 
     private void prepareImageNameField() {
@@ -173,7 +169,7 @@ public class AddQuestionGI extends JFrame {
         questionPanel.add(imagePanel);
 
         JScrollPane scrollPane = FrameUtils.createScroll(questionArea = createTextArea());
-        questionPanel.add(new JLabel("Текст запитання:"));
+        scrollPane.setBorder(new TitledBorder("Текст запитання:"));
         questionPanel.add(scrollPane);
 
         prepareAnswersPanel();

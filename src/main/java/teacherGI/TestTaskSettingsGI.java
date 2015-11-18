@@ -10,7 +10,13 @@ import usersClasses.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +57,7 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton cancelButton;
 
     private List<List<Question>> questionsGroupList = new ArrayList<>();
+    private ChangeDataListener listener = new ChangeDataListener();
 
     public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
@@ -117,7 +124,7 @@ public class TestTaskSettingsGI extends JDialog {
 
     private void prepareApplyButton() {
         applyButton = new JButton("Застосувати");
-        //applyButton.setEnabled(false);
+        applyButton.setEnabled(false);
         applyButton.addActionListener(e -> {
             saveSettings();
             applyButton.setEnabled(false);
@@ -187,6 +194,7 @@ public class TestTaskSettingsGI extends JDialog {
         descriptionArea.setWrapStyleWord(true);
         descriptionArea.setFont(FrameUtils.MAIN_FONT);
         descriptionArea.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
+        descriptionArea.getDocument().addDocumentListener(listener);
 
         JPanel labelPanel = new BoxPanel(new JLabel("Опис тестововго завдання"));
         descriptionPanel.add(labelPanel, BorderLayout.NORTH);
@@ -197,6 +205,7 @@ public class TestTaskSettingsGI extends JDialog {
         JCheckBox checkAll = new JCheckBox("Відмітити усіх");
         checkAll.setBackground(Color.WHITE);
         checkAll.setFocusable(false);
+        checkAll.addActionListener(listener);
         checkAll.addItemListener(e -> {
             checkAll.setText(checkAll.isSelected() ? "Зняти усіх" : "Відмітити усіх");
             for (int i = 2; i < checkBoxPanel.getComponentCount(); i++) {
@@ -224,6 +233,7 @@ public class TestTaskSettingsGI extends JDialog {
                     new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
+            checkBox.addActionListener(listener);
             if (o instanceof Teacher) {
                 String teacherName = ((Teacher) o).getUserName();
                 checkBox.setSelected(testTask.getAuthorsList().contains(teacherName));
@@ -254,6 +264,7 @@ public class TestTaskSettingsGI extends JDialog {
             componentsCount++;
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
+            checkBox.addActionListener(listener);
             checkBoxPanel.add(checkBox);
         }
         return checkBoxPanel;
@@ -271,14 +282,17 @@ public class TestTaskSettingsGI extends JDialog {
 
     private JPanel createGeneralTabComponents() {
         nameField = new JTextField(testTask.getTaskName(), COLUMNS_COUNT);
+        nameField.getDocument().addDocumentListener(listener);
 
         disciplineField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
+        disciplineField.getDocument().addDocumentListener(listener);
 
         JLabel creatorLabel = new JLabel(testTask.getCreatorName());
 
         String[] attributeItems = {"Загальнодоступний", "З обмеженим доступом", "Лише перегляд"};
         attributeBox = new JComboBox<>(attributeItems);
         attributeBox.setSelectedIndex(testTask.getAttribute());
+        attributeBox.addActionListener(listener);
 
         return FrameUtils.createComponentsGridPanel(nameField, disciplineField, creatorLabel, attributeBox);
     }
@@ -298,14 +312,19 @@ public class TestTaskSettingsGI extends JDialog {
 
     private JPanel createSpinners() {
         answersLimit = new JSpinner(new SpinnerNumberModel(testTask.getAnswersLimit(), 3, 7, 1));
+        answersLimit.addChangeListener(listener);
 
         questionsLimit = new JSpinner(new SpinnerNumberModel(testTask.getQuestionsLimit(), 10, 50, 1));
+        questionsLimit.addChangeListener(listener);
 
         timeLimit = new JSpinner(new SpinnerNumberModel(testTask.getTimeLimit(), 0, 80, 5));
+        timeLimit.addChangeListener(listener);
 
         attemptLimit = new JSpinner(new SpinnerNumberModel(testTask.getAttemptsLimit(), 0, 3, 1));
+        attemptLimit.addChangeListener(listener);
 
         pointLimit = new JSpinner(new SpinnerNumberModel(testTask.getMinPoint(), 50, 80, 5));
+        pointLimit.addChangeListener(listener);
 
         return FrameUtils.createComponentsGridPanel(answersLimit, questionsLimit, timeLimit, attemptLimit, pointLimit);
     }
@@ -377,6 +396,7 @@ public class TestTaskSettingsGI extends JDialog {
             questionsGroupList.remove(questionJList.getSelectedIndex());
             listModel.remove(questionJList.getSelectedIndex());
             removeGroupButton.setEnabled(false);
+            applyButton.setEnabled(true);
         });
     }
 
@@ -397,6 +417,35 @@ public class TestTaskSettingsGI extends JDialog {
             questionsGroupList.add(questions);
             groupName = groupName.substring(0, groupName.length() - 2);
             listModel.addElement(groupName);
+            applyButton.setEnabled(true);
         });
+    }
+
+    private class ChangeDataListener implements DocumentListener, ActionListener, ChangeListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            applyButton.setEnabled(true);
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            applyButton.setEnabled(true);
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            applyButton.setEnabled(true);
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            applyButton.setEnabled(true);
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            applyButton.setEnabled(true);
+        }
     }
 }
