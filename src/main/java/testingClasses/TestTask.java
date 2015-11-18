@@ -101,7 +101,7 @@ public class TestTask implements Serializable {
     }
 
     public void setAuthorsList(List<String> authorsList) {
-        this.authorsList = (ArrayList<String>) authorsList;
+        this.authorsList = authorsList;
     }
 
     public List<Question> getQuestionsList() {
