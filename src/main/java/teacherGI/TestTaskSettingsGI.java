@@ -50,7 +50,7 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton applyButton;
     private JButton cancelButton;
 
-    private List<Question> questionsGroupList = new ArrayList<>();
+    private List<List<Question>> questionsGroupList = new ArrayList<>();
 
     public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
@@ -59,8 +59,9 @@ public class TestTaskSettingsGI extends JDialog {
         this.studentManager = studentManager;
         this.testTaskManager = testTaskManager;
         testTask = testTaskManager.getCurrentTest();
+        questionsGroupList.addAll(testTask.getQuestionGroupsList());
 
-        prepareTabbedPanel();
+        prepareTabbedPane();
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
         prepareSaveButton();
@@ -75,14 +76,14 @@ public class TestTaskSettingsGI extends JDialog {
 
     private void setupDialog() {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setSize(new Dimension(415, 420));
+        setSize(new Dimension(415, 500));
         setIconImage(new ImageIcon("resources/settings.png").getImage());
         setResizable(false);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
-    private void prepareTabbedPanel() {
+    private void prepareTabbedPane() {
         tabbedPane = new JTabbedPane();
         tabbedPane.setBorder(new EmptyBorder(5, 5, 0, 5));
         tabbedPane.setBackground(Color.WHITE);
@@ -140,6 +141,8 @@ public class TestTaskSettingsGI extends JDialog {
 
         testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel));
 
+        testTask.setQuestionGroupsList(questionsGroupList);
+
         testTaskManager.saveTests();
     }
 
@@ -165,18 +168,19 @@ public class TestTaskSettingsGI extends JDialog {
         generalTabPanel = new JPanel(new BorderLayout());
         generalTabPanel.setBackground(Color.WHITE);
         generalTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+
         generalTabPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT,
                 "Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
-        authorsPanel = createCheckBoxPanel(
-                new ArrayList<>(teacherManager.getUserSet()));
-        generalTabPanel.add(createScrollPaneWithBorder(authorsPanel, "Автори"), BorderLayout.SOUTH);
+        authorsPanel = createCheckBoxPanel(new ArrayList<>(teacherManager.getUserSet()));
+        generalTabPanel.add(createScrollPaneWithTitle(authorsPanel, "Автори"), BorderLayout.SOUTH);
     }
 
     private void prepareDescriptionPanel() {
-        descriptionPanel = new BoxPanel(BoxLayout.Y_AXIS);
+        descriptionPanel = new JPanel(new BorderLayout());
         descriptionPanel.setBorder(new EmptyBorder(5, 7, 7, 7));
+        descriptionPanel.setOpaque(false);
 
         descriptionArea = new JTextArea(testTask.getDescription());
         descriptionArea.setLineWrap(true);
@@ -184,8 +188,9 @@ public class TestTaskSettingsGI extends JDialog {
         descriptionArea.setFont(FrameUtils.MAIN_FONT);
         descriptionArea.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
 
-        descriptionPanel.add(new JLabel("Опис тестововго завдання"));
-        descriptionPanel.add(FrameUtils.createScroll(descriptionArea));
+        JPanel labelPanel = new BoxPanel(new JLabel("Опис тестововго завдання"));
+        descriptionPanel.add(labelPanel, BorderLayout.NORTH);
+        descriptionPanel.add(FrameUtils.createScroll(descriptionArea), BorderLayout.CENTER);
     }
 
     private JCheckBox createCheckAllBox(JPanel checkBoxPanel) {
@@ -254,10 +259,10 @@ public class TestTaskSettingsGI extends JDialog {
         return checkBoxPanel;
     }
 
-    private JScrollPane createScrollPaneWithBorder(JPanel panel, String title) {
+    private JScrollPane createScrollPaneWithTitle(JPanel panel, String title) {
         JScrollPane scrollPane = new JScrollPane(panel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(100, 188));
+        scrollPane.setPreferredSize(new Dimension(100, 258));
         scrollPane.setMaximumSize(new Dimension(100500, 188));
         scrollPane.setBorder(new TitledBorder(title));
         scrollPane.setBackground(Color.WHITE);
@@ -281,18 +286,14 @@ public class TestTaskSettingsGI extends JDialog {
     private void prepareLimitTabPanel() {
         limitTabPanel = new JPanel(new BorderLayout());
         limitTabPanel.setBackground(Color.WHITE);
-        limitTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        limitTabPanel.setBorder(new EmptyBorder(10, 20, 240, 40));
 
-        JPanel limitPanel = new JPanel(new BorderLayout());
-        limitPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Максимальна кількість варіантів відповідей:",
+        limitTabPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Максимальна кількість варіантів відповідей:",
                 "Максимальна кількість запитань у тесті:",
                 "Максимальна кількість часу, хв.:",
                 "Максимальна кількість спроб:",
                 "Мінімальна кількість балів для сдачі тесту:"), BorderLayout.WEST);
-        limitPanel.add(createSpinners(), BorderLayout.CENTER);
-        limitPanel.setBorder(new TitledBorder("Обмеження"));
-        limitPanel.setBackground(Color.WHITE);
-        limitTabPanel.add(limitPanel, BorderLayout.CENTER);
+        limitTabPanel.add(createSpinners(), BorderLayout.CENTER);
     }
 
     private JPanel createSpinners() {
@@ -314,13 +315,11 @@ public class TestTaskSettingsGI extends JDialog {
         studentsTabPanel.setBackground(Color.WHITE);
         studentsTabPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel label = new JLabel("<html>Оберіть групи студентів, які будуть<br>" +
-                "мати доступ до складання даного тесту</html>");
-        label.setHorizontalAlignment(JLabel.LEFT);
-        studentsTabPanel.add(label, BorderLayout.NORTH);
+        studentsTabPanel.add(new JLabel("Оберіть групи студентів, які будуть"));
+        studentsTabPanel.add(new JLabel("мати доступ до складання даного тесту"));
 
         studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()));
-        studentsTabPanel.add(createScrollPaneWithBorder(studentsGroupPanel, "Групи студентів"), BorderLayout.CENTER);
+        studentsTabPanel.add(createScrollPaneWithTitle(studentsGroupPanel, "Групи студентів"));
     }
 
     private void prepareQuestionsTabPanel() {
@@ -332,26 +331,26 @@ public class TestTaskSettingsGI extends JDialog {
             ((JCheckBox) c).addActionListener(e -> addQuestionsButton.setEnabled(areTwoBoxesSelected()));
         }
 
-        JScrollPane scrollPane = createScrollPaneWithBorder(questionsGroupPanel, "Оберіть запитання");
+        JScrollPane scrollPane = createScrollPaneWithTitle(questionsGroupPanel, "Оберіть запитання");
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         questionsTabPanel.add(scrollPane);
 
         prepareAddQuestionButton();
-        questionsTabPanel.add(addQuestionsButton);
+        questionsTabPanel.add(new BoxPanel(addQuestionsButton));
 
         prepareQuestionJList();
         questionsTabPanel.add(FrameUtils.createScroll(questionJList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS));
 
         prepareRemoveGroupButton();
-        questionsTabPanel.add(removeGroupButton);
+        questionsTabPanel.add(new BoxPanel(removeGroupButton));
     }
 
     private void prepareQuestionJList() {
         listModel = new DefaultListModel<>();
-        for (ArrayList<Question> list : testTask.getQuestionGroupsList()) {
+        for (List<Question> list : questionsGroupList) {
             String groupName = "";
             for (Question question : list) {
-                groupName += testTask.getQuestionsList().indexOf(question) + ", ";
+                groupName += (testTask.getQuestionsList().indexOf(question) + 1) + ", ";
             }
             groupName = groupName.substring(0, groupName.length() - 2);
             listModel.addElement(groupName);
@@ -386,14 +385,16 @@ public class TestTaskSettingsGI extends JDialog {
         addQuestionsButton.setEnabled(false);
         addQuestionsButton.addActionListener(e -> {
             String groupName = "";
+            List<Question> questions = new ArrayList<>();
             for (int i = 0; i < questionsGroupPanel.getComponentCount(); i++) {
                 JCheckBox checkBox = (JCheckBox) questionsGroupPanel.getComponent(i);
                 if (checkBox.isSelected()) {
-                    questionsGroupList.add(testTask.getQuestionsList().get(i));
-                    groupName += i + ", ";
+                    questions.add(testTask.getQuestionsList().get(i));
+                    groupName += (i + 1) + ", ";
                     checkBox.setSelected(false);
                 }
             }
+            questionsGroupList.add(questions);
             groupName = groupName.substring(0, groupName.length() - 2);
             listModel.addElement(groupName);
         });

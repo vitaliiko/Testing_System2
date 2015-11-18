@@ -29,6 +29,8 @@ public class StartInitObjects {
         studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
         studentsGroupsList.add(new StudentsGroup("CG-126", "", ""));
         studentsGroupsList.add(new StudentsGroup("RV-125", "", ""));
+        studentsGroupsList.add(new StudentsGroup("RV-126", "", ""));
+        studentsGroupsList.add(new StudentsGroup("RV-127", "", ""));
 
         new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
         new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));

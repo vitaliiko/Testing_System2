@@ -60,6 +60,15 @@ public class FrameUtils {
         return panel;
     }
 
+    public static JPanel createComponentsGridPanel(int width, int height, Component... components) {
+        JPanel panel = createPanel(components.length, 6);
+        for (Component component : components) {
+            panel.add(component);
+        }
+        panel.setPreferredSize(new Dimension(width, height));
+        return panel;
+    }
+
     private static JPanel createPanel(int rowCount, int distance) {
         JPanel panel = new JPanel(new GridLayout(rowCount, 1, 0, distance));
         panel.setOpaque(false);

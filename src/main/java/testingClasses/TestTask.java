@@ -24,7 +24,7 @@ public class TestTask implements Serializable {
     private int minPoint = 60;
 
     private List<Question> questionsList = new ArrayList<>();
-    private List<ArrayList<Question>> questionGroupsList = new ArrayList<>();
+    private List<List<Question>> questionGroupsList = new ArrayList<>();
     private List<String> authorsList = new ArrayList<>();
     private List<String> studentGroupsList = new ArrayList<>();
     private List<Student> notAllowedStudentsList = new ArrayList<>();
@@ -127,11 +127,11 @@ public class TestTask implements Serializable {
         this.minPoint = minPoint;
     }
 
-    public List<ArrayList<Question>> getQuestionGroupsList() {
+    public List<List<Question>> getQuestionGroupsList() {
         return questionGroupsList;
     }
 
-    public void setQuestionGroupsList(ArrayList<ArrayList<Question>> questionGroupsList) {
+    public void setQuestionGroupsList(List<List<Question>> questionGroupsList) {
         this.questionGroupsList = questionGroupsList;
     }
 
@@ -165,7 +165,7 @@ public class TestTask implements Serializable {
 
     public ArrayList<String> createQuestionGroupsNames() {
         ArrayList<String> dataList = new ArrayList<>();
-        for (ArrayList<Question> questionGroup : questionGroupsList) {
+        for (List<Question> questionGroup : questionGroupsList) {
             String questionGroupName = "";
             for (Question question : questionGroup) {
                 questionGroupName += questionsList.indexOf(question) + ", ";
