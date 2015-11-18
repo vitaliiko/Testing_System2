@@ -172,8 +172,7 @@ public class AddQuestionGI extends JFrame {
         prepareImagePanel();
         questionPanel.add(imagePanel);
 
-        JScrollPane scrollPane = new JScrollPane(questionArea = createTextArea(),
-                ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scrollPane = FrameUtils.createScroll(questionArea = createTextArea());
         questionPanel.add(new JLabel("Текст запитання:"));
         questionPanel.add(scrollPane);
 

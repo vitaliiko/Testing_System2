@@ -1,6 +1,7 @@
 package studentGI;
 
 import components.BoxPanel;
+import components.FrameUtils;
 import components.LabelComponentPanel;
 import components.QuestionPanel;
 import testingClasses.TestTaskWrapper;
@@ -34,8 +35,7 @@ public class PassingTheTestGI extends JWindow {
         questionsCount = testTaskWrapper.getTestTask().getQuestionsLimit();
 
         gd.setFullScreenWindow(this);
-        JScrollPane scrollPane = new JScrollPane(questionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane scrollPane = FrameUtils.createScroll(questionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         addListenersToQuestionPanel();
         getContentPane().add(scrollPane, BorderLayout.CENTER);

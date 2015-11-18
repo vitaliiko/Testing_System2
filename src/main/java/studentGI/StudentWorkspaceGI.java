@@ -1,6 +1,7 @@
 package studentGI;
 
 import components.BoxPanel;
+import components.FrameUtils;
 import components.MainFrame;
 import components.TableParameters;
 import testingClasses.TestTask;
@@ -50,8 +51,7 @@ public class StudentWorkspaceGI extends MainFrame {
     @Override
     public void fillContainer() {
         prepareTestTasksTable();
-        addOnContainer(new JScrollPane(testTaskTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        addOnContainer(FrameUtils.createScroll(testTaskTable));
     }
 
     private void prepareTestTasksTable() {

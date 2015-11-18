@@ -185,8 +185,7 @@ public class TestTaskSettingsGI extends JDialog {
         descriptionArea.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
 
         descriptionPanel.add(new JLabel("Опис тестововго завдання"));
-        descriptionPanel.add(new JScrollPane(descriptionArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        descriptionPanel.add(FrameUtils.createScroll(descriptionArea));
     }
 
     private JCheckBox createCheckAllBox(JPanel checkBoxPanel) {
@@ -341,8 +340,7 @@ public class TestTaskSettingsGI extends JDialog {
         questionsTabPanel.add(addQuestionsButton);
 
         prepareQuestionJList();
-        questionsTabPanel.add(new JScrollPane(questionJList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        questionsTabPanel.add(FrameUtils.createScroll(questionJList, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS));
 
         prepareRemoveGroupButton();
         questionsTabPanel.add(removeGroupButton);

@@ -1,15 +1,18 @@
 package teacherGI;
 
 import components.BoxPanel;
+import components.FrameUtils;
 import components.MainFrame;
 import supporting.IOFileHandling;
 import components.TableParameters;
 import testingClasses.TestTask;
+import testingClasses.TestTaskWrapper;
 import usersClasses.Student;
 import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -22,7 +25,14 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JButton settingsButton;
     private JTable testTaskTable;
     private JTable studentsGroupTable;
-    private JTable studentsTable;
+    private JPanel viewStudentsInfoTab;
+    private JPanel studentsInfoPanel;
+    private JList<StudentsGroup> studentsGroupJList;
+    private DefaultListModel<StudentsGroup> studentsGroupListModel;
+    private JList<Student> studentsJList;
+    private DefaultListModel<Student> studentListModel;
+    private JList<TestTaskWrapper> wrapperJList;
+    private DefaultListModel<TestTaskWrapper> wrapperListModel;
     private TableParameters<TestTask> testTaskTableParameters;
     private TableParameters<StudentsGroup> studentsGroupTableParameters;
     private TableParameters<Student> studentTableParameters;
@@ -57,11 +67,13 @@ public class TeacherWorkspaceGI extends MainFrame {
     @Override
     public void fillContainer() {
         prepareTestTasksTable();
-        addOnContainer(new JScrollPane(testTaskTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
-        prepareStudentsGroupTable();
-        addOnContainer(new JScrollPane(studentsGroupTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        addOnContainer(FrameUtils.createScroll(testTaskTable));
+
+        prepareViewStudentsInfoTab();
+        addOnContainer(viewStudentsInfoTab);
+//        prepareStudentsGroupTable();
+//        addOnContainer(new JScrollPane(studentsGroupTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+//                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
     }
 
     private void prepareTestTasksTable() {
@@ -123,5 +135,43 @@ public class TeacherWorkspaceGI extends MainFrame {
         settingsButton.setEnabled(false);
         settingsButton.addActionListener(e ->
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
+    }
+
+    private void prepareViewStudentsInfoTab() {
+        viewStudentsInfoTab = new JPanel();
+
+        prepareStudentsGroupJList();
+        viewStudentsInfoTab.add(FrameUtils.createScroll(studentsGroupJList));
+
+        prepareStudentsJList();
+        viewStudentsInfoTab.add(FrameUtils.createScroll(studentsJList));
+    }
+
+    private void prepareStudentsInfoPanel() {
+        studentsInfoPanel = new JPanel(new BorderLayout());
+
+    }
+
+    private void prepareStudentsGroupJList() {
+        studentsGroupListModel = new DefaultListModel<>();
+        for (StudentsGroup studentsGroup : studentManager.getStudentsGroupSet()) {
+            studentsGroupListModel.addElement(studentsGroup);
+        }
+
+        studentsGroupJList = new JList<>(studentsGroupListModel);
+        studentsGroupJList.setVisibleRowCount(5);
+        studentsGroupJList.addListSelectionListener(e -> {
+            studentListModel.removeAllElements();
+            int index = studentsGroupJList.getSelectedIndex();
+            for (Student student : studentsGroupListModel.getElementAt(index).getUsersSet()) {
+                studentListModel.addElement(student);
+            }
+        });
+    }
+
+    private void prepareStudentsJList() {
+        studentListModel = new DefaultListModel<>();
+        studentsJList = new JList<>(studentListModel);
+        studentsJList.setVisibleRowCount(5);
     }
 }

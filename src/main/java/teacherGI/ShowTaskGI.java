@@ -96,10 +96,8 @@ public class ShowTaskGI extends MainFrame {
         browseQuestionsPanel.setLayout(new BoxLayout(browseQuestionsPanel, BoxLayout.Y_AXIS));
         repaintBrowsePanel();
 
-        addOnContainer(new JScrollPane(questionsTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-                new JScrollPane(browseQuestionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
+        addOnContainer(FrameUtils.createScroll(questionsTable),
+                FrameUtils.createScroll(browseQuestionsPanel, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
     private void repaintBrowsePanel() {

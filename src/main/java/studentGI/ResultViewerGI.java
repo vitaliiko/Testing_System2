@@ -23,8 +23,7 @@ public class ResultViewerGI extends JDialog {
 
         prepareStatPanel();
         JPanel mainPanel = new BoxPanel(BoxLayout.Y_AXIS, statPanel, new JSeparator(), resultPanel);
-        getContentPane().add(new JScrollPane(mainPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER));
+        getContentPane().add(FrameUtils.createScroll(mainPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS));
 
         dialogSetup();
     }

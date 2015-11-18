@@ -77,4 +77,21 @@ public class FrameUtils {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return button;
     }
+
+    public static JScrollPane createScroll(Component component) {
+        return new JScrollPane(component, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+    }
+
+    public static JScrollPane createScroll(Component component, int policy) {
+        JScrollPane scrollPane = new JScrollPane(component);
+        if (policy < ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            scrollPane.setVerticalScrollBarPolicy(policy);
+            scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        } else {
+            scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPane.setHorizontalScrollBarPolicy(policy);
+        }
+        return scrollPane;
+    }
 }
