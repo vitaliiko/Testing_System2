@@ -29,7 +29,6 @@ public class ShowTaskGI extends MainFrame {
     private JButton settingsButton;
     private JLabel questionsCountLabel;
     private JTable questionsTable;
-    private TableParameters<Question> questionTableParameters;
 
     public ShowTaskGI(TeacherManager teacherManager, int currentTest) throws HeadlessException {
         super("Редагування тесту", teacherManager);
@@ -189,7 +188,6 @@ public class ShowTaskGI extends MainFrame {
         completeButton = new JButton("Готово");
         completeButton.setAlignmentX(RIGHT_ALIGNMENT);
         completeButton.addActionListener(e -> {
-            //testTask.setQuestionsList(questionsList);
             testTaskManager.saveTests();
             new TeacherWorkspaceGI(teacherManager);
             dispose();
@@ -197,7 +195,7 @@ public class ShowTaskGI extends MainFrame {
     }
 
     private void prepareQuestionsTable() {
-        questionTableParameters = new TableParameters<>(questionsList);
+        TableParameters<Question> questionTableParameters = new TableParameters<>(questionsList);
         questionsTable = createTable(questionTableParameters);
         questionsTable.getSelectionModel().addListSelectionListener(e -> {
             removeButton.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));

@@ -66,7 +66,7 @@ public class StartTestGI extends JDialog {
             dispose();
         });
 
-        cancelButton = new JButton("відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.addActionListener(e -> dispose());
     }
 }

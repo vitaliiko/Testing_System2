@@ -177,7 +177,9 @@ public class TestTask implements Serializable {
     }
 
     public ArrayList<String> getQuestionNamesList() {
-        return questionsList.stream().map(Question::getTask).collect(Collectors.toCollection(ArrayList::new));
+        return questionsList.stream()
+                .map(Question::getTask)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -203,9 +205,9 @@ public class TestTask implements Serializable {
 
         TestTask testTask = (TestTask) o;
 
-        return taskName.equals(testTask.taskName) &&
-                disciplineName.equals(testTask.disciplineName) &&
-                getCreatorName().equals(((TestTask) o).getCreatorName());
+        return taskName.equals(testTask.taskName)
+                && disciplineName.equals(testTask.disciplineName)
+                && getCreatorName().equals(((TestTask) o).getCreatorName());
 
     }
 

@@ -172,34 +172,34 @@ public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends
     }
 
     public void prepareCancelButton() {
-        cancelButton = new JButton("Відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.addActionListener(e -> dispose());
     }
 
     private boolean isPasswordFieldsEmpty() {
         if (user.isPasswordEmpty()) {
-            return newPasswordField.getPassword().length == 0 &&
-                    repeatPasswordField.getPassword().length == 0;
+            return newPasswordField.getPassword().length == 0
+                    && repeatPasswordField.getPassword().length == 0;
         }
-        return currentPasswordField.getPassword().length == 0 &&
-                newPasswordField.getPassword().length == 0 &&
-                repeatPasswordField.getPassword().length == 0;
+        return currentPasswordField.getPassword().length == 0
+                && newPasswordField.getPassword().length == 0
+                && repeatPasswordField.getPassword().length == 0;
     }
 
     private boolean isNotPasswordFieldsEmpty() {
         if (user.isPasswordEmpty()) {
-            return newPasswordField.getPassword().length != 0 &&
-                    repeatPasswordField.getPassword().length != 0;
+            return newPasswordField.getPassword().length != 0
+                    && repeatPasswordField.getPassword().length != 0;
         }
-        return currentPasswordField.getPassword().length != 0 &&
-                newPasswordField.getPassword().length != 0 &&
-                repeatPasswordField.getPassword().length != 0;
+        return currentPasswordField.getPassword().length != 0
+                && newPasswordField.getPassword().length != 0
+                && repeatPasswordField.getPassword().length != 0;
     }
 
     private boolean isNotFieldsEmpty() {
-        return !nameField.getText().isEmpty() &&
-                !surnameField.getText().isEmpty() &&
-                !secondNameField.getText().isEmpty();
+        return !nameField.getText().isEmpty()
+                && !surnameField.getText().isEmpty()
+                && !secondNameField.getText().isEmpty();
     }
 
     public class TypeListener implements DocumentListener {

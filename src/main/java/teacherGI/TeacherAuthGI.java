@@ -93,8 +93,8 @@ public class TeacherAuthGI extends JFrame {
         teacherNamesBox = new AutoCompleteComboBox<>(teacherManager.getUsersNameList().toArray());
         teacherNamesBox.setSelectedIndex(-1);
         teacherNamesBox.setEditable(true);
-        ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument().
-                addDocumentListener(new LoginTypeListener());
+        ((JTextField) teacherNamesBox.getEditor().getEditorComponent()).getDocument()
+                .addDocumentListener(new LoginTypeListener());
     }
 
     private void prepareLoginButton() {
@@ -175,8 +175,10 @@ public class TeacherAuthGI extends JFrame {
                 }
                 ((CardLayout) container.getLayout()).first(container);
                 SingleMessage.setDefaultMessage(SingleMessage.ADD_USER_SUC);
+
                 teacherNamesBox.addItem(secondNameField.getText());
                 teacherNamesBox.setSelectedItem(secondNameField.getText());
+
                 passwordField.setText(String.valueOf(firstPasswordField.getPassword()));
                 loginButton.setEnabled(true);
             } catch (IOException exception) {
@@ -186,7 +188,7 @@ public class TeacherAuthGI extends JFrame {
     }
 
     private void prepareCancelButton() {
-        cancelButton = new JButton("Відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).first(container);
             clearFields();
@@ -210,11 +212,11 @@ public class TeacherAuthGI extends JFrame {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            signUpButton.setEnabled(!nameField.getText().isEmpty() &&
-                    !surnameField.getText().isEmpty() &&
-                    !secondNameField.getText().isEmpty() &&
-                    firstPasswordField.getPassword().length != 0 &&
-                    secondPasswordField.getPassword().length != 0);
+            signUpButton.setEnabled(!nameField.getText().isEmpty()
+                    && !surnameField.getText().isEmpty()
+                    && !secondNameField.getText().isEmpty()
+                    && firstPasswordField.getPassword().length != 0
+                    && secondPasswordField.getPassword().length != 0);
         }
 
         @Override
@@ -232,8 +234,8 @@ public class TeacherAuthGI extends JFrame {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            loginButton.setEnabled(passwordField.getPassword().length != 0 &&
-                    teacherNamesBox.getSelectedItem() != null);
+            loginButton.setEnabled(passwordField.getPassword().length != 0
+                    && teacherNamesBox.getSelectedItem() != null);
         }
 
         @Override

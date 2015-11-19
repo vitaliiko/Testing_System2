@@ -97,13 +97,19 @@ public class PassingTheTestGI extends JWindow {
         completeButton = new JButton("Завершити");
         completeButton.addActionListener(e -> {
             float result = 0;
+            int rightAnswersCount = 0;
             for (Component component : questionsPanel.getComponents()) {
                 if (component instanceof QuestionPanel) {
-                    result += ((QuestionPanel) component).saveState();
+                    float questionResult = ((QuestionPanel) component).saveState();
+                    result += questionResult;
+                    if (questionResult == 1) {
+                        rightAnswersCount++;
+                    }
                 }
             }
             testTaskWrapper.setPoints(100 / questionsCount * result);
             testTaskWrapper.setResultPanel(questionsPanel);
+            testTaskWrapper.setRightAnswersCount(rightAnswersCount);
             dispose();
         });
     }
@@ -111,17 +117,17 @@ public class PassingTheTestGI extends JWindow {
     private void startTimer() {
         Timer timer = new Timer(1000, e -> {
             timeLimit--;
-            timeLabel.setText(String.valueOf(timeLimit / 60 + " хв. " + timeLimit % 60 + " сек."));
+            int minutes = timeLimit / 60;
+            int seconds = timeLimit % 60;
+            timeLabel.setText(String.valueOf((minutes < 10 ? "0" + minutes : minutes) + " хв. "
+                    + (seconds < 10 ? "0" + seconds : seconds) + " сек."));
             if (timeLimit == 0) {
                 completeButton.doClick();
-            }
-            if (timeLimit == 120) {
+            } else if (timeLimit == 120 || timeLimit == 60) {
                 timeLabel.setForeground(Color.RED);
-            }
-            if (timeLimit == 119) {
+            } else if (timeLimit == 119 || timeLimit == 59) {
                 timeLabel.setForeground(Color.BLACK);
-            }
-            if (timeLimit <= 29) {
+            } else if (timeLimit <= 19) {
                 timeLabel.setForeground(timeLabel.getForeground() == Color.BLACK ? Color.RED : Color.BLACK);
             }
         });

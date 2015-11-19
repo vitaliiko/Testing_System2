@@ -275,7 +275,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsJList.addListSelectionListener(e -> {
             Student student = studentsJList.getSelectedValue();
             if (student != null) {
-                studentManager.setCurrentStudent(student);
+                studentManager.setCurrentUser(student);
                 nameField.setText(student.getName());
                 surnameField.setText(student.getSecondName());
                 secondNameField.setText(student.getSecondName());
@@ -322,7 +322,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         @Override
         public void insertUpdate(DocumentEvent e) {
             saveStudentButton.setEnabled(!surnameField.getText().isEmpty() &&
-                    !nameField.getText().isEmpty() && !secondNameField.getText().isEmpty());
+                    !nameField.getText().isEmpty() &&
+                    !secondNameField.getText().isEmpty());
         }
 
         @Override

@@ -43,8 +43,6 @@ public class ResultViewerGI extends JDialog {
         statPanel.setBackground(testTaskWrapper.getStatus() < 3 ? QuestionPanel.RED_COLOR : QuestionPanel.GREEN_COLOR);
         statPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        Font font = new Font("Arial", Font.PLAIN, 13);
-
         statPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Назва тесту: ", "Дисципліна: ",
                 "Дано правильних відповідей: ", "Кількість балів: ", "Статус: ", "Спроб залишилось: "),
                 BorderLayout.WEST);

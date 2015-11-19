@@ -218,8 +218,7 @@ public class AddQuestionGI extends JFrame {
                         }
                     } else {
                         answerBoxPanel.setEnabledCheckBox(false);
-                        if (index != answersBoxList.size() - 1 &&
-                                answersBoxList.get(index + 1).getText().isEmpty()) {
+                        if (index != answersBoxList.size() - 1 && answersBoxList.get(index + 1).getText().isEmpty()) {
                             answersBoxList.get(index + 1).setEnabledTextArea(false);
                         }
                     }
@@ -258,7 +257,7 @@ public class AddQuestionGI extends JFrame {
     }
 
     private void prepareCancelButton() {
-        cancelButton = new JButton("Відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cancelButton.addActionListener(e -> {
             if (!questionArea.getText().isEmpty()) {

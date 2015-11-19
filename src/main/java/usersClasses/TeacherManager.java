@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class TeacherManager extends Validator implements UserManager<Teacher> {
+public class TeacherManager extends UserManager<Teacher> {
 
     private Set<Teacher> teacherSet;
     private ArrayList<String> teachersNamesList;
-    private Teacher currentTeacher;
 
     public TeacherManager() {
         teacherSet = IOFileHandling.loadUserSet(IOFileHandling.TEACHERS_SER);
@@ -33,7 +32,7 @@ public class TeacherManager extends Validator implements UserManager<Teacher> {
 
     @Override
     public Teacher getCurrentUser() {
-        return currentTeacher;
+        return currentUser;
     }
 
     @Override
@@ -49,31 +48,6 @@ public class TeacherManager extends Validator implements UserManager<Teacher> {
             throw new IOException(SingleMessage.EXIST_USER);
         }
         saveUserSet();
-    }
-
-    @Override
-    public void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
-            throws IOException {
-        validateName(name, surname, secondName);
-
-        String userName = surname + " " + name + " " + secondName;
-        if (!currentTeacher.getUserName().equals(userName)) {
-            checkUsername(userName);
-        }
-
-        currentTeacher.setName(name);
-        currentTeacher.setSurname(surname);
-        currentTeacher.setSecondName(secondName);
-        currentTeacher.setUserName(userName);
-
-        if (!telephone.isEmpty()) {
-            validateTelephone(telephone);
-        }
-        currentTeacher.setTelephoneNum(telephone);
-        if (!mail.isEmpty()) {
-            validateMail(mail);
-        }
-        currentTeacher.setMailAddress(mail);
     }
 
     @Override
@@ -93,15 +67,15 @@ public class TeacherManager extends Validator implements UserManager<Teacher> {
 
     @Override
     public void deleteCurrentUser() {
-        teacherSet.remove(currentTeacher);
-        currentTeacher = null;
+        teacherSet.remove(currentUser);
+        currentUser = null;
     }
 
     @Override
     public boolean authorizeUser(String userName, char[] password) {
         for (Teacher teacher : teacherSet) {
             if (teacher.isMatches(userName, password)) {
-                currentTeacher = teacher;
+                currentUser = teacher;
                 return true;
             }
         }

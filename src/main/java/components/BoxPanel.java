@@ -61,8 +61,10 @@ public class BoxPanel extends JPanel {
 
     private void checkAxis(int axis) {
         try {
-            if (axis != BoxLayout.Y_AXIS && axis != BoxLayout.X_AXIS &&
-                    axis != BoxLayout.LINE_AXIS && axis != BoxLayout.PAGE_AXIS) {
+            if (axis != BoxLayout.Y_AXIS
+                    && axis != BoxLayout.X_AXIS
+                    && axis != BoxLayout.LINE_AXIS
+                    && axis != BoxLayout.PAGE_AXIS) {
                 throw new IOException("Axis mast be equal 1, 2, 3 or 4");
             }
         } catch (IOException e) {
@@ -72,8 +74,10 @@ public class BoxPanel extends JPanel {
 
     private void checkConstraint(String constraint) {
         try {
-            if (!constraint.equals(BorderLayout.SOUTH) && !constraint.equals(BorderLayout.NORTH)
-                    && !constraint.equals(BorderLayout.WEST) && !constraint.equals(BorderLayout.EAST)
+            if (!constraint.equals(BorderLayout.SOUTH)
+                    && !constraint.equals(BorderLayout.NORTH)
+                    && !constraint.equals(BorderLayout.WEST)
+                    && !constraint.equals(BorderLayout.EAST)
                     && !constraint.equals(BorderLayout.CENTER)) {
                 throw new IOException("Constraint mast be equal Center, North, East, South or West");
             }

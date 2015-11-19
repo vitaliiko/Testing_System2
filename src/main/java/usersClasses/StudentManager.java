@@ -8,18 +8,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class StudentManager extends Validator implements UserManager<Student> {
+public class StudentManager extends UserManager<Student> {
 
     private Set<StudentsGroup> studentsGroupSet;
     private StudentsGroup studentsGroup;
-    private Student currentStudent;
 
     public StudentManager() {
         studentsGroupSet = IOFileHandling.loadStudentsGroupSet();
     }
 
-    public void setCurrentStudent(Student currentStudent) {
-        this.currentStudent = currentStudent;
+    public void setCurrentUser(Student currentUser) {
+        this.currentUser = currentUser;
     }
 
     @Override
@@ -34,7 +33,7 @@ public class StudentManager extends Validator implements UserManager<Student> {
 
     @Override
     public Student getCurrentUser() {
-        return currentStudent;
+        return currentUser;
     }
 
     @Override
@@ -47,36 +46,10 @@ public class StudentManager extends Validator implements UserManager<Student> {
 
     }
 
-    @Override
-    public void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
-            throws IOException {
-        validateName(name, surname, secondName);
-
-        String userName = surname + " " + name + " " + secondName;
-        if (!currentStudent.getUserName().equals(userName)) {
-            checkUsername(userName);
-        }
-
-        currentStudent.setName(name);
-        currentStudent.setSurname(surname);
-        currentStudent.setSecondName(secondName);
-        currentStudent.setUserName(userName);
-
-        if (!telephone.isEmpty()) {
-            validateTelephone(telephone);
-        }
-        currentStudent.setTelephoneNum(telephone);
-
-        if (!mail.isEmpty()) {
-            validateMail(mail);
-        }
-        currentStudent.setMailAddress(mail);
-    }
-
     public void updateCurrentUserInfo(String surname, String name, String secondName, StudentsGroup group,
                                       String telephone, String mail) throws IOException {
-        if (!currentStudent.getStudentsGroup().equals(group)) {
-            currentStudent.setStudentsGroup(group);
+        if (!currentUser.getStudentsGroup().equals(group)) {
+            currentUser.setStudentsGroup(group);
         }
         updateCurrentUserInfo(surname, name, secondName, telephone, mail);
     }
@@ -103,11 +76,11 @@ public class StudentManager extends Validator implements UserManager<Student> {
                 validatePassword(password, this);
                 student.setPassword(password);
                 saveUserSet();
-                currentStudent = student;
+                currentUser = student;
                 return true;
             }
             if (student.isMatches(userName, password)) {
-                currentStudent = student;
+                currentUser = student;
                 return true;
             }
         }
@@ -124,7 +97,9 @@ public class StudentManager extends Validator implements UserManager<Student> {
     }
 
     public ArrayList<String> getGroupNamesList() {
-        return studentsGroupSet.stream().map(StudentsGroup::getName).collect(Collectors.toCollection(ArrayList::new));
+        return studentsGroupSet.stream()
+                .map(StudentsGroup::getName)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public StudentsGroup getStudentGroup(String name) {

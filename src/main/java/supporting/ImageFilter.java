@@ -11,12 +11,12 @@ public class ImageFilter extends FileFilter {
         }
 
         String fileName = f.getName();
-        return fileName.endsWith(ImageUtils.tiff) ||
-                fileName.endsWith(ImageUtils.tif) ||
-                fileName.endsWith(ImageUtils.gif) ||
-                fileName.endsWith(ImageUtils.jpeg) ||
-                fileName.endsWith(ImageUtils.jpg) ||
-                fileName.endsWith(ImageUtils.png);
+        return fileName.toLowerCase().endsWith(ImageUtils.tiff)
+                || fileName.toLowerCase().endsWith(ImageUtils.tif)
+                || fileName.toLowerCase().endsWith(ImageUtils.gif)
+                || fileName.toLowerCase().endsWith(ImageUtils.jpeg)
+                || fileName.toLowerCase().endsWith(ImageUtils.jpg)
+                || fileName.toLowerCase().endsWith(ImageUtils.png);
     }
 
     @Override

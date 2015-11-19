@@ -84,8 +84,8 @@ public class QuestionPanel extends JPanel {
                 if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText())) {
                     answerRadioBoxPanel.setTrue();
                 }
-                if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText()) &&
-                        answerRadioBoxPanel.isSelected()) {
+                if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText())
+                        && answerRadioBoxPanel.isSelected()) {
                     studentsRightAnswersCount++;
                 }
             }

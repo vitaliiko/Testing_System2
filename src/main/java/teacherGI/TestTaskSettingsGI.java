@@ -167,7 +167,7 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private void prepareCancelButton() {
-        cancelButton = new JButton("Відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.addActionListener(e -> dispose());
     }
 

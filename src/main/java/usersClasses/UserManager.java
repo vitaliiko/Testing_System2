@@ -4,26 +4,50 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public interface UserManager<T extends User> {
+public abstract class UserManager<T extends User> extends Validator {
 
-    Set<T> getUserSet();
+    protected T currentUser;
 
-    List<String> getUsersNameList();
+    public abstract Set<T> getUserSet();
 
-    T getCurrentUser();
+    public abstract List<String> getUsersNameList();
 
-    void saveUserSet();
+    public abstract T getCurrentUser();
 
-    void createUser(String surname, String name, String secondName, char[] password) throws IOException;
+    public abstract void saveUserSet();
 
-    void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
-            throws IOException;
+    public abstract void createUser(String surname, String name, String secondName, char[] password) throws IOException;
 
-    boolean checkUsername(String username) throws IOException;
+    public abstract boolean checkUsername(String username) throws IOException;
 
-    void deleteUser(T user);
+    public abstract void deleteUser(T user);
 
-    void deleteCurrentUser();
+    public abstract void deleteCurrentUser();
 
-    boolean authorizeUser(String userName, char[] password) throws IOException;
+    public abstract boolean authorizeUser(String userName, char[] password) throws IOException;
+
+    public  void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
+            throws IOException {
+        validateName(name, surname, secondName);
+
+        String userName = surname + " " + name + " " + secondName;
+        if (!currentUser.getUserName().equals(userName)) {
+            checkUsername(userName);
+        }
+
+        currentUser.setName(name);
+        currentUser.setSurname(surname);
+        currentUser.setSecondName(secondName);
+        currentUser.setUserName(userName);
+
+        if (!telephone.isEmpty()) {
+            validateTelephone(telephone);
+        }
+        currentUser.setTelephoneNum(telephone);
+
+        if (!mail.isEmpty()) {
+            validateMail(mail);
+        }
+        currentUser.setMailAddress(mail);
+    }
 }

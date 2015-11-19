@@ -84,9 +84,10 @@ public class Question implements Serializable {
 
         Question question = (Question) o;
 
-        return !(imageName != null ? !imageName.equals(question.imageName) : question.imageName != null) &&
-                Arrays.equals(imageInByte, question.imageInByte) && task.equals(question.task) &&
-                answersList.equals(question.answersList) &&
-                rightAnswersList.equals(question.rightAnswersList);
+        return !(imageName != null ? !imageName.equals(question.imageName) : question.imageName != null)
+                && Arrays.equals(imageInByte, question.imageInByte)
+                && task.equals(question.task)
+                && answersList.equals(question.answersList)
+                && rightAnswersList.equals(question.rightAnswersList);
     }
 }

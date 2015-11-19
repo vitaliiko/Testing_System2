@@ -112,8 +112,8 @@ public class StudentAuthGI extends JFrame {
         groupsBox = new AutoCompleteComboBox<>(studentManager.getGroupNamesList().toArray());
         groupsBox.setSelectedIndex(-1);
         groupsBox.setEditable(true);
-        ((JTextField) groupsBox.getEditor().getEditorComponent()).getDocument().
-                addDocumentListener(new LoginTypeListener());
+        ((JTextField) groupsBox.getEditor().getEditorComponent()).getDocument()
+                .addDocumentListener(new LoginTypeListener());
 
     }
 
@@ -140,7 +140,7 @@ public class StudentAuthGI extends JFrame {
     }
 
     private void prepareCancelButton() {
-        cancelButton = new JButton("Відмінити");
+        cancelButton = new JButton("Скасувати");
         cancelButton.addActionListener(e -> dispose());
     }
 
@@ -148,9 +148,9 @@ public class StudentAuthGI extends JFrame {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            loginButton.setEnabled(groupsBox.getSelectedItem() != null &&
-                    !nameField.getText().isEmpty() &&
-                    passwordField.getPassword().length != 0);
+            loginButton.setEnabled(groupsBox.getSelectedItem() != null
+                    && !nameField.getText().isEmpty()
+                    && passwordField.getPassword().length != 0);
             String text = ((JTextField) groupsBox.getEditor().getEditorComponent()).getText();
             nameField.setEnabled(!text.isEmpty());
             passwordField.setEnabled(!text.isEmpty());
