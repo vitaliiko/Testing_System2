@@ -92,17 +92,17 @@ public class TestTaskWrapper implements Serializable {
         questionList.addAll(testTask.getQuestionsList());
 
         Random random = new Random();
-        int questionCount = testTask.getQuestionsLimit();
+        int questionIndex = testTask.getQuestionsList().size();
         int i = 1;
-        while (questionCount > 0) {
-            Question question = questionList.get(random.nextInt(questionCount--));
+        while (i <= testTask.getQuestionsLimit()) {
+            Question question = questionList.get(random.nextInt(questionIndex--));
             QuestionPanel questionPanel = new QuestionPanel(i++, question);
             questionList.remove(question);
             testTask.getQuestionGroupsList().stream()
                     .filter(list -> list.contains(question))
                     .forEach(questionList::removeAll);
-            if (questionCount > questionList.size()) {
-                questionCount = questionList.size();
+            if (questionIndex > questionList.size()) {
+                questionIndex = questionList.size();
             }
             panel.add(questionPanel);
             panel.add(new JSeparator());
