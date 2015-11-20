@@ -1,5 +1,6 @@
 package usersClasses;
 
+import components.SingleMessage;
 import supporting.IOFileHandling;
 
 import java.io.IOException;
@@ -41,17 +42,22 @@ public class StudentManager extends UserManager<Student> {
         IOFileHandling.saveStudentsGroupSet(studentsGroupSet);
     }
 
-    @Override
-    public void createUser(String surname, String name, String secondName, char[] password) throws IOException {
-
+    public void createUser(String surname, String name, String secondName, StudentsGroup studentsGroup)
+            throws IOException {
+        this.studentsGroup = studentsGroup;
+        validateName(surname, name, secondName);
+        if (!this.studentsGroup.getUsersSet().add(new Student(surname, name, secondName, studentsGroup))) {
+            throw new IOException(SingleMessage.EXIST_USER);
+        }
+        saveUserSet();
     }
 
-    public void updateCurrentUserInfo(String surname, String name, String secondName, StudentsGroup group,
-                                      String telephone, String mail) throws IOException {
+    public void updateCurrentUserInfo(String surname, String name, String secondName, StudentsGroup group)
+            throws IOException {
         if (!currentUser.getStudentsGroup().equals(group)) {
             currentUser.setStudentsGroup(group);
         }
-        updateCurrentUserInfo(surname, name, secondName, telephone, mail);
+        updateCurrentUserInfo(surname, name, secondName);
     }
 
     @Override

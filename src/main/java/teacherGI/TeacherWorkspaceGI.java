@@ -17,10 +17,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class TeacherWorkspaceGI extends MainFrame {
@@ -47,10 +44,14 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JTextField surnameField;
     private JTextField nameField;
     private JTextField secondNameField;
-    private JTextField emailField;
-    private JTextField telephoneField;
+    private JLabel emailLabel;
+    private JLabel telephoneLabel;
+    private JButton addNewGroupButton;
     private JButton saveStudentButton;
     private JButton addNewStudentButton;
+    private JButton saveAddedStudentButton;
+    private JButton cancelAdditionButton;
+    private Container buttonsContainer;
 
     public TeacherWorkspaceGI(TeacherManager teacherManager) {
         super("Робоче середовище", teacherManager);
@@ -191,13 +192,14 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsInfoPanel.add(labels, BorderLayout.WEST);
 
         prepareFields();
+        prepareAddNewGroupButton();
+        JPanel boxWithButton = new BoxPanel(studentGroupsBox, addNewGroupButton);
         JPanel fields = FrameUtils.createComponentsGridPanel(surnameField, nameField, secondNameField,
-                studentGroupsBox, telephoneField, emailField);
+                boxWithButton, telephoneLabel, emailLabel);
         studentsInfoPanel.add(fields, BorderLayout.CENTER);
 
-        prepareSaveStudentButton();
-        prepareAddNewStudentButton();
-        studentsInfoPanel.add(new BoxPanel(saveStudentButton, addNewStudentButton), BorderLayout.SOUTH);
+        prepareButtonsContainer();
+        studentsInfoPanel.add(buttonsContainer, BorderLayout.SOUTH);
     }
 
     private void prepareFields() {
@@ -219,11 +221,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentGroupsBox = new JComboBox<>(comboBoxModel);
         studentGroupsBox.addActionListener(listener);
 
-        telephoneField = new JTextField(COLUMNS_COUNT);
-        telephoneField.getDocument().addDocumentListener(listener);
-
-        emailField = new JTextField(COLUMNS_COUNT);
-        emailField.getDocument().addDocumentListener(listener);
+        telephoneLabel = new JLabel();
+        emailLabel = new JLabel();
 
         setFieldsEnabled(false);
     }
@@ -233,16 +232,14 @@ public class TeacherWorkspaceGI extends MainFrame {
         nameField.setEnabled(enabled);
         secondNameField.setEnabled(enabled);
         studentGroupsBox.setEnabled(enabled);
-        telephoneField.setEnabled(enabled);
-        emailField.setEnabled(enabled);
     }
 
     private void clearFields() {
         surnameField.setText("");
         nameField.setText("");
         secondNameField.setText("");
-        telephoneField.setText("");
-        emailField.setText("");
+        telephoneLabel.setText("");
+        emailLabel.setText("");
     }
 
     private void prepareStudentsGroupJList() {
@@ -265,6 +262,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 clearFields();
                 setFieldsEnabled(false);
             }
+            SingleMessage.setEmptyMessage();
         });
     }
 
@@ -273,16 +271,20 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsJList = new JList<>(studentListModel);
         studentsJList.setVisibleRowCount(8);
         studentsJList.addListSelectionListener(e -> {
-            Student student = studentsJList.getSelectedValue();
-            if (student != null) {
+            Student student = null;
+            int index = studentsJList.getSelectedIndex();
+            if (index != -1) {
+                student = studentListModel.getElementAt(index);
                 studentManager.setCurrentUser(student);
                 nameField.setText(student.getName());
-                surnameField.setText(student.getSecondName());
+                surnameField.setText(student.getSurname());
                 secondNameField.setText(student.getSecondName());
-                telephoneField.setText(student.getTelephoneNum());
-                emailField.setText(student.getMailAddress());
+                telephoneLabel.setText(student.getTelephoneNum());
+                emailLabel.setText(student.getMailAddress());
                 studentGroupsBox.setSelectedItem(student.getStudentsGroup());
                 setFieldsEnabled(true);
+                saveStudentButton.setEnabled(false);
+                SingleMessage.setEmptyMessage();
             }
         });
     }
@@ -293,8 +295,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         saveStudentButton.addActionListener(e -> {
             try {
                 studentManager.updateCurrentUserInfo(surnameField.getText(), nameField.getText(),
-                        secondNameField.getText(), (StudentsGroup) studentGroupsBox.getSelectedItem(),
-                        telephoneField.getText(), emailField.getText());
+                        secondNameField.getText(), (StudentsGroup) studentGroupsBox.getSelectedItem());
             } catch (IOException e1) {
                 SingleMessage.setWarningMessage(e1.getMessage());
             }
@@ -303,6 +304,64 @@ public class TeacherWorkspaceGI extends MainFrame {
 
     private void prepareAddNewStudentButton() {
         addNewStudentButton = new JButton("Додати студента");
+        addNewStudentButton.addActionListener(e -> {
+            clearFields();
+            setFieldsEnabled(true);
+            int index = studentsGroupJList.getSelectedIndex();
+            if (index != -1) {
+                studentGroupsBox.setSelectedIndex(index);
+            }
+            switchContainerTab();
+        });
+    }
+
+    private void prepareSaveAddedStudentButton() {
+        saveAddedStudentButton = new JButton("Зберегти");
+        saveAddedStudentButton.setEnabled(false);
+        saveAddedStudentButton.addActionListener(e -> {
+            try {
+                studentManager.createUser(surnameField.getText(), nameField.getText(), secondNameField.getText(),
+                        (StudentsGroup) studentGroupsBox.getSelectedItem());
+                switchContainerTab();
+                SingleMessage.setDefaultMessage(SingleMessage.ADD_USER_SUC);
+            } catch (IOException e1) {
+                SingleMessage.setWarningMessage(e1.getMessage());
+                saveAddedStudentButton.setEnabled(false);
+            }
+        });
+    }
+
+    private void prepareCancelAdditionButton() {
+        cancelAdditionButton = new JButton("Скасувати");
+        cancelAdditionButton.addActionListener(e -> {
+            switchContainerTab();
+            clearFields();
+            setFieldsEnabled(true);
+        });
+    }
+
+    private void prepareAddNewGroupButton() {
+        addNewGroupButton = new JButton(new ImageIcon("resources/add_group.png"));
+        addNewGroupButton.setToolTipText("Додати групу");
+        addNewGroupButton.setVisible(false);
+    }
+
+    private void prepareButtonsContainer() {
+        buttonsContainer = new Container();
+        buttonsContainer.setLayout(new CardLayout());
+
+        prepareSaveStudentButton();
+        prepareAddNewStudentButton();
+        buttonsContainer.add(new BoxPanel(saveStudentButton, addNewStudentButton));
+
+        prepareSaveAddedStudentButton();
+        prepareCancelAdditionButton();
+        buttonsContainer.add(new BoxPanel(saveAddedStudentButton, cancelAdditionButton));
+    }
+
+    private void switchContainerTab() {
+        ((CardLayout) buttonsContainer.getLayout()).next(buttonsContainer);
+        addNewGroupButton.setVisible(!addNewGroupButton.isVisible());
     }
 
     private void prepareTestWrapperPanel() {
@@ -317,29 +376,33 @@ public class TeacherWorkspaceGI extends MainFrame {
         testWrapperPanel.add(FrameUtils.createScroll(wrapperJList, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
 
+    private void checkButtonsEnabled() {
+        saveStudentButton.setEnabled(!surnameField.getText().isEmpty()
+                && !nameField.getText().isEmpty()
+                && !secondNameField.getText().isEmpty());
+        saveAddedStudentButton.setEnabled(saveStudentButton.isEnabled());
+    }
+
     private class ChangeDataListener implements DocumentListener, ActionListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            saveStudentButton.setEnabled(!surnameField.getText().isEmpty() &&
-                    !nameField.getText().isEmpty() &&
-                    !secondNameField.getText().isEmpty());
+            checkButtonsEnabled();
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            insertUpdate(e);
+            checkButtonsEnabled();
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
-            insertUpdate(e);
+            checkButtonsEnabled();
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            saveStudentButton.setEnabled(!surnameField.getText().isEmpty() &&
-                    !nameField.getText().isEmpty() && !secondNameField.getText().isEmpty());
+            checkButtonsEnabled();
         }
     }
 }

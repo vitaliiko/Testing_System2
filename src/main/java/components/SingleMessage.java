@@ -10,7 +10,7 @@ public class SingleMessage extends JLabel {
 
     public static final String WRONG_USER_OR_PASS = "Непрвильний логін або пароль";
     public static final String WRONG_GROUP = "Такої групи не існує";
-    public static final String EXIST_USER = "Користувач з таким ім'ям вжу існує";
+    public static final String EXIST_USER = "Користувач з таким ім'ям вже існує";
     public static final String ADD_USER_SUC = "Обліковий запис успішно створено!";
     public static final String PASSWORDS_DOES_NOT_MATCH = "Паролі не співпадають";
     public static final String WRONG_USERNAME = "Неправильне ім'я користувача";

@@ -40,7 +40,6 @@ public class TeacherManager extends UserManager<Teacher> {
         IOFileHandling.saveUserSet(teacherSet, IOFileHandling.TEACHERS_SER);
     }
 
-    @Override
     public void createUser(String surname, String name, String secondName, char[] password) throws IOException {
         validateName(surname, name, secondName);
         validatePassword(password, this);

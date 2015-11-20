@@ -16,8 +16,6 @@ public abstract class UserManager<T extends User> extends Validator {
 
     public abstract void saveUserSet();
 
-    public abstract void createUser(String surname, String name, String secondName, char[] password) throws IOException;
-
     public abstract boolean checkUsername(String username) throws IOException;
 
     public abstract void deleteUser(T user);
@@ -28,17 +26,8 @@ public abstract class UserManager<T extends User> extends Validator {
 
     public  void updateCurrentUserInfo(String surname, String name, String secondName, String telephone, String mail)
             throws IOException {
-        validateName(name, surname, secondName);
-
-        String userName = surname + " " + name + " " + secondName;
-        if (!currentUser.getUserName().equals(userName)) {
-            checkUsername(userName);
-        }
-
-        currentUser.setName(name);
-        currentUser.setSurname(surname);
-        currentUser.setSecondName(secondName);
-        currentUser.setUserName(userName);
+        validateName(surname, name, secondName);
+        updateUserName(surname, name, secondName);
 
         if (!telephone.isEmpty()) {
             validateTelephone(telephone);
@@ -49,5 +38,22 @@ public abstract class UserManager<T extends User> extends Validator {
             validateMail(mail);
         }
         currentUser.setMailAddress(mail);
+    }
+
+    public void updateCurrentUserInfo(String surname, String name, String secondName) throws IOException {
+        validateName(surname, name, secondName);
+        updateUserName(surname, name, secondName);
+    }
+
+    private void updateUserName(String surname, String name, String secondName) throws IOException {
+        String userName = surname + " " + name + " " + secondName;
+        if (!currentUser.getUserName().equals(userName)) {
+            checkUsername(userName);
+        }
+
+        currentUser.setName(name);
+        currentUser.setSurname(surname);
+        currentUser.setSecondName(secondName);
+        currentUser.setUserName(userName);
     }
 }
