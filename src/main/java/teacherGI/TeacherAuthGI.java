@@ -4,7 +4,6 @@ import components.AutoCompleteComboBox;
 import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
-import components.SingleMessage;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
@@ -14,6 +13,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.io.IOException;
 import java.util.Arrays;
+
+import static components.SingleMessage.*;
 
 public class TeacherAuthGI extends JFrame {
 
@@ -45,7 +46,7 @@ public class TeacherAuthGI extends JFrame {
 
         prepareContainer();
         getContentPane().add(container, BorderLayout.CENTER);
-        getContentPane().add(SingleMessage.getInstance(), BorderLayout.NORTH);
+        getContentPane().add(getMessageInstance(), BorderLayout.NORTH);
 
         setupFrame();
     }
@@ -107,7 +108,7 @@ public class TeacherAuthGI extends JFrame {
                 new TeacherWorkspaceGI(teacherManager);
                 dispose();
             } else {
-                SingleMessage.setWarningMessage(SingleMessage.WRONG_USER_OR_PASS);
+                setWarningMessage(WRONG_USER_OR_PASS);
             }
         });
     }
@@ -117,7 +118,7 @@ public class TeacherAuthGI extends JFrame {
         createNewButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).last(container);
             clearFields();
-            SingleMessage.setEmptyMessage();
+            setEmptyMessage();
             setTitle("Реєстрація");
         });
     }
@@ -171,10 +172,10 @@ public class TeacherAuthGI extends JFrame {
                     teacherManager.createUser(surnameField.getText(), nameField.getText(), secondNameField.getText(),
                             firstPasswordField.getPassword());
                 } else {
-                    throw new IOException(SingleMessage.PASSWORDS_DOES_NOT_MATCH);
+                    throw new IOException(PASSWORDS_DOES_NOT_MATCH);
                 }
                 ((CardLayout) container.getLayout()).first(container);
-                SingleMessage.setDefaultMessage(SingleMessage.ADD_USER_SUC);
+                setDefaultMessage(ADD_USER_SUC);
 
                 teacherNamesBox.addItem(secondNameField.getText());
                 teacherNamesBox.setSelectedItem(secondNameField.getText());
@@ -182,7 +183,7 @@ public class TeacherAuthGI extends JFrame {
                 passwordField.setText(String.valueOf(firstPasswordField.getPassword()));
                 loginButton.setEnabled(true);
             } catch (IOException exception) {
-                SingleMessage.setWarningMessage(exception.getMessage());
+                setWarningMessage(exception.getMessage());
             }
         });
     }
@@ -192,7 +193,7 @@ public class TeacherAuthGI extends JFrame {
         cancelButton.addActionListener(e -> {
             ((CardLayout) container.getLayout()).first(container);
             clearFields();
-            SingleMessage.setDefaultMessage(SingleMessage.LOGIN);
+            setDefaultMessage(LOGIN);
             setTitle("Вхід");
         });
     }

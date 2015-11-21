@@ -74,9 +74,7 @@ public class TestTaskSettingsGI extends JDialog {
         prepareSaveButton();
         prepareCancelButton();
         prepareApplyButton();
-        JPanel buttonsPanel = new BoxPanel(saveButton, cancelButton, applyButton);
-        buttonsPanel.setAlignmentX(RIGHT_ALIGNMENT);
-        getContentPane().add(buttonsPanel, BorderLayout.SOUTH);
+        getContentPane().add(new BoxPanel(saveButton, cancelButton, applyButton), BorderLayout.SOUTH);
 
         setupDialog();
     }
@@ -193,7 +191,7 @@ public class TestTaskSettingsGI extends JDialog {
         descriptionArea.setLineWrap(true);
         descriptionArea.setWrapStyleWord(true);
         descriptionArea.setFont(FrameUtils.MAIN_FONT);
-        descriptionArea.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
+        descriptionArea.setEditable(testTask.isCreator(teacherManager.getCurrentUser()));
         descriptionArea.getDocument().addDocumentListener(listener);
 
         JPanel labelPanel = new BoxPanel(new JLabel("Опис тестововго завдання"));
@@ -247,7 +245,7 @@ public class TestTaskSettingsGI extends JDialog {
             }
             checkBoxPanel.add(checkBox);
         }
-        if (selectedCount == dataList.size() && checkAllBox != null) {
+        if (selectedCount == dataList.size()) {
             checkAllBox.setSelected(true);
         }
         return checkBoxPanel;
@@ -314,13 +312,14 @@ public class TestTaskSettingsGI extends JDialog {
         answersLimit = new JSpinner(new SpinnerNumberModel(testTask.getAnswersLimit(), 3, 7, 1));
         answersLimit.addChangeListener(listener);
 
-        questionsLimit = new JSpinner(new SpinnerNumberModel(testTask.getQuestionsLimit(), 10, 50, 1));
+        questionsLimit = new JSpinner(
+                new SpinnerNumberModel(testTask.getQuestionsLimit(), 10, testTask.getQuestionsList().size(), 1));
         questionsLimit.addChangeListener(listener);
 
         timeLimit = new JSpinner(new SpinnerNumberModel(testTask.getTimeLimit(), 0, 80, 5));
         timeLimit.addChangeListener(listener);
 
-        attemptLimit = new JSpinner(new SpinnerNumberModel(testTask.getAttemptsLimit(), 0, 3, 1));
+        attemptLimit = new JSpinner(new SpinnerNumberModel(testTask.getAttemptsLimit(), 1, 3, 1));
         attemptLimit.addChangeListener(listener);
 
         pointLimit = new JSpinner(new SpinnerNumberModel(testTask.getMinPoint(), 50, 80, 5));

@@ -33,7 +33,7 @@ public class SingleMessage extends JLabel {
 
     private SingleMessage() {}
 
-    public static SingleMessage getInstance(String message) {
+    public static SingleMessage getMessageInstance(String message) {
         instance.setText(message);
         instance.setHorizontalAlignment(JLabel.CENTER);
         instance.setBorder(new EmptyBorder(8, 0, 8, 0));
@@ -42,8 +42,8 @@ public class SingleMessage extends JLabel {
         return instance;
     }
 
-    public static SingleMessage getInstance() {
-        return getInstance(" ");
+    public static SingleMessage getMessageInstance() {
+        return getMessageInstance(" ");
     }
 
     public static void setDefaultMessage(String message) {

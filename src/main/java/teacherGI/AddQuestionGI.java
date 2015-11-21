@@ -4,7 +4,6 @@ import components.BoxPanel;
 import components.AnswerBoxPanel;
 import components.FrameUtils;
 import supporting.ImageUtils;
-import components.SingleMessage;
 import testingClasses.Question;
 
 import javax.imageio.ImageIO;
@@ -20,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
+
+import static components.SingleMessage.*;
 
 public class AddQuestionGI extends JFrame {
 
@@ -48,7 +49,7 @@ public class AddQuestionGI extends JFrame {
         }
         this.answersLimit = answersLimit;
 
-        getContentPane().add(SingleMessage.getInstance("Заповніть порожні поля"), BorderLayout.NORTH);
+        getContentPane().add(getMessageInstance("Заповніть порожні поля"), BorderLayout.NORTH);
         prepareQuestionPanel();
         getContentPane().add(questionPanel, BorderLayout.CENTER);
         prepareButtonsPanel();
@@ -70,7 +71,7 @@ public class AddQuestionGI extends JFrame {
             answersBoxList.get(i).setSelected(question.getRightAnswersList().contains(s));
             i++;
         }
-        SingleMessage.setDefaultMessage("Редагування запитання");
+        setDefaultMessage("Редагування запитання");
     }
 
     public Question getQuestion() {
@@ -106,9 +107,9 @@ public class AddQuestionGI extends JFrame {
                     imageNameField.setText(imagePath);
                 }
             } catch (IndexOutOfBoundsException e1) {
-                SingleMessage.setWarningMessage("Виникла помилка при завантаженні зображення");
+                setWarningMessage("Виникла помилка при завантаженні зображення");
             } catch (IOException e1) {
-                SingleMessage.setWarningMessage(e1.getMessage());
+                setWarningMessage(e1.getMessage());
             }
         });
         openImageButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -308,18 +309,18 @@ public class AddQuestionGI extends JFrame {
                         rightAnswersList.add(answer.getText());
                     }
                 } else {
-                    SingleMessage.setWarningMessage("Два чи більше однакових варіанта відповідей");
+                    setWarningMessage("Два чи більше однакових варіанта відповідей");
                     return null;
                 }
             }
         }
 
         if (answersList.size() < 3) {
-            SingleMessage.setWarningMessage("Кількість варіантів відповідей повинна бути не меншою 3");
+            setWarningMessage("Кількість варіантів відповідей повинна бути не меншою 3");
             return null;
         }
         if (rightAnswersList.size() < 1) {
-            SingleMessage.setWarningMessage("Повинна бути одна або більше правильних відповідей");
+            setWarningMessage("Повинна бути одна або більше правильних відповідей");
             return null;
         }
 

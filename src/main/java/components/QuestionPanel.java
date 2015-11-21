@@ -15,7 +15,6 @@ public class QuestionPanel extends JPanel {
     public static final Color RED_COLOR = new Color(237, 194, 189);
     public static final Color GREEN_COLOR = new Color(216, 255, 208);
 
-    private int rightAnswerCount;
     private int studentsAnswersCount;
     private int studentsRightAnswersCount;
     private int index;

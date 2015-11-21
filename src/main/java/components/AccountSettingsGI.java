@@ -44,7 +44,7 @@ public class AccountSettingsGI<U extends User, M extends UserManager<U>> extends
 
         FrameUtils.setLookAndFill();
 
-        getContentPane().add(SingleMessage.getInstance(SingleMessage.SETTINGS), BorderLayout.NORTH);
+        getContentPane().add(SingleMessage.getMessageInstance(SingleMessage.SETTINGS), BorderLayout.NORTH);
         prepareFieldsPanel();
         getContentPane().add(fieldsPanel, BorderLayout.EAST);
 

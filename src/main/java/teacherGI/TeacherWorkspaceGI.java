@@ -5,7 +5,6 @@ import components.FrameUtils;
 import components.MainFrame;
 import supporting.IOFileHandling;
 import components.TableParameters;
-import components.SingleMessage;
 import testingClasses.TestTask;
 import testingClasses.TestTaskWrapper;
 import usersClasses.Student;
@@ -19,6 +18,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+
+import static components.SingleMessage.*;
 
 public class TeacherWorkspaceGI extends MainFrame {
 
@@ -97,7 +98,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         addOnContainer(tableScroll);
 
         prepareViewStudentsInfoTab();
-        BoxPanel panel = new BoxPanel(SingleMessage.getInstance(), BorderLayout.NORTH);
+        BoxPanel panel = new BoxPanel(getMessageInstance(), BorderLayout.NORTH);
         panel.add(viewStudentsInfoTab, BorderLayout.CENTER);
         addOnContainer(panel);
     }
@@ -262,7 +263,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 clearFields();
                 setFieldsEnabled(false);
             }
-            SingleMessage.setEmptyMessage();
+            setEmptyMessage();
         });
     }
 
@@ -284,7 +285,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 studentGroupsBox.setSelectedItem(student.getStudentsGroup());
                 setFieldsEnabled(true);
                 saveStudentButton.setEnabled(false);
-                SingleMessage.setEmptyMessage();
+                setEmptyMessage();
             }
         });
     }
@@ -297,7 +298,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 studentManager.updateCurrentUserInfo(surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), (StudentsGroup) studentGroupsBox.getSelectedItem());
             } catch (IOException e1) {
-                SingleMessage.setWarningMessage(e1.getMessage());
+                setWarningMessage(e1.getMessage());
             }
         });
     }
@@ -323,9 +324,9 @@ public class TeacherWorkspaceGI extends MainFrame {
                 studentManager.createUser(surnameField.getText(), nameField.getText(), secondNameField.getText(),
                         (StudentsGroup) studentGroupsBox.getSelectedItem());
                 switchContainerTab();
-                SingleMessage.setDefaultMessage(SingleMessage.ADD_USER_SUC);
+                setDefaultMessage(ADD_USER_SUC);
             } catch (IOException e1) {
-                SingleMessage.setWarningMessage(e1.getMessage());
+                setWarningMessage(e1.getMessage());
                 saveAddedStudentButton.setEnabled(false);
             }
         });

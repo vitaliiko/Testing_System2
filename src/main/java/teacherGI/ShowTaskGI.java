@@ -179,7 +179,7 @@ public class ShowTaskGI extends MainFrame {
     private void prepareSetupButton() {
         settingsButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "settings.png"));
         settingsButton.setToolTipText("Налаштування тесту");
-        settingsButton.setEnabled(testTask.isCreator(teacherManager.getCurrentUser()));
+        settingsButton.setEnabled(testTask.isAuthor(teacherManager.getCurrentUser()));
         settingsButton.addActionListener(e ->
                 new TestTaskSettingsGI(this, testTaskManager, teacherManager, studentManager));
     }

@@ -4,7 +4,6 @@ import components.AutoCompleteComboBox;
 import components.BoxPanel;
 import components.FrameUtils;
 import components.LabelComponentPanel;
-import components.SingleMessage;
 import usersClasses.Student;
 import usersClasses.StudentManager;
 import usersClasses.StudentsGroup;
@@ -17,6 +16,8 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
+
+import static components.SingleMessage.*;
 
 public class StudentAuthGI extends JFrame {
 
@@ -39,7 +40,7 @@ public class StudentAuthGI extends JFrame {
 
         prepareLoginPanel();
         getContentPane().add(loginPanel, BorderLayout.CENTER);
-        getContentPane().add(SingleMessage.getInstance(), BorderLayout.NORTH);
+        getContentPane().add(getMessageInstance(), BorderLayout.NORTH);
         setupFrame();
     }
 
@@ -94,10 +95,10 @@ public class StudentAuthGI extends JFrame {
     private void checkForPassword(StudentsGroup group, String studentName) {
         for (Student student : group.getUsersSet()) {
             if (student.getUserName().equals(studentName) && student.isPasswordEmpty()) {
-                SingleMessage.setDefaultMessage("Додайте пароль до свого облікового запису");
+                setDefaultMessage("Додайте пароль до свого облікового запису");
                 return;
             } else {
-                SingleMessage.setEmptyMessage();
+                setEmptyMessage();
             }
         }
     }
@@ -128,13 +129,13 @@ public class StudentAuthGI extends JFrame {
                         new StudentWorkspaceGI(studentManager);
                         dispose();
                     } else {
-                        SingleMessage.setWarningMessage(SingleMessage.WRONG_USER_OR_PASS);
+                        setWarningMessage(WRONG_USER_OR_PASS);
                     }
                 } else {
-                    SingleMessage.setWarningMessage(SingleMessage.WRONG_GROUP);
+                    setWarningMessage(WRONG_GROUP);
                 }
             } catch (IOException e1) {
-                SingleMessage.setWarningMessage(e1.getMessage());
+                setWarningMessage(e1.getMessage());
             }
         });
     }

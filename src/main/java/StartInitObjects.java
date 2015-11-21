@@ -1,4 +1,3 @@
-import org.omg.PortableInterceptor.ServerRequestInfo;
 import supporting.IOFileHandling;
 import supporting.ImageUtils;
 import testingClasses.Question;
@@ -8,6 +7,8 @@ import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -94,10 +95,9 @@ public class StartInitObjects {
                     break;
                 }
                 case 1: {
-                    if (!s.isEmpty()) {
-                        image = ImageUtils.imageInByteArr("E:\\Intellij\\Testing_System2\\tests\\" + s);
-                        imageName = "E:\\Intellij\\Testing_System2\\tests\\" + s;
-                    }
+                    Path imagePath = Paths.get("tests", s);
+                    image = ImageUtils.imageInByteArr(imagePath.toString());
+                    imageName = s;
                     i++;
                     break;
                 }
