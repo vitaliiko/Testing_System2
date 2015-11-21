@@ -18,7 +18,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestTaskSettingsGI extends JDialog {
 
@@ -134,7 +136,7 @@ public class TestTaskSettingsGI extends JDialog {
             testTask.setTaskName(nameField.getText());
             testTask.setDisciplineName(disciplineField.getText());
             testTask.setAttribute(attributeBox.getSelectedIndex());
-            testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel));
+            //testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel));
             testTask.setDescription(descriptionArea.getText());
         }
 
@@ -144,7 +146,7 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
         testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel));
+        //testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel));
 
         testTask.setQuestionGroupsList(questionsGroupList);
 
@@ -234,11 +236,11 @@ public class TestTaskSettingsGI extends JDialog {
             checkBox.addActionListener(listener);
             if (o instanceof Teacher) {
                 String teacherName = ((Teacher) o).getUserName();
-                checkBox.setSelected(testTask.getAuthorsList().contains(teacherName));
-                checkBox.setEnabled(testTask.getAuthorsList().indexOf(teacherName) != 0);
+                checkBox.setSelected(testTask.getAuthorsList().contains(o));
+                checkBox.setEnabled(testTask.getAuthorsList().indexOf(o) != 0);
             }
             if (o instanceof StudentsGroup) {
-                checkBox.setSelected(testTask.getStudentGroupsList().contains(((StudentsGroup) o).getName()));
+                checkBox.setSelected(testTask.getStudentGroupsList().contains(o));
             }
             if (checkBox.isSelected()) {
                 selectedCount++;
@@ -285,7 +287,7 @@ public class TestTaskSettingsGI extends JDialog {
         disciplineField = new JTextField(testTask.getDisciplineName(), COLUMNS_COUNT);
         disciplineField.getDocument().addDocumentListener(listener);
 
-        JLabel creatorLabel = new JLabel(testTask.getCreatorName());
+        JLabel creatorLabel = new JLabel(testTask.getCreator().getUserName());
 
         String[] attributeItems = {"Загальнодоступний", "З обмеженим доступом", "Лише перегляд"};
         attributeBox = new JComboBox<>(attributeItems);
@@ -338,6 +340,9 @@ public class TestTaskSettingsGI extends JDialog {
 
         studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()));
         studentsTabPanel.add(createScrollPaneWithTitle(studentsGroupPanel, "Групи студентів"));
+
+//        notAllowedStudentsPanel = new JPanel();
+//        studentsTabPanel.add(createScrollPaneWithTitle(notAllowedStudentsPanel, "Недопущені студенти"));
     }
 
     private void prepareQuestionsTabPanel() {

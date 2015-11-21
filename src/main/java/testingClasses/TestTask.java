@@ -1,6 +1,7 @@
 package testingClasses;
 
 import usersClasses.Student;
+import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
 
 import java.io.Serializable;
@@ -26,14 +27,14 @@ public class TestTask implements Serializable {
 
     private List<Question> questionsList = new ArrayList<>();
     private List<List<Question>> questionGroupsList = new ArrayList<>();
-    private List<String> authorsList = new ArrayList<>();
-    private List<String> studentGroupsList = new ArrayList<>();
+    private List<Teacher> authorsList = new ArrayList<>();
+    private List<StudentsGroup> studentGroupsList = new ArrayList<>();
     private List<Student> notAllowedStudentsList = new ArrayList<>();
 
-    public TestTask(String taskName, String disciplineName, String creatorName) {
+    public TestTask(String taskName, String disciplineName, Teacher creator) {
         this.taskName = taskName;
         this.disciplineName = disciplineName;
-        authorsList.add(creatorName);
+        authorsList.add(creator);
     }
 
     public String getTaskName() {
@@ -52,7 +53,7 @@ public class TestTask implements Serializable {
         this.disciplineName = disciplineName;
     }
 
-    public String getCreatorName() {
+    public Teacher getCreator() {
         return authorsList.get(0);
     }
 
@@ -96,11 +97,11 @@ public class TestTask implements Serializable {
         this.timeLimit = timeLimit;
     }
 
-    public List<String> getAuthorsList() {
+    public List<Teacher> getAuthorsList() {
         return authorsList;
     }
 
-    public void setAuthorsList(List<String> authorsList) {
+    public void setAuthorsList(List<Teacher> authorsList) {
         this.authorsList = authorsList;
     }
 
@@ -136,11 +137,11 @@ public class TestTask implements Serializable {
         this.questionGroupsList = questionGroupsList;
     }
 
-    public List<String> getStudentGroupsList() {
+    public List<StudentsGroup> getStudentGroupsList() {
         return studentGroupsList;
     }
 
-    public void setStudentGroupsList(List<String> studentGroupsList) {
+    public void setStudentGroupsList(List<StudentsGroup> studentGroupsList) {
         this.studentGroupsList = studentGroupsList;
     }
 
@@ -148,20 +149,20 @@ public class TestTask implements Serializable {
         return notAllowedStudentsList;
     }
 
-    public void setNotAllowedStudentsList(ArrayList<Student> notAllowedStudentsList) {
+    public void setNotAllowedStudentsList(List<Student> notAllowedStudentsList) {
         this.notAllowedStudentsList = notAllowedStudentsList;
     }
 
     public boolean isAuthor(Teacher teacher) {
-        return authorsList.contains(teacher.getUserName()) || attribute != PRIVATE_ATR;
+        return authorsList.contains(teacher) || attribute != PRIVATE_ATR;
     }
 
     public boolean isCreator(Teacher teacher) {
-        return authorsList.indexOf(teacher.getUserName()) == 0;
+        return authorsList.indexOf(teacher) == 0;
     }
 
     public boolean canReadOnly(Teacher teacher) {
-        return !authorsList.contains(teacher.getUserName()) && attribute == READ_ONLY_ATR;
+        return !authorsList.contains(teacher) && attribute == READ_ONLY_ATR;
     }
 
     public ArrayList<String> createQuestionGroupsNames() {
@@ -207,7 +208,7 @@ public class TestTask implements Serializable {
 
         return taskName.equals(testTask.taskName)
                 && disciplineName.equals(testTask.disciplineName)
-                && getCreatorName().equals(((TestTask) o).getCreatorName());
+                && getCreator().equals(((TestTask) o).getCreator());
 
     }
 
@@ -215,7 +216,7 @@ public class TestTask implements Serializable {
     public int hashCode() {
         int result = taskName.hashCode();
         result = 31 * result + disciplineName.hashCode();
-        result = 31 * result + getCreatorName().hashCode();
+        result = 31 * result + getCreator().hashCode();
         return result;
     }
 }
