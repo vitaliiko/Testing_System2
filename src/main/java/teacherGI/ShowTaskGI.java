@@ -131,7 +131,7 @@ public class ShowTaskGI extends MainFrame {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
         addButton.addActionListener(e -> {
-            AddQuestionGI addQuestionGI = new AddQuestionGI(testTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(testTask);
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
@@ -163,7 +163,7 @@ public class ShowTaskGI extends MainFrame {
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
             int index = questionsTable.getSelectedRow();
-            AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), testTask.getAnswersLimit());
+            AddQuestionGI addQuestionGI = new AddQuestionGI(questionsList.get(index), testTask);
             addQuestionGI.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {

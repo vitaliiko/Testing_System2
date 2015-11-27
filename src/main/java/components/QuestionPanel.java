@@ -17,10 +17,12 @@ public class QuestionPanel extends JPanel {
 
     private int index;
     private Question question;
+    private boolean isCheckBoxAlways;
 
-    public QuestionPanel(int index, Question question) {
+    public QuestionPanel(int index, Question question, boolean isCheckBoxAlways) {
         this.index = index;
         this.question = question;
+        this.isCheckBoxAlways = isCheckBoxAlways;
         create();
     }
 
@@ -37,7 +39,7 @@ public class QuestionPanel extends JPanel {
         Random random = new Random();
         List<String> answerList = new ArrayList<>();
         answerList.addAll(question.getAnswersList());
-        if (question.getRightAnswersList().size() == 1) {
+        if (!isCheckBoxAlways && question.getRightAnswersList().size() == 1) {
             ButtonGroup buttonGroup = new ButtonGroup();
             while (answerList.size() > 0) {
                 String answer = answerList.get(random.nextInt(answerList.size()));
@@ -91,6 +93,9 @@ public class QuestionPanel extends JPanel {
             }
         }
 
+        if (question.getRightAnswersList().size() == 0) {
+            return 0;
+        }
         float result = (studentRightAnswersCount * 2 - studentAnswersCount) / question.getRightAnswersList().size();
         setBackground(result == 1 ? GREEN_COLOR : RED_COLOR);
         return result < 0 ? 0 : result;

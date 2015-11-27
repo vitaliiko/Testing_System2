@@ -24,6 +24,9 @@ public class TestTask implements Serializable {
     private int timeLimit = 60;
     private int attemptsLimit = 2;
     private int minPoint = 60;
+    private boolean allowWithoutRightAnswers = false;
+    private boolean allowAllRightAnswers = false;
+    private boolean checkBoxAlways = false;
 
     private List<Question> questionsList = new ArrayList<>();
     private List<List<Question>> questionGroupsList = new ArrayList<>();
@@ -129,6 +132,30 @@ public class TestTask implements Serializable {
         this.minPoint = minPoint;
     }
 
+    public boolean isAllowWithoutRightAnswers() {
+        return allowWithoutRightAnswers;
+    }
+
+    public void setAllowWithoutRightAnswers(boolean allowWithoutRightAnswers) {
+        this.allowWithoutRightAnswers = allowWithoutRightAnswers;
+    }
+
+    public boolean isAllowAllRightAnswers() {
+        return allowAllRightAnswers;
+    }
+
+    public void setAllowAllRightAnswers(boolean allowAllRightAnswers) {
+        this.allowAllRightAnswers = allowAllRightAnswers;
+    }
+
+    public boolean isCheckBoxAlways() {
+        return checkBoxAlways;
+    }
+
+    public void setCheckBoxAlways(boolean checkBoxAlways) {
+        this.checkBoxAlways = checkBoxAlways;
+    }
+
     public List<List<Question>> getQuestionGroupsList() {
         return questionGroupsList;
     }
@@ -209,7 +236,6 @@ public class TestTask implements Serializable {
         return taskName.equals(testTask.taskName)
                 && disciplineName.equals(testTask.disciplineName)
                 && getCreator().equals(((TestTask) o).getCreator());
-
     }
 
     @Override

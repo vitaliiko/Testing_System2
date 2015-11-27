@@ -96,7 +96,7 @@ public class TestTaskWrapper implements Serializable {
         int i = 1;
         while (i <= testTask.getQuestionsLimit()) {
             Question question = questionList.get(random.nextInt(questionIndex--));
-            QuestionPanel questionPanel = new QuestionPanel(i++, question);
+            QuestionPanel questionPanel = new QuestionPanel(i++, question, testTask.isCheckBoxAlways());
             questionList.remove(question);
             testTask.getQuestionGroupsList().stream()
                     .filter(list -> list.contains(question))

@@ -50,6 +50,9 @@ public class TestTaskSettingsGI extends JDialog {
     private JSpinner timeLimit;
     private JSpinner attemptLimit;
     private JSpinner pointLimit;
+    private JCheckBox allowWithoutRightAnswers;
+    private JCheckBox allowAllRightAnswers;
+    private JCheckBox checkBoxAlways;
     private JList<String> questionJList;
     private DefaultListModel<String> listModel;
     private JButton addQuestionsButton;
@@ -138,24 +141,34 @@ public class TestTaskSettingsGI extends JDialog {
 
     private void saveSettings() {
         if (testTask.isCreator(teacherManager.getCurrentUser())) {
-            testTask.setTaskName(nameField.getText());
-            testTask.setDisciplineName(disciplineField.getText());
-            testTask.setAttribute(attributeBox.getSelectedIndex());
-            testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel, teacherMap));
+            saveGeneralSettings();
             testTask.setDescription(descriptionArea.getText());
         }
 
+        saveLimitsSettings();
+        testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel, studentsGroupMap));
+        testTask.setQuestionGroupsList(questionsGroupList);
+
+        testTaskManager.saveTests();
+    }
+
+    private void saveGeneralSettings() {
+        testTask.setTaskName(nameField.getText());
+        testTask.setDisciplineName(disciplineField.getText());
+        testTask.setAttribute(attributeBox.getSelectedIndex());
+        testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel, teacherMap));
+    }
+
+    private void saveLimitsSettings() {
         testTask.setAnswersLimit((Integer) answersLimit.getValue());
         testTask.setQuestionsLimit((Integer) questionsLimit.getValue());
         testTask.setTimeLimit((Integer) timeLimit.getValue());
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
         testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel, studentsGroupMap));
-
-        testTask.setQuestionGroupsList(questionsGroupList);
-
-        testTaskManager.saveTests();
+        testTask.setAllowWithoutRightAnswers(allowWithoutRightAnswers.isSelected());
+        testTask.setAllowAllRightAnswers(allowAllRightAnswers.isSelected());
+        testTask.setCheckBoxAlways(checkBoxAlways.isSelected());
     }
 
     private <T extends Data> List<T> makeDataListFromCheckBoxPanel(JPanel panel, Map<String, T> dataMap) {
@@ -322,6 +335,7 @@ public class TestTaskSettingsGI extends JDialog {
                 "Максимальна кількість спроб:",
                 "Мінімальна кількість балів для сдачі тесту:"), BorderLayout.WEST);
         limitTabPanel.add(createSpinners(), BorderLayout.CENTER);
+        limitTabPanel.add(createAllowedBoxes(), BorderLayout.SOUTH);
     }
 
     private JPanel createSpinners() {
@@ -341,6 +355,25 @@ public class TestTaskSettingsGI extends JDialog {
         pointLimit.addChangeListener(listener);
 
         return FrameUtils.createComponentsGridPanel(answersLimit, questionsLimit, timeLimit, attemptLimit, pointLimit);
+    }
+
+    private JPanel createAllowedBoxes() {
+        allowWithoutRightAnswers = new JCheckBox("Дозволити запитання без правильних відповідей");
+        allowWithoutRightAnswers.setBackground(Color.WHITE);
+        allowWithoutRightAnswers.addActionListener(listener);
+        allowWithoutRightAnswers.setSelected(testTask.isAllowWithoutRightAnswers());
+
+        allowAllRightAnswers = new JCheckBox("Дозволити запитання з усіма првильними відповідями");
+        allowAllRightAnswers.setBackground(Color.WHITE);
+        allowAllRightAnswers.addActionListener(listener);
+        allowAllRightAnswers.setSelected(testTask.isAllowAllRightAnswers());
+
+        checkBoxAlways = new JCheckBox("Завжди використовувати прапорці");
+        checkBoxAlways.setBackground(Color.WHITE);
+        checkBoxAlways.addActionListener(listener);
+        checkBoxAlways.setSelected(testTask.isCheckBoxAlways());
+
+        return new BoxPanel(BoxLayout.Y_AXIS, allowWithoutRightAnswers, allowAllRightAnswers, checkBoxAlways);
     }
 
     private JSpinner createQuestionsLimitSpinner() {
