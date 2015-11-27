@@ -61,6 +61,8 @@ public class TestTaskSettingsGI extends JDialog {
 
     private List<List<Question>> questionsGroupList = new ArrayList<>();
     private ChangeDataListener listener = new ChangeDataListener();
+    private Map<String, Teacher> teacherMap = new HashMap<>();
+    private Map<String, StudentsGroup> studentsGroupMap = new HashMap<>();
 
     public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
@@ -139,7 +141,7 @@ public class TestTaskSettingsGI extends JDialog {
             testTask.setTaskName(nameField.getText());
             testTask.setDisciplineName(disciplineField.getText());
             testTask.setAttribute(attributeBox.getSelectedIndex());
-            //testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel));
+            testTask.setAuthorsList(makeDataListFromCheckBoxPanel(authorsPanel, teacherMap));
             testTask.setDescription(descriptionArea.getText());
         }
 
@@ -149,21 +151,21 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
         testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        //testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel));
+        testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel, studentsGroupMap));
 
         testTask.setQuestionGroupsList(questionsGroupList);
 
         testTaskManager.saveTests();
     }
 
-    private List<String> makeDataListFromCheckBoxPanel(JPanel panel) {
-        List<String> dataList = new ArrayList<>();
+    private <T extends Data> List<T> makeDataListFromCheckBoxPanel(JPanel panel, Map<String, T> dataMap) {
+        List<T> dataList = new ArrayList<>();
         for (int i = 2; i < panel.getComponentCount(); i++) {
             JCheckBox checkBox = (JCheckBox) panel.getComponent(i);
             if (!checkBox.isEnabled()) {
-                dataList.add(0, checkBox.getText());
+                dataList.add(0, dataMap.get(checkBox.getText()));
             } else if (checkBox.isSelected()) {
-                dataList.add(checkBox.getText());
+                dataList.add(dataMap.get(checkBox.getText()));
             }
         }
         return dataList;
@@ -184,7 +186,10 @@ public class TestTaskSettingsGI extends JDialog {
                 "Назва:", "Дисципліна:", "Створив:", "Режим доступу:"), BorderLayout.WEST);
         generalTabPanel.add(createGeneralTabComponents(), BorderLayout.CENTER);
 
-        authorsPanel = createCheckBoxPanel(new ArrayList<>(teacherManager.getUserSet()));
+        for (Teacher teacher : teacherManager.getUserSet()) {
+            teacherMap.put(teacher.getUserName(), teacher);
+        }
+        authorsPanel = createCheckBoxPanel(teacherMap);
         generalTabPanel.add(createScrollPaneWithTitle(authorsPanel, "Автори"), BorderLayout.SOUTH);
     }
 
@@ -222,7 +227,7 @@ public class TestTaskSettingsGI extends JDialog {
         return checkAll;
     }
 
-    private <T extends DataList> JPanel createCheckBoxPanel(List<T> dataList) {
+    private <T extends Data> JPanel createCheckBoxPanel(Map<String, T> dataMap) {
         JPanel checkBoxPanel = new BoxPanel(BoxLayout.Y_AXIS);
         checkBoxPanel.setBackground(Color.WHITE);
         checkBoxPanel.setOpaque(true);
@@ -232,29 +237,34 @@ public class TestTaskSettingsGI extends JDialog {
         checkBoxPanel.add(new JSeparator());
 
         int selectedCount = 0;
-        for (T o : dataList) {
-            JCheckBox checkBox =
-                    new JCheckBox(o instanceof User ? ((User) o).getUserName() : ((StudentsGroup) o).getName());
+        for (String name : dataMap.keySet()) {
+            JCheckBox checkBox = new JCheckBox(name);
             checkBox.setBackground(Color.WHITE);
             checkBox.setFocusable(false);
             checkBox.addActionListener(listener);
-            if (o instanceof Teacher) {
-                String teacherName = ((Teacher) o).getUserName();
-                checkBox.setSelected(testTask.getAuthorsList().contains(o));
-                checkBox.setEnabled(testTask.getAuthorsList().indexOf(o) != 0);
-            }
-            if (o instanceof StudentsGroup) {
-                checkBox.setSelected(testTask.getStudentGroupsList().contains(o));
-            }
+            checkSelected(checkBox, dataMap.get(name));
             if (checkBox.isSelected()) {
                 selectedCount++;
             }
             checkBoxPanel.add(checkBox);
         }
-        if (selectedCount == dataList.size()) {
+        if (selectedCount == dataMap.size()) {
             checkAllBox.setSelected(true);
         }
         return checkBoxPanel;
+    }
+
+    private void checkSelected(JCheckBox checkBox, Data data) {
+        if (data instanceof Teacher) {
+            checkBox.setSelected(testTask.getAuthorsList().contains(data));
+            checkBox.setEnabled(testTask.getAuthorsList().indexOf(data) != 0);
+        }
+        if (data instanceof Student) {
+            checkBox.setSelected(testTask.getNotAllowedStudentsList().contains(data));
+        }
+        if (data instanceof StudentsGroup) {
+            checkBox.setSelected(testTask.getStudentGroupsList().contains(data));
+        }
     }
 
     private JPanel createQuestionCheckBoxPanel(List<Question> questions) {
@@ -353,7 +363,10 @@ public class TestTaskSettingsGI extends JDialog {
         studentsTabPanel.add(new JLabel("Оберіть групи студентів, які будуть"));
         studentsTabPanel.add(new JLabel("мати доступ до складання даного тесту"));
 
-        studentsGroupPanel = createCheckBoxPanel(new ArrayList<>(studentManager.getStudentsGroupSet()));
+        for (StudentsGroup studentsGroup : studentManager.getStudentsGroupSet()) {
+            studentsGroupMap.put(studentsGroup.getName(), studentsGroup);
+        }
+        studentsGroupPanel = createCheckBoxPanel(studentsGroupMap);
         studentsTabPanel.add(createScrollPaneWithTitle(studentsGroupPanel, "Групи студентів"));
 
 //        notAllowedStudentsPanel = new JPanel();

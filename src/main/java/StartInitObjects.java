@@ -20,6 +20,7 @@ public class StartInitObjects {
     public static final ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
 
     private static Set<Teacher> teacherSet;
+    private static Teacher ivanov;
 
     public static void main(String[] args) {
         initStudents();
@@ -49,7 +50,8 @@ public class StartInitObjects {
 
     public static void initTeacherSet() {
         teacherSet = new TreeSet<>();
-        teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "00000"));
+        ivanov = new Teacher("Іванов", "Іван", "Іванович", "00000");
+        teacherSet.add(ivanov);
         teacherSet.add(new Teacher("Петров", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Сидоров", "Іван", "Іванович", "22222"));
         teacherSet.add(new Teacher("Іваненко", "Іван", "Іванович", "1110111"));
@@ -68,8 +70,12 @@ public class StartInitObjects {
         String[] disciplineNames = {"Інформатика", "Інформатика", "Дискратна математика"};
         List<Teacher> teachers = new ArrayList<>(teacherSet);
         try {
-            for (int i = 0; i < 3; i++) {
-                testTasks.add(createTests("tests/test.txt", testNames[i], disciplineNames[i], teachers.get(i)));
+            int j = 0;
+            for (Teacher teacher : teachers) {
+                TestTask testTask = createTests("tests/test.txt", testNames[j], disciplineNames[j], teacher);
+                testTask.getAuthorsList().add(ivanov);
+                testTasks.add(testTask);
+                j = j == 2 ? 0 : ++j;
             }
         } catch (IOException e) {
             e.getMessage();
