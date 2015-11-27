@@ -15,8 +15,6 @@ public class QuestionPanel extends JPanel {
     public static final Color RED_COLOR = new Color(237, 194, 189);
     public static final Color GREEN_COLOR = new Color(216, 255, 208);
 
-    private int studentsAnswersCount;
-    private int studentsRightAnswersCount;
     private int index;
     private Question question;
 
@@ -43,13 +41,13 @@ public class QuestionPanel extends JPanel {
             ButtonGroup buttonGroup = new ButtonGroup();
             while (answerList.size() > 0) {
                 String answer = answerList.get(random.nextInt(answerList.size()));
-                add(new AnswerRadioBoxPanel(buttonGroup, answer));
+                add(new AnswerForQuestionPanel(buttonGroup, answer));
                 answerList.remove(answer);
             }
         } else {
             while (answerList.size() > 0) {
                 String answer = answerList.get(random.nextInt(answerList.size()));
-                add(new AnswerRadioBoxPanel(answer));
+                add(new AnswerForQuestionPanel(answer));
                 answerList.remove(answer);
             }
         }
@@ -57,7 +55,7 @@ public class QuestionPanel extends JPanel {
 
     public boolean isChoiceMade() {
         for (Component component : getComponents()) {
-            if (component instanceof AnswerRadioBoxPanel && ((AnswerRadioBoxPanel) component).isSelected()) {
+            if (component instanceof AnswerForQuestionPanel && ((AnswerForQuestionPanel) component).isSelected()) {
                 return true;
             }
         }
@@ -66,31 +64,34 @@ public class QuestionPanel extends JPanel {
 
     public void addListeners(ActionListener actionListener) {
         for (Component component : getComponents()) {
-            if (component instanceof AnswerRadioBoxPanel) {
-                ((AnswerRadioBoxPanel) component).addListener(actionListener);
+            if (component instanceof AnswerForQuestionPanel) {
+                ((AnswerForQuestionPanel) component).addListener(actionListener);
             }
         }
     }
 
     public float saveState() {
+        int studentAnswersCount = 0;
+        int studentRightAnswersCount = 0;
+
         for (Component component : getComponents()) {
-            if (component instanceof AnswerRadioBoxPanel) {
-                AnswerRadioBoxPanel answerRadioBoxPanel = (AnswerRadioBoxPanel) component;
-                answerRadioBoxPanel.doDisabled();
-                if (answerRadioBoxPanel.isSelected()) {
-                    studentsAnswersCount++;
+            if (component instanceof AnswerForQuestionPanel) {
+                AnswerForQuestionPanel answerForQuestion = (AnswerForQuestionPanel) component;
+                answerForQuestion.doDisabled();
+                if (answerForQuestion.isSelected()) {
+                    studentAnswersCount++;
                 }
-                if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText())) {
-                    answerRadioBoxPanel.setTrue();
+                if (question.getRightAnswersList().contains(answerForQuestion.getText())) {
+                    answerForQuestion.setTrue();
                 }
-                if (question.getRightAnswersList().contains(answerRadioBoxPanel.getText())
-                        && answerRadioBoxPanel.isSelected()) {
-                    studentsRightAnswersCount++;
+                if (question.getRightAnswersList().contains(answerForQuestion.getText())
+                        && answerForQuestion.isSelected()) {
+                    studentRightAnswersCount++;
                 }
             }
         }
 
-        float result = (studentsRightAnswersCount * 2 - studentsAnswersCount) / question.getRightAnswersList().size();
+        float result = (studentRightAnswersCount * 2 - studentAnswersCount) / question.getRightAnswersList().size();
         setBackground(result == 1 ? GREEN_COLOR : RED_COLOR);
         return result < 0 ? 0 : result;
     }

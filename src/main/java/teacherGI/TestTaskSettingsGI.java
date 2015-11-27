@@ -57,6 +57,7 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton saveButton;
     private JButton applyButton;
     private JButton cancelButton;
+    private Dimension buttonsDimension;
 
     private List<List<Question>> questionsGroupList = new ArrayList<>();
     private ChangeDataListener listener = new ChangeDataListener();
@@ -73,9 +74,9 @@ public class TestTaskSettingsGI extends JDialog {
         prepareTabbedPane();
         getContentPane().add(tabbedPane, BorderLayout.CENTER);
 
+        prepareApplyButton();
         prepareSaveButton();
         prepareCancelButton();
-        prepareApplyButton();
         getContentPane().add(new BoxPanel(saveButton, cancelButton, applyButton), BorderLayout.SOUTH);
 
         setupDialog();
@@ -116,6 +117,7 @@ public class TestTaskSettingsGI extends JDialog {
 
     private void prepareSaveButton(){
         saveButton = new JButton("OK");
+        //saveButton.setPreferredSize(buttonsDimension);
         saveButton.addActionListener(e -> {
             saveSettings();
             dispose();
@@ -129,6 +131,7 @@ public class TestTaskSettingsGI extends JDialog {
             saveSettings();
             applyButton.setEnabled(false);
         });
+        buttonsDimension = getPreferredSize();
     }
 
     private void saveSettings() {
@@ -168,6 +171,7 @@ public class TestTaskSettingsGI extends JDialog {
 
     private void prepareCancelButton() {
         cancelButton = new JButton("Скасувати");
+        //cancelButton.setPreferredSize(buttonsDimension);
         cancelButton.addActionListener(e -> dispose());
     }
 
@@ -314,8 +318,7 @@ public class TestTaskSettingsGI extends JDialog {
         answersLimit = new JSpinner(new SpinnerNumberModel(testTask.getAnswersLimit(), 3, 7, 1));
         answersLimit.addChangeListener(listener);
 
-        questionsLimit = new JSpinner(
-                new SpinnerNumberModel(testTask.getQuestionsLimit(), 10, testTask.getQuestionsList().size(), 1));
+        questionsLimit = createQuestionsLimitSpinner();
         questionsLimit.addChangeListener(listener);
 
         timeLimit = new JSpinner(new SpinnerNumberModel(testTask.getTimeLimit(), 0, 80, 5));
@@ -328,6 +331,18 @@ public class TestTaskSettingsGI extends JDialog {
         pointLimit.addChangeListener(listener);
 
         return FrameUtils.createComponentsGridPanel(answersLimit, questionsLimit, timeLimit, attemptLimit, pointLimit);
+    }
+
+    private JSpinner createQuestionsLimitSpinner() {
+        int size = testTask.getQuestionsList().size();
+        int minimum = 10;
+        int maximum = size <= minimum ? minimum + 1 : size;
+        int value = maximum / 2 <= minimum ? minimum : maximum / 2;
+
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(value, minimum, maximum, 1));
+        spinner.setEnabled(size > minimum);
+
+        return spinner;
     }
 
     private void prepareStudentsTabPanel() {

@@ -6,12 +6,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class AnswerRadioBoxPanel extends JPanel {
+public class AnswerForQuestionPanel extends JPanel {
 
     private JToggleButton toggleButton;
     private JTextArea textArea;
 
-    public AnswerRadioBoxPanel(String text) {
+    public AnswerForQuestionPanel(String text) {
         toggleButton = new JCheckBox("");
         toggleButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         toggleButton.setOpaque(false);
@@ -20,7 +20,7 @@ public class AnswerRadioBoxPanel extends JPanel {
         add(createTextArea(text));
     }
 
-    public AnswerRadioBoxPanel(ButtonGroup buttonGroup, String text) {
+    public AnswerForQuestionPanel(ButtonGroup buttonGroup, String text) {
         toggleButton = new JRadioButton("");
         toggleButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         toggleButton.setOpaque(false);

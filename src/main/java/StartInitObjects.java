@@ -7,6 +7,7 @@ import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
 
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.TreeSet;
 public class StartInitObjects {
 
     public static final ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
+
+    private static Set<Teacher> teacherSet;
 
     public static void main(String[] args) {
         initStudents();
@@ -45,7 +48,7 @@ public class StartInitObjects {
     }
 
     public static void initTeacherSet() {
-        Set<Teacher> teacherSet = new TreeSet<>();
+        teacherSet = new TreeSet<>();
         teacherSet.add(new Teacher("Іванов", "Іван", "Іванович", "00000"));
         teacherSet.add(new Teacher("Петров", "Іван", "Іванович", "111111"));
         teacherSet.add(new Teacher("Сидоров", "Іван", "Іванович", "22222"));
@@ -63,10 +66,10 @@ public class StartInitObjects {
         ArrayList<TestTask> testTasks = new ArrayList<>();
         String[] testNames = {"1 курс. Модульна контрольна робота", "1 курс. Залік", "1 курс. Модульна контрольна робота"};
         String[] disciplineNames = {"Інформатика", "Інформатика", "Дискратна математика"};
-        String[] creatorNames = {"Іванов Іван Іванович", "Іванов Іван Іванович", "Іваненко Іван Іванович"};
+        List<Teacher> teachers = new ArrayList<>(teacherSet);
         try {
             for (int i = 0; i < 3; i++) {
-                testTasks.add(createTests("tests/test.txt", testNames[i], disciplineNames[i], creatorNames[i]));
+                testTasks.add(createTests("tests/test.txt", testNames[i], disciplineNames[i], teachers.get(i)));
             }
         } catch (IOException e) {
             e.getMessage();
@@ -74,7 +77,8 @@ public class StartInitObjects {
         IOFileHandling.saveTestTasks(testTasks);
     }
 
-    public static TestTask createTests(String fileName, String testName, String discipline, String creatorName) throws IOException {
+    public static TestTask createTests(String fileName, String testName, String discipline, Teacher creatorName)
+            throws IOException {
         List<String> stringList = IOFileHandling.readFromFile(fileName);
         if (stringList == null) {
             throw new IOException("fuck");
@@ -95,9 +99,15 @@ public class StartInitObjects {
                     break;
                 }
                 case 1: {
-                    Path imagePath = Paths.get("tests", s);
-                    image = ImageUtils.imageInByteArr(imagePath.toString());
-                    imageName = s;
+                    if (!s.isEmpty()) {
+                        try {
+                            Path imagePath = Paths.get("tests", s);
+                            image = ImageUtils.imageInByteArr(imagePath.toString());
+                            imageName = s;
+                        } catch (InvalidPathException e) {
+                            System.out.println(s);
+                        }
+                    }
                     i++;
                     break;
                 }

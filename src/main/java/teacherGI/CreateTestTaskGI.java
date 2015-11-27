@@ -71,7 +71,7 @@ public class CreateTestTaskGI extends JDialog {
         completeButton.setEnabled(false);
         completeButton.addActionListener(e -> {
             testTask = new TestTask(taskNameField.getText(), disciplineField.getText(),
-                    teacherManager.getCurrentUser().toString());
+                    teacherManager.getCurrentUser());
             testTaskManager.addTest(testTask);
             testTaskManager.saveTests();
             frame.dispose();

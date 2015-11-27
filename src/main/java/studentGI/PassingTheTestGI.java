@@ -31,6 +31,7 @@ public class PassingTheTestGI extends JWindow {
     public PassingTheTestGI(TestTaskWrapper testTaskWrapper) {
         this.testTaskWrapper = testTaskWrapper;
         questionsPanel = testTaskWrapper.createCard();
+        questionsPanel = new JPanel();
         timeLimit = testTaskWrapper.getTestTask().getTimeLimit() * 60;
         questionsCount = testTaskWrapper.getTestTask().getQuestionsLimit();
 
