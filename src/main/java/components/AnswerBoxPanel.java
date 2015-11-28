@@ -3,6 +3,7 @@ package components;
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class AnswerBoxPanel extends JPanel {
 
@@ -42,6 +43,10 @@ public class AnswerBoxPanel extends JPanel {
 
     public void addDocumentListener(DocumentListener listener) {
         textArea.getDocument().addDocumentListener(listener);
+    }
+
+    public void addActionListener(ActionListener listener) {
+        checkBox.addActionListener(listener);
     }
 
     public void setSelected(boolean b) {

@@ -43,6 +43,7 @@ public abstract class UserManager<T extends User> extends Validator {
     public void updateCurrentUserInfo(String surname, String name, String secondName) throws IOException {
         validateName(surname, name, secondName);
         updateUserName(surname, name, secondName);
+        saveUserSet();
     }
 
     private void updateUserName(String surname, String name, String secondName) throws IOException {

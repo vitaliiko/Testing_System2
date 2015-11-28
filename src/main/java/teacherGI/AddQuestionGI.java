@@ -3,6 +3,7 @@ package teacherGI;
 import components.BoxPanel;
 import components.AnswerBoxPanel;
 import components.FrameUtils;
+import components.SingleMessage;
 import supporting.ImageUtils;
 import testingClasses.Question;
 import testingClasses.TestParameters;
@@ -15,6 +16,8 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -27,6 +30,7 @@ import static components.SingleMessage.*;
 public class AddQuestionGI extends JFrame {
 
     private Question question = null;
+    private int rightAnswersCount;
     private ArrayList<AnswerBoxPanel> answersBoxList;
     private JPanel answersPanel;
     private JPanel questionPanel;
@@ -38,6 +42,7 @@ public class AddQuestionGI extends JFrame {
     private JButton browseImageButton;
     private JButton completeButton;
     private JButton cancelButton;
+    private ChangesListener changesListener = new ChangesListener();
 
     private TestTask testTask;
 
@@ -47,7 +52,7 @@ public class AddQuestionGI extends JFrame {
         FrameUtils.setLookAndFill();
         this.testTask = testTask;
 
-        getContentPane().add(getMessageInstance("Заповніть порожні поля"), BorderLayout.NORTH);
+        getContentPane().add(getMessageInstance(), BorderLayout.NORTH);
         prepareQuestionPanel();
         getContentPane().add(questionPanel, BorderLayout.CENTER);
         prepareButtonsPanel();
@@ -59,6 +64,7 @@ public class AddQuestionGI extends JFrame {
         this(testTask);
         setTitle("Редагування");
         this.question = question;
+        rightAnswersCount = question.getRightAnswersList().size();
         imageNameField.setText(question.getImageName());
         questionArea.setText(question.getTask());
         int i = 0;
@@ -125,8 +131,7 @@ public class AddQuestionGI extends JFrame {
                     new ImageBrowserGI(ImageIO.read(new File(imageNameField.getText())));
                 }
             } catch (IOException e1) {
-                JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні зображення",
-                        "Попередження", JOptionPane.DEFAULT_OPTION);
+                setWarningMessage("Виникла помилка при завантаженні зображення");
             }
         });
     }
@@ -167,7 +172,8 @@ public class AddQuestionGI extends JFrame {
         prepareImagePanel();
         questionPanel.add(imagePanel);
 
-        JScrollPane scrollPane = FrameUtils.createScroll(questionArea = createTextArea());
+        questionArea = createTextArea();
+        JScrollPane scrollPane = FrameUtils.createScroll(questionArea);
         scrollPane.setBorder(new TitledBorder("Текст запитання:"));
         questionPanel.add(scrollPane);
 
@@ -196,6 +202,7 @@ public class AddQuestionGI extends JFrame {
                 insertUpdate(e);
             }
         });
+        textArea.getDocument().addDocumentListener(changesListener);
         return textArea;
     }
 
@@ -206,6 +213,8 @@ public class AddQuestionGI extends JFrame {
         for (int i = 0; i < testTask.getAnswersLimit(); i++) {
             AnswerBoxPanel answerBoxPanel = new AnswerBoxPanel();
             answerBoxPanel.setEnabledTextArea(i == 0);
+            answerBoxPanel.addActionListener(changesListener);
+            answerBoxPanel.addDocumentListener(changesListener);
             answerBoxPanel.addDocumentListener(new DocumentListener() {
                 @Override
                 public void insertUpdate(DocumentEvent e) {
@@ -244,13 +253,9 @@ public class AddQuestionGI extends JFrame {
         completeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         completeButton.setEnabled(false);
         completeButton.addActionListener(e -> {
-            try {
-                question = createQuestion();
-                if (question != null) {
-                    dispose();
-                }
-            } catch (IOException e1) {
-                JOptionPane.showConfirmDialog(null, e1.getMessage(), "Попередження", JOptionPane.DEFAULT_OPTION);
+            question = createQuestion();
+            if (question != null) {
+                dispose();
             }
         });
     }
@@ -264,9 +269,6 @@ public class AddQuestionGI extends JFrame {
                         null, JOptionPane.YES_NO_CANCEL_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     completeButton.doClick();
-                }
-                if (option == JOptionPane.NO_OPTION) {
-                    dispose();
                 }
             } else {
                 dispose();
@@ -282,7 +284,7 @@ public class AddQuestionGI extends JFrame {
         buttonsPanel.add(cancelButton);
     }
 
-    private Question createQuestion() throws IOException {
+    private Question createQuestion() {
         String task;
         String imageName = null;
         byte[] imageInByte = null;
@@ -323,18 +325,37 @@ public class AddQuestionGI extends JFrame {
         }
 
         int answersCount = rightAnswersList.size();
-        if (testTask.getAllowAllRightAnswers() != TestParameters.ALLOW
+        if (testTask.getAllowAllRightAnswers() != TestParameters.ALLOW && rightAnswersCount != answersCount
                 && answersCount != 0 && answersCount == answersList.size()) {
-            int option = JOptionPane.showConfirmDialog(
-                    null, "Ви відмітили всі відповіді як правильні. Бажаєте продовжити?",
-                    null, JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                new Question(imageName, imageInByte, task, answersList, rightAnswersList);
+            if (getMessageText().equals(SingleMessage.ALL_ANSWERS_RIGHT)) {
+                return new Question(imageName, imageInByte, task, answersList, rightAnswersList);
             }
-            if (option == JOptionPane.NO_OPTION) {
-
-            }
+            setWarningMessage(SingleMessage.ALL_ANSWERS_RIGHT);
+            return null;
         }
         return new Question(imageName, imageInByte, task, answersList, rightAnswersList);
+    }
+
+    private class ChangesListener implements DocumentListener, ActionListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            setEmptyMessage();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            setEmptyMessage();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            setEmptyMessage();
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setEmptyMessage();
+        }
     }
 }

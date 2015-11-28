@@ -121,8 +121,8 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void determineButtonsEnabled() {
         testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
         if (testTaskManager.getCurrentTest() != null) {
-            removeButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentUser()));
             editButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
+            removeButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentUser()));
             settingsButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
         } else {
             removeButton.setEnabled(false);
@@ -168,8 +168,8 @@ public class TeacherWorkspaceGI extends MainFrame {
 
         prepareStudentsGroupJList();
         prepareStudentsJList();
-        viewStudentsInfoTab.add(new BoxPanel(FrameUtils.createScroll(studentsGroupJList),
-                FrameUtils.createScroll(studentsJList)), BorderLayout.NORTH);
+        viewStudentsInfoTab.add(new BoxPanel(createScrollPaneWithTitle(studentsGroupJList, "Групи студентів"),
+                createScrollPaneWithTitle(studentsJList, "Список студентів")), BorderLayout.NORTH);
 
         prepareStudentsInfoPanel();
         viewStudentsInfoTab.add(studentsInfoPanel, BorderLayout.WEST);
@@ -178,12 +178,20 @@ public class TeacherWorkspaceGI extends MainFrame {
         viewStudentsInfoTab.add(testWrapperPanel, BorderLayout.CENTER);
     }
 
+    private JScrollPane createScrollPaneWithTitle(JList list, String title) {
+        JScrollPane scrollPane = new JScrollPane(list, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(new TitledBorder(title));
+        scrollPane.setBackground(Color.WHITE);
+        return scrollPane;
+    }
+
     private void prepareStudentsInfoPanel() {
         studentsInfoPanel = new JPanel(new BorderLayout());
         studentsInfoPanel.setBorder(new TitledBorder("Інформація про студента"));
         studentsInfoPanel.setOpaque(false);
 
-        Dimension dimension = new Dimension(300, 200);
+        Dimension dimension = new Dimension(300, 600);
         studentsInfoPanel.setMaximumSize(dimension);
         studentsInfoPanel.setPreferredSize(dimension);
         studentsInfoPanel.setMinimumSize(dimension);
@@ -192,8 +200,8 @@ public class TeacherWorkspaceGI extends MainFrame {
                 "Прізвище: ", "Ім\'я: ", "Побатькові: ", "Група: ", "Телефон: ", "E-Mail: ");
         studentsInfoPanel.add(labels, BorderLayout.WEST);
 
-        prepareFields();
         prepareAddNewGroupButton();
+        prepareFields();
         JPanel boxWithButton = new BoxPanel(studentGroupsBox, addNewGroupButton);
         JPanel fields = FrameUtils.createComponentsGridPanel(surnameField, nameField, secondNameField,
                 boxWithButton, telephoneLabel, emailLabel);
@@ -207,23 +215,24 @@ public class TeacherWorkspaceGI extends MainFrame {
         ChangeDataListener listener = new ChangeDataListener();
 
         surnameField = new JTextField(COLUMNS_COUNT);
+        surnameField.setBackground(Color.WHITE);
         surnameField.getDocument().addDocumentListener(listener);
 
         nameField = new JTextField(COLUMNS_COUNT);
+        nameField.setBackground(Color.WHITE);
         nameField.getDocument().addDocumentListener(listener);
 
         secondNameField = new JTextField(COLUMNS_COUNT);
+        secondNameField.setBackground(Color.WHITE);
         secondNameField.getDocument().addDocumentListener(listener);
 
         comboBoxModel = new DefaultComboBoxModel<>();
-        for (StudentsGroup studentsGroup : studentManager.getStudentsGroupSet()) {
-            comboBoxModel.addElement(studentsGroup);
-        }
+        studentManager.getStudentsGroupSet().forEach(comboBoxModel::addElement);
         studentGroupsBox = new JComboBox<>(comboBoxModel);
         studentGroupsBox.addActionListener(listener);
 
-        telephoneLabel = new JLabel();
-        emailLabel = new JLabel();
+        telephoneLabel = new JLabel("-");
+        emailLabel = new JLabel("-");
 
         setFieldsEnabled(false);
     }
@@ -239,24 +248,20 @@ public class TeacherWorkspaceGI extends MainFrame {
         surnameField.setText("");
         nameField.setText("");
         secondNameField.setText("");
-        telephoneLabel.setText("");
-        emailLabel.setText("");
+        telephoneLabel.setText("-");
+        emailLabel.setText("-");
     }
 
     private void prepareStudentsGroupJList() {
         studentsGroupListModel = new DefaultListModel<>();
-        for (StudentsGroup studentsGroup : studentManager.getStudentsGroupSet()) {
-            studentsGroupListModel.addElement(studentsGroup);
-        }
+        studentManager.getStudentsGroupSet().forEach(studentsGroupListModel::addElement);
 
         studentsGroupJList = new JList<>(studentsGroupListModel);
         studentsGroupJList.setVisibleRowCount(8);
+        studentsGroupJList.setFixedCellWidth(200);
+        studentsGroupJList.setFixedCellHeight(18);
         studentsGroupJList.addListSelectionListener(e -> {
-            studentListModel.removeAllElements();
-            int index = studentsGroupJList.getSelectedIndex();
-            for (Student student : studentsGroupListModel.getElementAt(index).getUsersSet()) {
-                studentListModel.addElement(student);
-            }
+            updateStudentListModelInfo(studentsGroupJList.getSelectedIndex());
             if (studentListModel.size() > 0) {
                 studentsJList.setSelectedIndex(0);
             } else {
@@ -267,27 +272,46 @@ public class TeacherWorkspaceGI extends MainFrame {
         });
     }
 
+    private void updateStudentListModelInfo(int groupIndex) {
+        studentListModel.removeAllElements();
+        studentsGroupListModel.getElementAt(groupIndex)
+                .getUsersSet()
+                .forEach(studentListModel::addElement);
+    }
+
     private void prepareStudentsJList() {
         studentListModel = new DefaultListModel<>();
         studentsJList = new JList<>(studentListModel);
         studentsJList.setVisibleRowCount(8);
+        studentsJList.setFixedCellWidth(200);
+        studentsJList.setFixedCellHeight(18);
         studentsJList.addListSelectionListener(e -> {
             Student student = null;
             int index = studentsJList.getSelectedIndex();
             if (index != -1) {
                 student = studentListModel.getElementAt(index);
-                studentManager.setCurrentUser(student);
-                nameField.setText(student.getName());
-                surnameField.setText(student.getSurname());
-                secondNameField.setText(student.getSecondName());
-                telephoneLabel.setText(student.getTelephoneNum());
-                emailLabel.setText(student.getMailAddress());
-                studentGroupsBox.setSelectedItem(student.getStudentsGroup());
+                if (student != null) {
+                    fillFields(studentListModel.getElementAt(index));
+                }
+
                 setFieldsEnabled(true);
                 saveStudentButton.setEnabled(false);
                 setEmptyMessage();
             }
         });
+    }
+
+    private void fillFields(Student student) {
+        studentManager.setCurrentUser(student);
+
+        nameField.setText(student.getName());
+        surnameField.setText(student.getSurname());
+        secondNameField.setText(student.getSecondName());
+
+        telephoneLabel.setText(student.getTelephoneNum() == null ? "-" : student.getTelephoneNum());
+        emailLabel.setText(student.getMailAddress() == null ? "-" : student.getMailAddress());
+
+        studentGroupsBox.setSelectedItem(student.getStudentsGroup());
     }
 
     private void prepareSaveStudentButton() {
@@ -297,6 +321,8 @@ public class TeacherWorkspaceGI extends MainFrame {
             try {
                 studentManager.updateCurrentUserInfo(surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), (StudentsGroup) studentGroupsBox.getSelectedItem());
+                saveStudentButton.setEnabled(false);
+                updateStudentListModelInfo(studentsGroupJList.getSelectedIndex());
             } catch (IOException e1) {
                 setWarningMessage(e1.getMessage());
             }
@@ -306,8 +332,6 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void prepareAddNewStudentButton() {
         addNewStudentButton = new JButton("Додати студента");
         addNewStudentButton.addActionListener(e -> {
-            clearFields();
-            setFieldsEnabled(true);
             int index = studentsGroupJList.getSelectedIndex();
             if (index != -1) {
                 studentGroupsBox.setSelectedIndex(index);
@@ -317,7 +341,7 @@ public class TeacherWorkspaceGI extends MainFrame {
     }
 
     private void prepareSaveAddedStudentButton() {
-        saveAddedStudentButton = new JButton("Зберегти");
+        saveAddedStudentButton = new JButton("Додати");
         saveAddedStudentButton.setEnabled(false);
         saveAddedStudentButton.addActionListener(e -> {
             try {
@@ -336,8 +360,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         cancelAdditionButton = new JButton("Скасувати");
         cancelAdditionButton.addActionListener(e -> {
             switchContainerTab();
-            clearFields();
-            setFieldsEnabled(true);
+            setEmptyMessage();
         });
     }
 
@@ -345,6 +368,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         addNewGroupButton = new JButton(new ImageIcon("resources/add_group.png"));
         addNewGroupButton.setToolTipText("Додати групу");
         addNewGroupButton.setVisible(false);
+        addNewGroupButton.addActionListener(e -> {});
     }
 
     private void prepareButtonsContainer() {
@@ -363,6 +387,8 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void switchContainerTab() {
         ((CardLayout) buttonsContainer.getLayout()).next(buttonsContainer);
         addNewGroupButton.setVisible(!addNewGroupButton.isVisible());
+        clearFields();
+        setFieldsEnabled(addNewGroupButton.isVisible());
     }
 
     private void prepareTestWrapperPanel() {

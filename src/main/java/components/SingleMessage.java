@@ -13,21 +13,22 @@ public class SingleMessage extends JLabel {
     public static final String EXIST_USER = "Користувач з таким ім'ям вже існує";
     public static final String ADD_USER_SUC = "Обліковий запис успішно створено!";
     public static final String PASSWORDS_DOES_NOT_MATCH = "Паролі не співпадають";
-    public static final String WRONG_USERNAME = "Неправильне ім'я користувача";
     public static final String SHORT_PASSWORD = "Пароль занадто короткий";
     public static final String LONG_PASSWORD = "Пароль занадто довгий";
-    public static final String WRONG_TEACHER_PASSWORD = "<html>Пароль повинен містити великі та<br>малі літери, " +
-            "числа та спеціальні символи</html>";
-    public static final String WRONG_STUDENT_PASSWORD = "<html>Пароль повинен містити великі і малі літери та числа</html>";
+    public static final String WRONG_TEACHER_PASSWORD = "<html>Пароль повинен містити великі та<br>" +
+            "малі літери, числа та спеціальні символи</html>";
+    public static final String WRONG_STUDENT_PASSWORD = "Пароль повинен містити великі і малі літери та числа";
     public static final String INCORRECT_PASSWORD = "Неправильний пароль";
     public static final String WRONG_NAME = "Прізвище, ім'я або по-батькові містять заборонені символи";
     public static final String LOGIN = " ";
-    public static final String CREATE = "Створення нового облікового запису";
 
     public static final String SETTINGS = "Налаштування облікового запису";
     public static final String WRONG_TEL = "Неправильний номер телефону";
     public static final String WRONG_MAIL = "Неправильна адреса ел. пошти";
     public static final String SAVED = "Зміни збережено";
+
+    public static final String ALL_ANSWERS_RIGHT = "Ви відмітили всі відповіді як правильні. " +
+            "Для продовження натисніть Готово";
 
     private static SingleMessage instance = new SingleMessage();
 
@@ -45,6 +46,10 @@ public class SingleMessage extends JLabel {
 
     public static SingleMessage getMessageInstance() {
         return getMessageInstance(" ");
+    }
+
+    public static String getMessageText() {
+        return instance.getText();
     }
 
     public static void setDefaultMessage(String message) {
