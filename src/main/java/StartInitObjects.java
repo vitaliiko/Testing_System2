@@ -23,19 +23,19 @@ public class StartInitObjects {
     private static Teacher ivanov;
 
     public static void main(String[] args) {
-        initStudents();
         initTeacherSet();
+        initStudents();
         initTestTask();
     }
 
     public static void initStudents() {
-        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", ""));
-        studentsGroupsList.add(new StudentsGroup("CG-126", "", ""));
-        studentsGroupsList.add(new StudentsGroup("RV-125", "", ""));
-        studentsGroupsList.add(new StudentsGroup("RV-126", "", ""));
-        studentsGroupsList.add(new StudentsGroup("RV-127", "", ""));
+        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("CG-126", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("RV-125", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("RV-126", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("RV-127", "", "", ivanov));
 
         new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
         new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));

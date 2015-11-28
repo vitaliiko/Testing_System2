@@ -103,6 +103,24 @@ public class StudentManager extends UserManager<Student> {
         return studentsGroupSet;
     }
 
+    public void addStudentsGroup(StudentsGroup studentsGroup) throws IOException {
+        if (!studentsGroupSet.add(studentsGroup)) {
+            throw new IOException("Група з такою назвою вже існує");
+        }
+    }
+
+    public void deleteStudentsGroup(StudentsGroup studentsGroup) {
+        studentsGroupSet.remove(studentsGroup);
+    }
+
+    public void checkStudentsGroupName(String name) throws IOException {
+        for (StudentsGroup studentsGroup : studentsGroupSet) {
+            if (studentsGroup.getName().equals(name)) {
+                throw new IOException("Група з такою назвою вже існує");
+            }
+        }
+    }
+
     public ArrayList<String> getGroupNamesList() {
         return studentsGroupSet.stream()
                 .map(StudentsGroup::getName)

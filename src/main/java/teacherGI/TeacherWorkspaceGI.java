@@ -47,7 +47,6 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JTextField secondNameField;
     private JLabel emailLabel;
     private JLabel telephoneLabel;
-    private JButton addNewGroupButton;
     private JButton saveStudentButton;
     private JButton addNewStudentButton;
     private JButton saveAddedStudentButton;
@@ -64,16 +63,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         fillContainer();
         fillToolsPanel();
         setTabbedItems("Список тестів ", "Інформація про студентів ");
-        addListenerToTabbedList(e -> {
-            if (tabbedList.getSelectedIndex() == 1) {
-                addButton.setEnabled(true);
-                removeButton.setEnabled(true);
-                editButton.setEnabled(false);
-                settingsButton.setEnabled(false);
-            } else {
-                determineButtonsEnabled();
-            }
-        });
+        addListenerToTabbedList(e -> determineButtonsEnabled());
         super.frameSetup();
     }
 
@@ -119,20 +109,38 @@ public class TeacherWorkspaceGI extends MainFrame {
     }
 
     private void determineButtonsEnabled() {
-        testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
-        if (testTaskManager.getCurrentTest() != null) {
-            editButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
-            removeButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentUser()));
-            settingsButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
+        if (tabbedList.getSelectedIndex() == 0) {
+            testTaskManager.setCurrentTest(testTaskTable.getSelectedRow());
+            if (testTaskManager.getCurrentTest() != null) {
+                editButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
+                removeButton.setEnabled(testTaskManager.getCurrentTest().isCreator(teacherManager.getCurrentUser()));
+                settingsButton.setEnabled(testTaskManager.getCurrentTest().isAuthor(teacherManager.getCurrentUser()));
+            } else {
+                setButtonsEnabled(false);
+            }
         } else {
-            removeButton.setEnabled(false);
+            setButtonsEnabled(studentsGroupJList.getSelectedIndex() != -1);
         }
+    }
+
+    private void setButtonsEnabled(boolean enabled) {
+        settingsButton.setEnabled(enabled);
+        removeButton.setEnabled(enabled);
+        editButton.setEnabled(enabled);
     }
 
     private void prepareAddButton() {
         addButton = new JButton(new ImageIcon(IOFileHandling.RESOURCES + "add.png"));
         addButton.setToolTipText("Додати");
-        addButton.addActionListener(e -> new CreateTestTaskGI(this, teacherManager, testTaskManager));
+        addButton.addActionListener(e -> {
+            if (tabbedList.getSelectedIndex() == 0) {
+                new CreateTestTaskGI(this, teacherManager, testTaskManager);
+            } else {
+                AddStudentsGroupGI addStudentsGroupGI =
+                        new AddStudentsGroupGI(this, teacherManager, studentManager);
+                addStudentsGroupGI.addWindowListener(new ClosedListener());
+            }
+        });
     }
 
     private void prepareRemoveButton() {
@@ -140,7 +148,14 @@ public class TeacherWorkspaceGI extends MainFrame {
         removeButton.setToolTipText("Видалити");
         removeButton.setEnabled(false);
         removeButton.addActionListener(e -> {
+            if (tabbedList.getSelectedIndex() == 0) {
 
+            } else {
+                StudentsGroup studentsGroup = studentsGroupListModel.getElementAt(studentsGroupJList.getSelectedIndex());
+                studentManager.deleteStudentsGroup(studentsGroup);
+                studentManager.saveUserSet();
+                updateStudentsGroupListModel();
+            }
         });
     }
 
@@ -149,8 +164,15 @@ public class TeacherWorkspaceGI extends MainFrame {
         editButton.setToolTipText("Редагувати");
         editButton.setEnabled(false);
         editButton.addActionListener(e -> {
-            new ShowTaskGI(teacherManager, testTaskManager.getCurrentTestIndex());
-            dispose();
+            if (tabbedList.getSelectedIndex() == 0) {
+                new ShowTaskGI(teacherManager, testTaskManager.getCurrentTestIndex());
+                dispose();
+            } else {
+                StudentsGroup studentsGroup = studentsGroupListModel.getElementAt(studentsGroupJList.getSelectedIndex());
+                AddStudentsGroupGI addStudentsGroupGI =
+                        new AddStudentsGroupGI(this, teacherManager, studentsGroup, studentManager);
+                addStudentsGroupGI.addWindowListener(new ClosedListener());
+            }
         });
     }
 
@@ -200,11 +222,9 @@ public class TeacherWorkspaceGI extends MainFrame {
                 "Прізвище: ", "Ім\'я: ", "Побатькові: ", "Група: ", "Телефон: ", "E-Mail: ");
         studentsInfoPanel.add(labels, BorderLayout.WEST);
 
-        prepareAddNewGroupButton();
         prepareFields();
-        JPanel boxWithButton = new BoxPanel(studentGroupsBox, addNewGroupButton);
         JPanel fields = FrameUtils.createComponentsGridPanel(surnameField, nameField, secondNameField,
-                boxWithButton, telephoneLabel, emailLabel);
+                studentGroupsBox, telephoneLabel, emailLabel);
         studentsInfoPanel.add(fields, BorderLayout.CENTER);
 
         prepareButtonsContainer();
@@ -261,7 +281,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsGroupJList.setFixedCellWidth(200);
         studentsGroupJList.setFixedCellHeight(18);
         studentsGroupJList.addListSelectionListener(e -> {
-            updateStudentListModelInfo(studentsGroupJList.getSelectedIndex());
+            updateStudentListModel(studentsGroupJList.getSelectedIndex());
+            setButtonsEnabled(true);
             if (studentListModel.size() > 0) {
                 studentsJList.setSelectedIndex(0);
             } else {
@@ -272,11 +293,22 @@ public class TeacherWorkspaceGI extends MainFrame {
         });
     }
 
-    private void updateStudentListModelInfo(int groupIndex) {
+    private void updateStudentListModel(int groupIndex) {
         studentListModel.removeAllElements();
-        studentsGroupListModel.getElementAt(groupIndex)
-                .getUsersSet()
-                .forEach(studentListModel::addElement);
+        if (studentsGroupListModel.size() != 0) {
+            studentsGroupListModel.getElementAt(groupIndex)
+                    .getUsersSet()
+                    .forEach(studentListModel::addElement);
+        }
+    }
+
+    private void updateStudentsGroupListModel() {
+        int index = studentsGroupJList.getSelectedIndex();
+        studentsGroupListModel.removeAllElements();
+        studentManager.getStudentsGroupSet().forEach(studentsGroupListModel::addElement);
+        if (studentsGroupListModel.size() != 0) {
+            studentsGroupJList.setSelectedIndex(index < studentsGroupListModel.size() ? index : 0);
+        }
     }
 
     private void prepareStudentsJList() {
@@ -322,7 +354,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 studentManager.updateCurrentUserInfo(surnameField.getText(), nameField.getText(),
                         secondNameField.getText(), (StudentsGroup) studentGroupsBox.getSelectedItem());
                 saveStudentButton.setEnabled(false);
-                updateStudentListModelInfo(studentsGroupJList.getSelectedIndex());
+                updateStudentListModel(studentsGroupJList.getSelectedIndex());
             } catch (IOException e1) {
                 setWarningMessage(e1.getMessage());
             }
@@ -364,13 +396,6 @@ public class TeacherWorkspaceGI extends MainFrame {
         });
     }
 
-    private void prepareAddNewGroupButton() {
-        addNewGroupButton = new JButton(new ImageIcon("resources/add_group.png"));
-        addNewGroupButton.setToolTipText("Додати групу");
-        addNewGroupButton.setVisible(false);
-        addNewGroupButton.addActionListener(e -> {});
-    }
-
     private void prepareButtonsContainer() {
         buttonsContainer = new Container();
         buttonsContainer.setLayout(new CardLayout());
@@ -386,9 +411,7 @@ public class TeacherWorkspaceGI extends MainFrame {
 
     private void switchContainerTab() {
         ((CardLayout) buttonsContainer.getLayout()).next(buttonsContainer);
-        addNewGroupButton.setVisible(!addNewGroupButton.isVisible());
         clearFields();
-        setFieldsEnabled(addNewGroupButton.isVisible());
     }
 
     private void prepareTestWrapperPanel() {
@@ -430,6 +453,14 @@ public class TeacherWorkspaceGI extends MainFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             checkButtonsEnabled();
+        }
+    }
+
+    private class ClosedListener extends WindowAdapter {
+
+        @Override
+        public void windowClosed(WindowEvent e) {
+            updateStudentsGroupListModel();
         }
     }
 }

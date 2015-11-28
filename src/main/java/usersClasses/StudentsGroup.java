@@ -10,12 +10,14 @@ public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable
     private String name;
     private String faculty;
     private String department;
+    private Teacher curator;
     private Set<Student> studentsSet = new HashSet<>();
 
-    public StudentsGroup(String name, String faculty, String department) {
+    public StudentsGroup(String name, String faculty, String department, Teacher curator) {
         this.name = name;
         this.faculty = faculty;
         this.department = department;
+        this.curator = curator;
     }
 
     public String getName() {
@@ -40,6 +42,14 @@ public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable
 
     public void setDepartment(String department) {
         this.department = department;
+    }
+
+    public Teacher getCurator() {
+        return curator;
+    }
+
+    public void setCurator(Teacher curator) {
+        this.curator = curator;
     }
 
     @Override
