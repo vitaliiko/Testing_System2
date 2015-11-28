@@ -65,13 +65,13 @@ public class TestTaskManager {
     public void wrappingTests(Student student) {
         StudentsGroup studentsGroup = student.getStudentsGroup();
         testTaskList.stream()
-                .filter(testTask -> testTask.getStudentGroupsList().contains(studentsGroup) &&
-                        !haveWrapper(testTask, student))
+                .filter(testTask -> testTask.getStudentGroupsList().contains(studentsGroup)
+                        && !haveWrapper(testTask, student))
                 .forEach(testTask -> student.addTestTaskWrapper(new TestTaskWrapper(testTask)));
 
         student.getTestTaskWrapperList().stream()
-                .filter(testTaskWrapper -> testTaskWrapper.getStatus() <= TestTaskWrapper.BAD &&
-                        !testTaskWrapper.getTestTask().getStudentGroupsList().contains(studentsGroup))
+                .filter(testTaskWrapper -> testTaskWrapper.getStatus() <= TestTaskWrapper.BAD
+                        && !testTaskWrapper.getTestTask().getStudentGroupsList().contains(studentsGroup))
                 .forEach(testTaskWrapper -> testTaskWrapper.setStatus(TestTaskWrapper.FAIL));
     }
 }

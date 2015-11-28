@@ -24,9 +24,9 @@ public class TestTask implements Serializable {
     private int timeLimit = 60;
     private int attemptsLimit = 2;
     private int minPoint = 60;
-    private boolean allowWithoutRightAnswers = false;
-    private boolean allowAllRightAnswers = false;
-    private boolean checkBoxAlways = false;
+    private TestParameters allowWithoutRightAnswers = TestParameters.NOT_ALLOW;
+    private TestParameters allowAllRightAnswers = TestParameters.NOT_ALLOW;
+    private TestParameters checkBoxAlways = TestParameters.NOT_ALLOW;
 
     private List<Question> questionsList = new ArrayList<>();
     private List<List<Question>> questionGroupsList = new ArrayList<>();
@@ -132,27 +132,27 @@ public class TestTask implements Serializable {
         this.minPoint = minPoint;
     }
 
-    public boolean isAllowWithoutRightAnswers() {
+    public TestParameters getAllowWithoutRightAnswers() {
         return allowWithoutRightAnswers;
     }
 
-    public void setAllowWithoutRightAnswers(boolean allowWithoutRightAnswers) {
+    public void setAllowWithoutRightAnswers(TestParameters allowWithoutRightAnswers) {
         this.allowWithoutRightAnswers = allowWithoutRightAnswers;
     }
 
-    public boolean isAllowAllRightAnswers() {
+    public TestParameters getAllowAllRightAnswers() {
         return allowAllRightAnswers;
     }
 
-    public void setAllowAllRightAnswers(boolean allowAllRightAnswers) {
+    public void setAllowAllRightAnswers(TestParameters allowAllRightAnswers) {
         this.allowAllRightAnswers = allowAllRightAnswers;
     }
 
-    public boolean isCheckBoxAlways() {
+    public TestParameters getCheckBoxAlways() {
         return checkBoxAlways;
     }
 
-    public void setCheckBoxAlways(boolean checkBoxAlways) {
+    public void setCheckBoxAlways(TestParameters checkBoxAlways) {
         this.checkBoxAlways = checkBoxAlways;
     }
 

@@ -3,6 +3,7 @@ package teacherGI;
 import components.BoxPanel;
 import components.FrameUtils;
 import testingClasses.Question;
+import testingClasses.TestParameters;
 import testingClasses.TestTask;
 import testingClasses.TestTaskManager;
 import usersClasses.*;
@@ -166,9 +167,9 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
         testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        testTask.setAllowWithoutRightAnswers(allowWithoutRightAnswers.isSelected());
-        testTask.setAllowAllRightAnswers(allowAllRightAnswers.isSelected());
-        testTask.setCheckBoxAlways(checkBoxAlways.isSelected());
+        testTask.setAllowWithoutRightAnswers(allowWithoutRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
+        testTask.setAllowAllRightAnswers(allowAllRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
+        testTask.setCheckBoxAlways(checkBoxAlways.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
     }
 
     private <T extends Data> List<T> makeDataListFromCheckBoxPanel(JPanel panel, Map<String, T> dataMap) {
@@ -361,17 +362,17 @@ public class TestTaskSettingsGI extends JDialog {
         allowWithoutRightAnswers = new JCheckBox("Дозволити запитання без правильних відповідей");
         allowWithoutRightAnswers.setBackground(Color.WHITE);
         allowWithoutRightAnswers.addActionListener(listener);
-        allowWithoutRightAnswers.setSelected(testTask.isAllowWithoutRightAnswers());
+        allowWithoutRightAnswers.setSelected(testTask.getAllowWithoutRightAnswers() == TestParameters.ALLOW);
 
         allowAllRightAnswers = new JCheckBox("Дозволити запитання з усіма првильними відповідями");
         allowAllRightAnswers.setBackground(Color.WHITE);
         allowAllRightAnswers.addActionListener(listener);
-        allowAllRightAnswers.setSelected(testTask.isAllowAllRightAnswers());
+        allowAllRightAnswers.setSelected(testTask.getAllowAllRightAnswers() == TestParameters.ALLOW);
 
         checkBoxAlways = new JCheckBox("Завжди використовувати прапорці");
         checkBoxAlways.setBackground(Color.WHITE);
         checkBoxAlways.addActionListener(listener);
-        checkBoxAlways.setSelected(testTask.isCheckBoxAlways());
+        checkBoxAlways.setSelected(testTask.getCheckBoxAlways() == TestParameters.ALLOW);
 
         return new BoxPanel(BoxLayout.Y_AXIS, allowWithoutRightAnswers, allowAllRightAnswers, checkBoxAlways);
     }

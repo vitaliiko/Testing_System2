@@ -5,6 +5,7 @@ import components.AnswerBoxPanel;
 import components.FrameUtils;
 import supporting.ImageUtils;
 import testingClasses.Question;
+import testingClasses.TestParameters;
 import testingClasses.TestTask;
 
 import javax.imageio.ImageIO;
@@ -316,13 +317,14 @@ public class AddQuestionGI extends JFrame {
             setWarningMessage("Кількість варіантів відповідей повинна бути не меншою 3");
             return null;
         }
-        if (!testTask.isAllowWithoutRightAnswers() && rightAnswersList.size() < 1) {
+        if (testTask.getAllowWithoutRightAnswers() != TestParameters.ALLOW && rightAnswersList.size() < 1) {
             setWarningMessage("Повинна бути одна або більше правильних відповідей");
             return null;
         }
 
         int answersCount = rightAnswersList.size();
-        if (!testTask.isAllowAllRightAnswers() && answersCount != 0 && answersCount == answersList.size()) {
+        if (testTask.getAllowAllRightAnswers() != TestParameters.ALLOW
+                && answersCount != 0 && answersCount == answersList.size()) {
             int option = JOptionPane.showConfirmDialog(
                     null, "Ви відмітили всі відповіді як правильні. Бажаєте продовжити?",
                     null, JOptionPane.YES_NO_OPTION);
