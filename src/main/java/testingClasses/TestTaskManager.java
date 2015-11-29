@@ -5,6 +5,7 @@ import usersClasses.Student;
 import usersClasses.StudentsGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TestTaskManager {
 
@@ -63,6 +64,7 @@ public class TestTaskManager {
 
     public void wrappingTests(Student student) {
         StudentsGroup studentsGroup = student.getStudentsGroup();
+        System.out.println(Arrays.toString(student.getTestTaskWrapperList().toArray()));
         testTaskList.stream()
                 .filter(testTask -> testTask.getStudentGroupsList().contains(studentsGroup)
                         && !haveWrapper(testTask, student))
@@ -72,5 +74,7 @@ public class TestTaskManager {
                 .filter(testTaskWrapper -> testTaskWrapper.getStatus() <= TestTaskWrapper.BAD
                         && !testTaskWrapper.getTestTask().getStudentGroupsList().contains(studentsGroup))
                 .forEach(testTaskWrapper -> testTaskWrapper.setStatus(TestTaskWrapper.FAIL));
+
+        System.out.println(Arrays.toString(student.getTestTaskWrapperList().toArray()));
     }
 }

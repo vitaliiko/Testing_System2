@@ -223,7 +223,8 @@ public class TestTask implements Serializable {
             }
         }
 
-        return disciplineName + " " + taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
+//        return disciplineName + " " + taskName + "\n" + "\tКількість запитань: " + questionsList.size() + " " + authors;
+        return taskName + " " + disciplineName + " " + getCreator();
     }
 
     @Override

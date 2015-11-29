@@ -57,7 +57,13 @@ public class StudentWorkspaceGI extends MainFrame {
     }
 
     private void prepareTestTasksTable() {
+        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
+        System.out.println(wrapperList);
         testTaskManager.wrappingTests(studentManager.getCurrentUser());
+        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
+        studentManager.saveUserSet();
+        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
+        System.out.println(wrapperList);
         testTaskTableParameters = new TableParameters<>(wrapperList);
         testTaskTable = createTable(testTaskTableParameters);
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {

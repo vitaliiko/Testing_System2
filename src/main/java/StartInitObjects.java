@@ -66,13 +66,12 @@ public class StartInitObjects {
 
     public static void initTestTask() {
         ArrayList<TestTask> testTasks = new ArrayList<>();
-        String[] testNames = {"1 курс. Модульна контрольна робота", "1 курс. Залік", "1 курс. Модульна контрольна робота"};
         String[] disciplineNames = {"Інформатика", "Інформатика", "Дискратна математика"};
         List<Teacher> teachers = new ArrayList<>(teacherSet);
         try {
-            int j = 0;
+            int j = 0, i = 1;
             for (Teacher teacher : teachers) {
-                TestTask testTask = createTests("tests/test.txt", testNames[j], disciplineNames[j], teacher);
+                TestTask testTask = createTests("tests/test.txt", "Модульна контрольна робота " + i++, disciplineNames[j], teacher);
                 testTask.getAuthorsList().add(ivanov);
                 testTasks.add(testTask);
                 j = j == 2 ? 0 : ++j;

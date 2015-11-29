@@ -9,8 +9,7 @@ import testingClasses.TestTaskWrapper;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class PassingTheTestGI extends JWindow {
 
@@ -35,9 +34,9 @@ public class PassingTheTestGI extends JWindow {
         questionsCount = testTaskWrapper.getTestTask().getQuestionsLimit();
 
         gd.setFullScreenWindow(this);
-        JScrollPane scrollPane = FrameUtils.createScroll(questionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         addListenersToQuestionPanel();
+        JScrollPane scrollPane = FrameUtils.createScroll(questionsPanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         getContentPane().add(scrollPane, BorderLayout.CENTER);
 
         prepareToolsPanel();
@@ -45,9 +44,27 @@ public class PassingTheTestGI extends JWindow {
         prepareEmptyPanel();
         getContentPane().add(emptyPanel, BorderLayout.EAST);
 
+        this.addWindowListeners();
         setVisible(true);
-        scrollPane.getViewport().setViewPosition(new Point(0, 0));
+    }
 
+    private void addWindowListeners() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+                completeButton.doClick();
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                completeButton.doClick();
+            }
+
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                completeButton.doClick();
+            }
+        });
     }
 
     private void prepareToolsPanel() {
