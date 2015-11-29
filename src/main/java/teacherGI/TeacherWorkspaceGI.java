@@ -45,6 +45,7 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JTextField surnameField;
     private JTextField nameField;
     private JTextField secondNameField;
+    private BoxPanel groupInfoPanel;
     private JLabel emailLabel;
     private JLabel telephoneLabel;
     private JButton saveStudentButton;
@@ -88,9 +89,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         addOnContainer(tableScroll);
 
         prepareViewStudentsInfoTab();
-        BoxPanel panel = new BoxPanel(getMessageInstance(), BorderLayout.NORTH);
-        panel.add(viewStudentsInfoTab, BorderLayout.CENTER);
-        addOnContainer(panel);
+        addOnContainer(viewStudentsInfoTab);
     }
 
     private void prepareTestTasksTable() {
@@ -149,7 +148,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         removeButton.setEnabled(false);
         removeButton.addActionListener(e -> {
             if (tabbedList.getSelectedIndex() == 0) {
-
+                testTaskManager.deleteTest(testTaskTable.getSelectedRow());
+                testTaskManager.saveTests();
             } else {
                 StudentsGroup studentsGroup = studentsGroupListModel.getElementAt(studentsGroupJList.getSelectedIndex());
                 studentManager.deleteStudentsGroup(studentsGroup);
@@ -190,14 +190,17 @@ public class TeacherWorkspaceGI extends MainFrame {
 
         prepareStudentsGroupJList();
         prepareStudentsJList();
-        viewStudentsInfoTab.add(new BoxPanel(createScrollPaneWithTitle(studentsGroupJList, "Групи студентів"),
-                createScrollPaneWithTitle(studentsJList, "Список студентів")), BorderLayout.NORTH);
+        BoxPanel studentsPanel = new BoxPanel(createScrollPaneWithTitle(studentsGroupJList, "Групи студентів"),
+                createScrollPaneWithTitle(studentsJList, "Список студентів"));
+
+        groupInfoPanel = new BoxPanel(new JLabel(" "));
+        viewStudentsInfoTab.add(new BoxPanel(BoxLayout.Y_AXIS, studentsPanel, groupInfoPanel), BorderLayout.NORTH);
 
         prepareStudentsInfoPanel();
-        viewStudentsInfoTab.add(studentsInfoPanel, BorderLayout.WEST);
-
         prepareTestWrapperPanel();
-        viewStudentsInfoTab.add(testWrapperPanel, BorderLayout.CENTER);
+        viewStudentsInfoTab.add(new BoxPanel(studentsInfoPanel, testWrapperPanel), BorderLayout.CENTER);
+
+        viewStudentsInfoTab.add(getMessageInstance(), BorderLayout.SOUTH);
     }
 
     private JScrollPane createScrollPaneWithTitle(JList list, String title) {
@@ -213,7 +216,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsInfoPanel.setBorder(new TitledBorder("Інформація про студента"));
         studentsInfoPanel.setOpaque(false);
 
-        Dimension dimension = new Dimension(300, 600);
+        Dimension dimension = new Dimension(300, 250);
         studentsInfoPanel.setMaximumSize(dimension);
         studentsInfoPanel.setPreferredSize(dimension);
         studentsInfoPanel.setMinimumSize(dimension);
@@ -268,6 +271,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         surnameField.setText("");
         nameField.setText("");
         secondNameField.setText("");
+        studentGroupsBox.setSelectedIndex(-1);
         telephoneLabel.setText("-");
         emailLabel.setText("-");
     }
@@ -282,6 +286,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsGroupJList.setFixedCellHeight(18);
         studentsGroupJList.addListSelectionListener(e -> {
             updateStudentListModel(studentsGroupJList.getSelectedIndex());
+            updateGroupInfoPanel();
             setButtonsEnabled(true);
             if (studentListModel.size() > 0) {
                 studentsJList.setSelectedIndex(0);
@@ -333,6 +338,23 @@ public class TeacherWorkspaceGI extends MainFrame {
         });
     }
 
+    private void updateGroupInfoPanel() {
+        if (studentsGroupJList.getSelectedIndex() != -1) {
+            StudentsGroup sg = studentsGroupListModel.getElementAt(studentsGroupJList.getSelectedIndex());
+            JLabel name = new JLabel("Назва: " + sg.getName() + "   ");
+            JLabel faculty = new JLabel("Факультет: " + sg.getFaculty() + "   ");
+            JLabel department = new JLabel("Кафедра: " + sg.getDepartment() + "   ");
+            JLabel curator = new JLabel("Куратор: " + sg.getCurator());
+            groupInfoPanel.removeAll();
+            groupInfoPanel.add(name, faculty, department, curator);
+            groupInfoPanel.validate();
+            groupInfoPanel.repaint();
+        } else {
+            groupInfoPanel.removeAll();
+            groupInfoPanel.add(new JLabel(" "));
+        }
+    }
+
     private void fillFields(Student student) {
         studentManager.setCurrentUser(student);
 
@@ -364,11 +386,12 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void prepareAddNewStudentButton() {
         addNewStudentButton = new JButton("Додати студента");
         addNewStudentButton.addActionListener(e -> {
+            switchContainerTab();
             int index = studentsGroupJList.getSelectedIndex();
             if (index != -1) {
                 studentGroupsBox.setSelectedIndex(index);
             }
-            switchContainerTab();
+            setFieldsEnabled(true);
         });
     }
 
@@ -392,6 +415,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         cancelAdditionButton = new JButton("Скасувати");
         cancelAdditionButton.addActionListener(e -> {
             switchContainerTab();
+            setFieldsEnabled(false);
             setEmptyMessage();
         });
     }
@@ -429,7 +453,8 @@ public class TeacherWorkspaceGI extends MainFrame {
     private void checkButtonsEnabled() {
         saveStudentButton.setEnabled(!surnameField.getText().isEmpty()
                 && !nameField.getText().isEmpty()
-                && !secondNameField.getText().isEmpty());
+                && !secondNameField.getText().isEmpty()
+                && studentGroupsBox.getSelectedIndex() != -1);
         saveAddedStudentButton.setEnabled(saveStudentButton.isEnabled());
     }
 
@@ -461,6 +486,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         @Override
         public void windowClosed(WindowEvent e) {
             updateStudentsGroupListModel();
+            viewStudentsInfoTab.add(getMessageInstance(), BorderLayout.SOUTH);
         }
     }
 }

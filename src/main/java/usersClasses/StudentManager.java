@@ -45,7 +45,6 @@ public class StudentManager extends UserManager<Student> {
     public void createUser(String surname, String name, String secondName, StudentsGroup studentsGroup)
             throws IOException {
         this.studentsGroup = studentsGroup;
-        System.out.println(surname + " " + name + " " + secondName);
         validateName(surname, name, secondName);
         if (!this.studentsGroup.getUsersSet().add(new Student(surname, name, secondName, studentsGroup))) {
             throw new IOException(SingleMessage.EXIST_USER);

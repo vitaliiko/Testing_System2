@@ -62,12 +62,13 @@ public class AddStudentsGroupGI extends JDialog {
         setIconImage(new ImageIcon("resources/add_group.png").getImage());
         setResizable(false);
         setLocationRelativeTo(null);
+        setModal(true);
         setVisible(true);
     }
 
     private void prepareMainPanel() {
         mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(new EmptyBorder(30, 20, 50, 20));
+        mainPanel.setBorder(new EmptyBorder(25, 20, 50, 20));
 
         mainPanel.add(FrameUtils.createLabelGridPanel("Назва:", "Факультет:", "Кафедра:", "Куратор:"),
                 BorderLayout.WEST);

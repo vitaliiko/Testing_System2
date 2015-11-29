@@ -53,8 +53,8 @@ public abstract class MainFrame extends JFrame {
 
     public void frameSetup() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(700, 400));
-        setSize(new Dimension(924, 520));
+        setMinimumSize(new Dimension(900, 560));
+        setSize(getMinimumSize());
         setLocationRelativeTo(null);
         getContentPane().setBackground(Color.WHITE);
         setVisible(true);

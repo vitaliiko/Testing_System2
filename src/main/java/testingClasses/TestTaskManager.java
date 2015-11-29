@@ -36,9 +36,8 @@ public class TestTaskManager {
         currentTestIndex = testTaskList.indexOf(testTask);
     }
 
-    public TestTask deleteTest(TestTask testTask) {
-        testTaskList.remove(testTask);
-        return testTask;
+    public void deleteTest(int index) {
+        testTaskList.remove(index);
     }
 
     public void saveTests() {
