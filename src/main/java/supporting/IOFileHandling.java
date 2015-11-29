@@ -18,31 +18,6 @@ public class IOFileHandling {
     public final static String TEACHERS_SER = "IOFiles/teachers.ser";
     public final static String STUDENTS_SER = "IOFiles/students.ser";
 
-    public static void saveTestTask(TestTask testTask, String fileName) {
-        fileName = fileName.replace(" ", "_");
-        try {
-            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream("IOFiles/" + fileName + ".ser"));
-            os.writeObject(testTask);
-            os.close();
-        } catch (IOException e) {
-            JOptionPane.showConfirmDialog(null, "Виникла помилка при збереженні",
-                    "Попередження", JOptionPane.DEFAULT_OPTION);
-        }
-    }
-
-    public static TestTask loadTestTask(String fileName) {
-        TestTask testTask = null;
-        fileName = fileName.replace(" ", "_");
-        try {
-            ObjectInputStream is = new ObjectInputStream(new FileInputStream("IOFiles/" + fileName + ".ser"));
-            testTask = (TestTask) is.readObject();
-        } catch (Exception e) {
-            JOptionPane.showConfirmDialog(null, "Виникла помилка при завантаженні",
-                    "Попередження", JOptionPane.DEFAULT_OPTION);
-        }
-        return testTask;
-    }
-
     public static void saveTestTasks(List<TestTask> testTaskList) {
         try {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(TEST_TASK_SER));
