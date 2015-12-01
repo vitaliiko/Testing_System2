@@ -86,7 +86,11 @@ public class StudentAuthGI extends JFrame {
                 String studentName = nameField.getText();
                 StudentsGroup group = studentManager.getStudentGroup((String) groupsBox.getSelectedItem());
                 if (group != null) {
-                    checkForPassword(group, studentName);
+                    if (studentManager.getUsersNameList(group).contains(studentName)) {
+                        checkForPassword(group, studentName);
+                    } else {
+                        setWarningMessage("В цій групі немає такого студента");
+                    }
                 }
             }
         });
@@ -152,9 +156,9 @@ public class StudentAuthGI extends JFrame {
             loginButton.setEnabled(groupsBox.getSelectedItem() != null
                     && !nameField.getText().isEmpty()
                     && passwordField.getPassword().length != 0);
-            String text = ((JTextField) groupsBox.getEditor().getEditorComponent()).getText();
-            nameField.setEnabled(!text.isEmpty());
-            passwordField.setEnabled(!text.isEmpty());
+            String groupName = ((JTextField) groupsBox.getEditor().getEditorComponent()).getText();
+            nameField.setEnabled(!groupName.isEmpty());
+            passwordField.setEnabled(!groupName.isEmpty());
         }
 
         @Override

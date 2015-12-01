@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable<StudentsGroup>, Data {
 
@@ -11,7 +12,7 @@ public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable
     private String faculty;
     private String department;
     private Teacher curator;
-    private Set<Student> studentsSet = new HashSet<>();
+    private Set<Student> studentsSet = new TreeSet<>();
 
     public StudentsGroup(String name, String faculty, String department, Teacher curator) {
         this.name = name;

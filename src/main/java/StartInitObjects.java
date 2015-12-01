@@ -74,6 +74,7 @@ public class StartInitObjects {
                 TestTask testTask = createTests("tests/test.txt", "Модульна контрольна робота " + i++, disciplineNames[j], teacher);
                 testTask.getAuthorsList().add(ivanov);
                 testTasks.add(testTask);
+                testTask.setStudentGroupsList(studentsGroupsList);
                 j = j == 2 ? 0 : ++j;
             }
         } catch (IOException e) {

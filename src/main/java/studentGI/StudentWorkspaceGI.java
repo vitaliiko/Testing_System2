@@ -64,8 +64,9 @@ public class StudentWorkspaceGI extends MainFrame {
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {
             int index = testTaskTable.getSelectedRow();
             testTaskManager.setCurrentTest(index);
+            System.out.println(wrapperList.get(index).getStatusName());
             startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() != 0
-                    || wrapperList.get(index).getStatus() == TestTaskWrapper.FAIL);
+                    || wrapperList.get(index).getStatus() != TestTaskWrapper.FAIL);
             viewResultButton.setEnabled(wrapperList.get(index).getResultPanel() != null);
         });
         testTaskTable.addMouseListener(new MouseAdapter() {

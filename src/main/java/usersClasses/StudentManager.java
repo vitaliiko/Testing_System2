@@ -27,6 +27,12 @@ public class StudentManager extends UserManager<Student> {
         return null;
     }
 
+    public List<String> getUsersNameList(StudentsGroup studentsGroup) {
+        return new ArrayList<>(studentsGroup.getUsersSet().stream()
+                .map(Student::getUserName)
+                .collect(Collectors.toList()));
+    }
+
     @Override
     public List<String> getUsersNameList() {
         return null;

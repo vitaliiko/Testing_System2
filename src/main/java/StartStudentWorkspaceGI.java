@@ -7,13 +7,12 @@ public class StartStudentWorkspaceGI {
 
     public static void main(String[] args) {
         StudentManager studentManager = new StudentManager();
-        StartInitObjects.initStudents();
         try {
             studentManager.authorizeUser("Іванов Іван Іванович", "111111qQ".toCharArray(),
-                    StartInitObjects.studentsGroupsList.get(0));
+                    studentManager.getStudentGroup("CGC-1466"));
+            new StudentWorkspaceGI(studentManager);
         } catch (IOException e) {
             e.getMessage();
         }
-        new StudentWorkspaceGI(studentManager);
     }
 }

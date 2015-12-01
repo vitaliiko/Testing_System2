@@ -16,8 +16,9 @@ public class TeacherManager extends UserManager<Teacher> {
 
     public TeacherManager() {
         teacherSet = IOFileHandling.loadUserSet(IOFileHandling.TEACHERS_SER);
-        teachersNamesList = new ArrayList<>(
-                this.teacherSet.stream().map(Teacher::getUserName).collect(Collectors.toList()));
+        teachersNamesList = new ArrayList<>(this.teacherSet.stream()
+                .map(Teacher::getUserName)
+                .collect(Collectors.toList()));
     }
 
     @Override

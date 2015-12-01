@@ -40,7 +40,6 @@ public class TeacherWorkspaceGI extends MainFrame {
     private DefaultListModel<TestTaskWrapper> wrapperListModel;
     private TableParameters<TestTask> testTaskTableParameters;
     private JComboBox<StudentsGroup> studentGroupsBox;
-    private DefaultComboBoxModel<StudentsGroup> comboBoxModel;
     private JPanel testWrapperPanel;
     private JTextField surnameField;
     private JTextField nameField;
@@ -249,7 +248,7 @@ public class TeacherWorkspaceGI extends MainFrame {
         secondNameField.setBackground(Color.WHITE);
         secondNameField.getDocument().addDocumentListener(listener);
 
-        comboBoxModel = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<StudentsGroup> comboBoxModel = new DefaultComboBoxModel<>();
         studentManager.getStudentsGroupSet().forEach(comboBoxModel::addElement);
         studentGroupsBox = new JComboBox<>(comboBoxModel);
         studentGroupsBox.addActionListener(listener);
@@ -457,6 +456,8 @@ public class TeacherWorkspaceGI extends MainFrame {
         wrapperListModel = new DefaultListModel<>();
         wrapperJList = new JList<>(wrapperListModel);
         wrapperJList.setVisibleRowCount(10);
+        wrapperJList.setFixedCellWidth(200);
+        wrapperJList.setFixedCellHeight(18);
 
         testWrapperPanel.add(FrameUtils.createScroll(wrapperJList, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }
