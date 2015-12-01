@@ -4,6 +4,7 @@ import components.BoxPanel;
 import components.FrameUtils;
 import components.MainFrame;
 import components.TableParameters;
+import supporting.IOFileHandling;
 import testingClasses.TestTask;
 import testingClasses.TestTaskWrapper;
 import usersClasses.StudentManager;
@@ -24,11 +25,10 @@ public class StudentWorkspaceGI extends MainFrame {
     private JLabel notCompletedTestCount;
     private JButton startButton;
     private JButton viewResultButton;
-    private ArrayList<TestTaskWrapper> wrapperList;
+    private List<TestTaskWrapper> wrapperList;
 
     public StudentWorkspaceGI(StudentManager studentManager) throws HeadlessException {
         super("title", studentManager);
-        this.studentManager.saveUserSet();
         wrapperList = studentManager.getCurrentUser().getTestTaskWrapperList();
         frameSetup();
     }
@@ -57,19 +57,15 @@ public class StudentWorkspaceGI extends MainFrame {
     }
 
     private void prepareTestTasksTable() {
-        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
-        System.out.println(wrapperList);
         testTaskManager.wrappingTests(studentManager.getCurrentUser());
-        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
         studentManager.saveUserSet();
-        System.out.println(studentManager.getCurrentUser().getTestTaskWrapperList());
-        System.out.println(wrapperList);
         testTaskTableParameters = new TableParameters<>(wrapperList);
         testTaskTable = createTable(testTaskTableParameters);
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {
             int index = testTaskTable.getSelectedRow();
             testTaskManager.setCurrentTest(index);
-            startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() != 0);
+            startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() != 0
+                    || wrapperList.get(index).getStatus() == TestTaskWrapper.FAIL);
             viewResultButton.setEnabled(wrapperList.get(index).getResultPanel() != null);
         });
         testTaskTable.addMouseListener(new MouseAdapter() {

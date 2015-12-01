@@ -67,14 +67,14 @@ public class IOFileHandling {
     }
 
     public static void saveStudentsGroupSet(Set<StudentsGroup> studentsGroupSet) {
-        try {
-            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(STUDENTS_SER));
+        try (ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(STUDENTS_SER))) {
+            System.out.println("write");
             os.writeObject(studentsGroupSet);
-            os.close();
         } catch (IOException e) {
             JOptionPane.showConfirmDialog(null, "Error when saving data base file", "ACHTUNG!",
                     JOptionPane.DEFAULT_OPTION);
         }
+        System.out.println("close");
     }
 
     public static Set<StudentsGroup> loadStudentsGroupSet() {

@@ -125,6 +125,7 @@ public class PassingTheTestGI extends JWindow {
                 }
             }
             testTaskWrapper.setPoints(100 / questionsCount * result);
+            testTaskWrapper.setTime(testTaskWrapper.getTestTask().getTimeLimit() - timeLimit);
             testTaskWrapper.setResultPanel(questionsPanel);
             testTaskWrapper.setRightAnswersCount(rightAnswersCount);
             dispose();

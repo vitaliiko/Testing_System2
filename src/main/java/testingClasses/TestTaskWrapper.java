@@ -23,6 +23,7 @@ public class TestTaskWrapper implements Serializable {
     private float points;
     private int rightAnswersCount;
     private int attemptsLeft;
+    private int time;
     private int status = NOT_TOOK;
 
     public TestTaskWrapper(TestTask testTask) {
@@ -50,6 +51,14 @@ public class TestTaskWrapper implements Serializable {
         attemptsLeft--;
     }
 
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -68,7 +77,7 @@ public class TestTaskWrapper implements Serializable {
             status = GOOD;
         } else if (points > 75) {
             status = FINE;
-        } else if (points > testTask.getMinPoint()) {
+        } else if (points >= testTask.getMinPoint()) {
             status = BAD;
         }
         if (points < testTask.getMinPoint()) {
@@ -124,6 +133,6 @@ public class TestTaskWrapper implements Serializable {
 
     @Override
     public String toString() {
-        return testTask.getTaskName() + " " + status;
+        return testTask.getDisciplineName() + " " + testTask.getTaskName() + " " + getStatusName();
     }
 }

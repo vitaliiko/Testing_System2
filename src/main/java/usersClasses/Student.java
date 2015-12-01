@@ -3,11 +3,12 @@ package usersClasses;
 import testingClasses.TestTaskWrapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Student extends User {
 
     private StudentsGroup studentsGroup;
-    private ArrayList<TestTaskWrapper> testTaskWrapperList = new ArrayList<>();
+    private List<TestTaskWrapper> testTaskWrapperList = new ArrayList<>();
 
     public Student(String surname, String name, String secondName, StudentsGroup studentsGroup) {
         super(surname, name, secondName, "");
@@ -29,7 +30,7 @@ public class Student extends User {
         return studentsGroup.getName();
     }
 
-    public ArrayList<TestTaskWrapper> getTestTaskWrapperList() {
+    public List<TestTaskWrapper> getTestTaskWrapperList() {
         return testTaskWrapperList;
     }
 

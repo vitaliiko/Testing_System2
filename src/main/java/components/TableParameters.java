@@ -5,13 +5,13 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class TableParameters<T> extends JTextArea implements TableModel, TableCellRenderer {
 
-    private ArrayList<T> objectsList;
+    private List<T> objectsList;
 
-    public TableParameters(ArrayList<T> objectsList) {
+    public TableParameters(List<T> objectsList) {
         super();
         setLineWrap(true);
         setWrapStyleWord(true);

@@ -307,6 +307,16 @@ public class TeacherWorkspaceGI extends MainFrame {
         }
     }
 
+    private void updateWrapperListModel(int studentIndex) {
+        wrapperListModel.removeAllElements();
+        if (studentListModel.size() != 0) {
+            studentListModel.getElementAt(studentIndex)
+                    .getTestTaskWrapperList().stream()
+                    .filter(wrapper -> wrapper.getStatus() != TestTaskWrapper.NOT_TOOK)
+                    .forEach(wrapperListModel::addElement);
+        }
+    }
+
     private void updateStudentsGroupListModel() {
         int index = studentsGroupJList.getSelectedIndex();
         studentsGroupListModel.removeAllElements();
@@ -329,6 +339,7 @@ public class TeacherWorkspaceGI extends MainFrame {
                 student = studentListModel.getElementAt(index);
                 if (student != null) {
                     fillFields(studentListModel.getElementAt(index));
+                    updateWrapperListModel(index);
                 }
 
                 setFieldsEnabled(true);
