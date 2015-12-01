@@ -67,12 +67,14 @@ public class TestTaskManager {
 
         testTaskList.stream()
                 .filter(testTask -> testTask.getStudentGroupsList().contains(studentsGroup)
-                        && !haveWrapper(testTask, student))
+                        && !haveWrapper(testTask, student)
+                        && !testTask.getNotAllowedStudentsList().contains(student))
                 .forEach(testTask -> student.addTestTaskWrapper(new TestTaskWrapper(testTask)));
 
         student.getTestTaskWrapperList().stream()
                 .filter(testTaskWrapper -> testTaskWrapper.getStatus() <= TestTaskWrapper.BAD
-                        && !testTaskWrapper.getTestTask().getStudentGroupsList().contains(studentsGroup))
+                        && !testTaskWrapper.getTestTask().getStudentGroupsList().contains(studentsGroup)
+                        && testTaskWrapper.getTestTask().getNotAllowedStudentsList().contains(student))
                 .forEach(testTaskWrapper -> testTaskWrapper.setStatus(TestTaskWrapper.FAIL));
     }
 }

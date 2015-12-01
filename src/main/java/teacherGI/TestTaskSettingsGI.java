@@ -18,10 +18,8 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class TestTaskSettingsGI extends JDialog {
 
@@ -61,12 +59,12 @@ public class TestTaskSettingsGI extends JDialog {
     private JButton saveButton;
     private JButton applyButton;
     private JButton cancelButton;
-    private Dimension buttonsDimension;
 
     private List<List<Question>> questionsGroupList = new ArrayList<>();
     private ChangeDataListener listener = new ChangeDataListener();
-    private Map<String, Teacher> teacherMap = new HashMap<>();
-    private Map<String, StudentsGroup> studentsGroupMap = new HashMap<>();
+    private Map<String, Teacher> teacherMap = new TreeMap<>();
+    private Map<String, Student> studentMap = new TreeMap<>();
+    private Map<String, StudentsGroup> studentsGroupMap = new TreeMap<>();
 
     public TestTaskSettingsGI(JFrame owner, TestTaskManager testTaskManager, TeacherManager teacherManager,
                               StudentManager studentManager) {
@@ -137,7 +135,6 @@ public class TestTaskSettingsGI extends JDialog {
             saveSettings();
             applyButton.setEnabled(false);
         });
-        buttonsDimension = getPreferredSize();
     }
 
     private void saveSettings() {
@@ -148,6 +145,7 @@ public class TestTaskSettingsGI extends JDialog {
 
         saveLimitsSettings();
         testTask.setStudentGroupsList(makeDataListFromCheckBoxPanel(studentsGroupPanel, studentsGroupMap));
+        testTask.setNotAllowedStudentsList(makeDataListFromCheckBoxPanel(notAllowedStudentsPanel, studentMap));
         testTask.setQuestionGroupsList(questionsGroupList);
 
         testTaskManager.saveTests();
@@ -167,8 +165,10 @@ public class TestTaskSettingsGI extends JDialog {
         testTask.setAttemptsLimit((Integer) attemptLimit.getValue());
         testTask.setMinPoint((Integer) pointLimit.getValue());
 
-        testTask.setAllowWithoutRightAnswers(allowWithoutRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
-        testTask.setAllowAllRightAnswers(allowAllRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
+        testTask.setAllowWithoutRightAnswers(
+                allowWithoutRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
+        testTask.setAllowAllRightAnswers(
+                allowAllRightAnswers.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
         testTask.setCheckBoxAlways(checkBoxAlways.isSelected() ? TestParameters.ALLOW : TestParameters.NOT_ALLOW);
     }
 
@@ -399,12 +399,15 @@ public class TestTaskSettingsGI extends JDialog {
 
         for (StudentsGroup studentsGroup : studentManager.getStudentsGroupSet()) {
             studentsGroupMap.put(studentsGroup.getName(), studentsGroup);
+            for (Student student : studentsGroup.getUsersSet()) {
+                studentMap.put(student.toString(), student);
+            }
         }
         studentsGroupPanel = createCheckBoxPanel(studentsGroupMap);
         studentsTabPanel.add(createScrollPaneWithTitle(studentsGroupPanel, "Групи студентів"));
 
-//        notAllowedStudentsPanel = new JPanel();
-//        studentsTabPanel.add(createScrollPaneWithTitle(notAllowedStudentsPanel, "Недопущені студенти"));
+        notAllowedStudentsPanel = createCheckBoxPanel(studentMap);
+        studentsTabPanel.add(createScrollPaneWithTitle(notAllowedStudentsPanel, "Недопущені студенти"));
     }
 
     private void prepareQuestionsTabPanel() {
