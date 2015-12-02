@@ -1,7 +1,9 @@
 package usersClasses;
 
+import components.SingleMessage;
 import testingClasses.TestTaskWrapper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +12,12 @@ public class Student extends User {
     private StudentsGroup studentsGroup;
     private List<TestTaskWrapper> testTaskWrapperList = new ArrayList<>();
 
-    public Student(String surname, String name, String secondName, StudentsGroup studentsGroup) {
+    public Student(String surname, String name, String secondName, StudentsGroup studentsGroup) throws IOException {
         super(surname, name, secondName, "");
         this.studentsGroup = studentsGroup;
-        studentsGroup.addUser(this);
+        if (!studentsGroup.addUser(this)) {
+            throw new IOException(SingleMessage.EXIST_USER);
+        }
     }
 
     public StudentsGroup getStudentsGroup() {

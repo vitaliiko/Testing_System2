@@ -14,6 +14,9 @@ public class LabelComponentPanel extends JPanel {
         setOpaque(false);
         label = new JLabel(labelText);
         label.setHorizontalAlignment(JLabel.RIGHT);
+        if (component instanceof JLabel) {
+            label.setFont(component.getFont());
+        }
         add(label);
         add(component);
     }

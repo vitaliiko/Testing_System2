@@ -12,5 +12,5 @@ public interface UserDAO<T> {
 
     void deleteUser(T user);
 
-    void addUser(T user);
+    boolean addUser(T user);
 }

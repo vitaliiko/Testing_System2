@@ -4,6 +4,7 @@ import components.BoxPanel;
 import components.QuestionPanel;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -107,6 +108,7 @@ public class TestTaskWrapper implements Serializable {
             Question question = questionList.get(random.nextInt(questionIndex--));
             QuestionPanel questionPanel =
                     new QuestionPanel(i++, question, testTask.getCheckBoxAlways() == TestParameters.ALLOW);
+            questionPanel.setBorder(new EmptyBorder(10, 0, 30, 0));
             questionList.remove(question);
             testTask.getQuestionGroupsList().stream()
                     .filter(list -> list.contains(question))

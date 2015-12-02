@@ -12,6 +12,7 @@ import usersClasses.StudentsGroup;
 import usersClasses.TeacherManager;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -51,10 +52,11 @@ public class TeacherWorkspaceGI extends MainFrame {
     private JButton addNewStudentButton;
     private JButton saveAddedStudentButton;
     private JButton cancelAdditionButton;
+    private JButton removeStudentButton;
     private Container buttonsContainer;
 
     public TeacherWorkspaceGI(TeacherManager teacherManager) {
-        super("Робоче середовище", teacherManager);
+        super("Тестування знань стдентів", teacherManager);
         frameSetup();
     }
 
@@ -215,19 +217,19 @@ public class TeacherWorkspaceGI extends MainFrame {
         studentsInfoPanel.setBorder(new TitledBorder("Інформація про студента"));
         studentsInfoPanel.setOpaque(false);
 
-        Dimension dimension = new Dimension(300, 250);
+        Dimension dimension = new Dimension(340, 250);
         studentsInfoPanel.setMaximumSize(dimension);
         studentsInfoPanel.setPreferredSize(dimension);
         studentsInfoPanel.setMinimumSize(dimension);
 
-        JPanel labels = FrameUtils.createLabelGridPanel(JLabel.RIGHT,
+        JPanel labelsPanel = FrameUtils.createLabelGridPanel(JLabel.RIGHT,
                 "Прізвище: ", "Ім\'я: ", "Побатькові: ", "Група: ", "Телефон: ", "E-Mail: ");
-        studentsInfoPanel.add(labels, BorderLayout.WEST);
+        studentsInfoPanel.add(labelsPanel, BorderLayout.WEST);
 
         prepareFields();
-        JPanel fields = FrameUtils.createComponentsGridPanel(surnameField, nameField, secondNameField,
+        JPanel fieldsPanel = FrameUtils.createComponentsGridPanel(surnameField, nameField, secondNameField,
                 studentGroupsBox, telephoneLabel, emailLabel);
-        studentsInfoPanel.add(fields, BorderLayout.CENTER);
+        studentsInfoPanel.add(fieldsPanel, BorderLayout.CENTER);
 
         prepareButtonsContainer();
         studentsInfoPanel.add(buttonsContainer, BorderLayout.SOUTH);
@@ -343,6 +345,7 @@ public class TeacherWorkspaceGI extends MainFrame {
 
                 setFieldsEnabled(true);
                 saveStudentButton.setEnabled(false);
+                removeStudentButton.setEnabled(true);
                 setEmptyMessage();
             }
         });
@@ -405,6 +408,18 @@ public class TeacherWorkspaceGI extends MainFrame {
         });
     }
 
+    private void prepareRemoveStudentButton() {
+        removeStudentButton = new JButton("Видалити");
+        removeStudentButton.setEnabled(false);
+        removeStudentButton.addActionListener(e -> {
+            studentListModel.removeElement(studentManager.getCurrentUser());
+            studentManager.deleteCurrentUser();
+            clearFields();
+            removeStudentButton.setEnabled(false);
+            studentsJList.setSelectedIndex(studentListModel.size() > 0 ? 0 : -1);
+        });
+    }
+
     private void prepareSaveAddedStudentButton() {
         saveAddedStudentButton = new JButton("Додати");
         saveAddedStudentButton.setEnabled(false);
@@ -436,7 +451,8 @@ public class TeacherWorkspaceGI extends MainFrame {
 
         prepareSaveStudentButton();
         prepareAddNewStudentButton();
-        buttonsContainer.add(new BoxPanel(saveStudentButton, addNewStudentButton));
+        prepareRemoveStudentButton();
+        buttonsContainer.add(new BoxPanel(removeStudentButton, saveStudentButton, addNewStudentButton));
 
         prepareSaveAddedStudentButton();
         prepareCancelAdditionButton();
@@ -450,14 +466,14 @@ public class TeacherWorkspaceGI extends MainFrame {
 
     private void prepareTestWrapperPanel() {
         testWrapperPanel = new JPanel();
-        testWrapperPanel.setBorder(new TitledBorder("Складені тести"));
+        testWrapperPanel.setBorder(new TitledBorder("Здані тести"));
         testWrapperPanel.setOpaque(false);
 
         wrapperListModel = new DefaultListModel<>();
         wrapperJList = new JList<>(wrapperListModel);
-        wrapperJList.setVisibleRowCount(10);
-        wrapperJList.setFixedCellWidth(200);
-        wrapperJList.setFixedCellHeight(18);
+        wrapperJList.setVisibleRowCount(11);
+        wrapperJList.setFixedCellWidth(300);
+        wrapperJList.setFixedCellHeight(19);
 
         testWrapperPanel.add(FrameUtils.createScroll(wrapperJList, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED));
     }

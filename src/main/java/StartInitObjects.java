@@ -22,13 +22,13 @@ public class StartInitObjects {
     private static Set<Teacher> teacherSet;
     private static Teacher ivanov;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         initTeacherSet();
         initStudents();
         initTestTask();
     }
 
-    public static void initStudents() {
+    public static void initStudents() throws IOException {
         studentsGroupsList.add(new StudentsGroup("CGC-1466", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("CGC-1566", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("CGC-1366", "", "", ivanov));

@@ -50,11 +50,8 @@ public class StudentManager extends UserManager<Student> {
 
     public void createUser(String surname, String name, String secondName, StudentsGroup studentsGroup)
             throws IOException {
-        this.studentsGroup = studentsGroup;
         validateName(surname, name, secondName);
-        if (!this.studentsGroup.getUsersSet().add(new Student(surname, name, secondName, studentsGroup))) {
-            throw new IOException(SingleMessage.EXIST_USER);
-        }
+        new Student(surname, name, secondName, studentsGroup);
         saveUserSet();
     }
 
@@ -78,7 +75,9 @@ public class StudentManager extends UserManager<Student> {
 
     @Override
     public void deleteCurrentUser() {
-
+        currentUser.getStudentsGroup().deleteUser(currentUser);
+        currentUser = null;
+        saveUserSet();
     }
 
     @Override

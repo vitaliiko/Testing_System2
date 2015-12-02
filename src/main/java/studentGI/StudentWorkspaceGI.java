@@ -22,13 +22,12 @@ public class StudentWorkspaceGI extends MainFrame {
     private TableParameters<TestTaskWrapper> testTaskTableParameters;
     private JPanel labelPanel;
     private JLabel completedTestsCount;
-    private JLabel notCompletedTestCount;
     private JButton startButton;
     private JButton viewResultButton;
     private List<TestTaskWrapper> wrapperList;
 
     public StudentWorkspaceGI(StudentManager studentManager) throws HeadlessException {
-        super("title", studentManager);
+        super("Тестування знань студентів", studentManager);
         wrapperList = studentManager.getCurrentUser().getTestTaskWrapperList();
         frameSetup();
     }
@@ -37,7 +36,7 @@ public class StudentWorkspaceGI extends MainFrame {
     public void frameSetup() {
         fillToolsPanel();
         fillContainer();
-        setTabbedItems("Список тестів", "Складені тести");
+        setTabbedItems("Список всіх тестів ", "Необхідно здадти ");
         addListenerToTabbedList(e -> {});
         super.frameSetup();
     }
@@ -64,9 +63,8 @@ public class StudentWorkspaceGI extends MainFrame {
         testTaskTable.getSelectionModel().addListSelectionListener(e -> {
             int index = testTaskTable.getSelectedRow();
             testTaskManager.setCurrentTest(index);
-            System.out.println(wrapperList.get(index).getStatusName());
-            startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() != 0
-                    || wrapperList.get(index).getStatus() != TestTaskWrapper.FAIL);
+            startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() > 0
+                    && wrapperList.get(index).getStatus() > TestTaskWrapper.FAIL);
             viewResultButton.setEnabled(wrapperList.get(index).getResultPanel() != null);
         });
         testTaskTable.addMouseListener(new MouseAdapter() {
@@ -83,10 +81,12 @@ public class StudentWorkspaceGI extends MainFrame {
         startButton = new JButton("Старт");
         startButton.setEnabled(false);
         startButton.addActionListener(e -> {
-            int index = testTaskTable.getSelectedRow();
-            new StartTestGI(this, wrapperList.get(index));
-            startButton.setEnabled(wrapperList.get(index).getAttemptsLeft() != 0);
-            viewResultButton.setEnabled(wrapperList.get(index).getResultPanel() != null);
+            TestTaskWrapper wrapper = wrapperList.get(testTaskTable.getSelectedRow());
+            if (wrapper.getAttemptsLeft() > 0 && wrapper.getStatus() > TestTaskWrapper.FAIL) {
+                new StartTestGI(this, wrapper);
+            }
+            startButton.setEnabled(wrapper.getAttemptsLeft() != 0);
+            viewResultButton.setEnabled(wrapper.getResultPanel() != null);
             studentManager.saveUserSet();
         });
 
@@ -100,10 +100,7 @@ public class StudentWorkspaceGI extends MainFrame {
         labelPanel = new BoxPanel(BoxLayout.Y_AXIS);
 
         completedTestsCount = new JLabel("0");
-        labelPanel.add(new BoxPanel(new JLabel("ʳ������ ��������� �����: "), completedTestsCount));
-
-        notCompletedTestCount = new JLabel(String.valueOf(testTaskTable.getRowCount()));
-        labelPanel.add(new BoxPanel(new JLabel("ʳ������ �����, �� ��������� �������: "),
-                notCompletedTestCount));
+        labelPanel.add(new BoxPanel(new JLabel("Здано тестів: "), completedTestsCount + " / "
+                + studentManager.getCurrentUser().getTestTaskWrapperList().size()));
     }
 }

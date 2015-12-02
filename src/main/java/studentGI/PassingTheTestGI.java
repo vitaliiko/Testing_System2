@@ -90,6 +90,8 @@ public class PassingTheTestGI extends JWindow {
             JLabel label = new JLabel("Залишилось часу: ");
             label.setFont(timeLabel.getFont());
             label.setHorizontalAlignment(JLabel.CENTER);
+            BoxPanel labelsBox = new BoxPanel(label, timeLabel);
+            labelsBox.setBorder(new EmptyBorder(0, 0, 30, 0));
             progressPanel.add(label);
             progressPanel.add(timeLabel);
             startTimer();
@@ -97,7 +99,9 @@ public class PassingTheTestGI extends JWindow {
 
         progressLabel = new JLabel("0/" + questionsCount);
         progressLabel.setFont(new Font("Arial", Font.PLAIN, 14));
-        progressPanel.add(new LabelComponentPanel("Дано відповідей: ", progressLabel));
+        JPanel labelComponent = new LabelComponentPanel("Дано відповідей: ", progressLabel);
+        labelComponent.setBorder(new EmptyBorder(0, 50, 0, 0));
+        progressPanel.add(labelComponent);
 
         progressBar = new JProgressBar(0, questionsCount);
         progressBar.setStringPainted(true);

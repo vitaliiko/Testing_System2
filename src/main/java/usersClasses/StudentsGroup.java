@@ -74,8 +74,8 @@ public class StudentsGroup implements UserDAO<Student>, Serializable, Comparable
     }
 
     @Override
-    public void addUser(Student user) {
-        studentsSet.add(user);
+    public boolean addUser(Student user) {
+        return studentsSet.add(user);
     }
 
     @Override
