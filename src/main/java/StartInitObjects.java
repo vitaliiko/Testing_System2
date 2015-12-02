@@ -2,6 +2,7 @@ import supporting.IOFileHandling;
 import supporting.ImageUtils;
 import testingClasses.Question;
 import testingClasses.TestTask;
+import testingClasses.TestTaskWrapper;
 import usersClasses.Student;
 import usersClasses.StudentsGroup;
 import usersClasses.Teacher;
@@ -10,10 +11,7 @@ import java.io.IOException;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class StartInitObjects {
 
@@ -21,30 +19,36 @@ public class StartInitObjects {
 
     private static Set<Teacher> teacherSet;
     private static Teacher ivanov;
+    private static Student ivan;
 
     public static void main(String[] args) throws IOException {
         initTeacherSet();
-        initStudents();
         initTestTask();
+        initStudents();
     }
 
     public static void initStudents() throws IOException {
-        studentsGroupsList.add(new StudentsGroup("CGC-1466", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("CGC-1566", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("CGC-1366", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("CG-126", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("RV-125", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("RV-126", "", "", ivanov));
-        studentsGroupsList.add(new StudentsGroup("RV-127", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("СВС-1466", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("СВС-1566", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("СВС-1366", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("КЛ-126", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("РП-125", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("РП-126", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("МВ-127", "", "", ivanov));
 
-        new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Іваненко", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Петренко", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Петров", "Іван", "Іванович", studentsGroupsList.get(0));
-        new Student("Іванов", "Петро", "Іванович", studentsGroupsList.get(1));
-        new Student("Іванов", "Іван", "Петрович", studentsGroupsList.get(1));
-        new Student("Іванов", "Федір", "Петрович", studentsGroupsList.get(1));
+        String[] names = {"Іван", "Петро", "Василь", "Артем", "Максим", "Сергій", "Олександр", "Олексій", "Валєра", "Денис"};
+        String[] surnames = {"Іванов", "Петров", "Васильєв", "Артемов", "Максимов", "Сергійов", "Олександров", "Олексійов", "Ковальов", "Денисов"};
+        String[] secondNames = {"Іванович", "Петрович", "Васильович", "Артемович", "Максимович", "Сергійович", "Олександрович", "Олексійович", "Валєрійович", "Денисович"};
 
+        Random random = new Random();
+        for (StudentsGroup studentsGroup : studentsGroupsList) {
+            for (int i = 0; i <= 15; i++) {
+                Student student = new Student(surnames[random.nextInt(10)], names[random.nextInt(10)], secondNames[random.nextInt(10)], studentsGroup);
+//                TestTaskWrapper testTaskWrapper = new TestTaskWrapper()
+//                student.addTestTaskWrapper();
+            }
+        }
+        ivan = new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
         IOFileHandling.saveStudentsGroupSet(new TreeSet<>(studentsGroupsList));
     }
 
