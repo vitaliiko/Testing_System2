@@ -18,6 +18,7 @@ public class StartInitObjects {
     public static final ArrayList<StudentsGroup> studentsGroupsList = new ArrayList<>();
 
     private static Set<Teacher> teacherSet;
+    private static ArrayList<TestTask> testTasks;
     private static Teacher ivanov;
     private static Student ivan;
 
@@ -25,9 +26,10 @@ public class StartInitObjects {
         initTeacherSet();
         initTestTask();
         initStudents();
+        addStudentsToTest();
     }
 
-    public static void initStudents() throws IOException {
+    public static void initStudents() {
         studentsGroupsList.add(new StudentsGroup("СВС-1466", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("СВС-1566", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("СВС-1366", "", "", ivanov));
@@ -35,6 +37,10 @@ public class StartInitObjects {
         studentsGroupsList.add(new StudentsGroup("РП-125", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("РП-126", "", "", ivanov));
         studentsGroupsList.add(new StudentsGroup("МВ-127", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("МВ-128", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("МВ-129", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("МВ-1266", "", "", ivanov));
+        studentsGroupsList.add(new StudentsGroup("МВ-1255", "", "", ivanov));
 
         String[] names = {"Іван", "Петро", "Василь", "Артем", "Максим", "Сергій", "Олександр", "Олексій", "Валєра", "Денис"};
         String[] surnames = {"Іванов", "Петров", "Васильєв", "Артемов", "Максимов", "Сергійов", "Олександров", "Олексійов", "Ковальов", "Денисов"};
@@ -43,12 +49,23 @@ public class StartInitObjects {
         Random random = new Random();
         for (StudentsGroup studentsGroup : studentsGroupsList) {
             for (int i = 0; i <= 15; i++) {
-                Student student = new Student(surnames[random.nextInt(10)], names[random.nextInt(10)], secondNames[random.nextInt(10)], studentsGroup);
-//                TestTaskWrapper testTaskWrapper = new TestTaskWrapper()
-//                student.addTestTaskWrapper();
+                try {
+                    Student student = new Student(surnames[random.nextInt(10)], names[random.nextInt(10)], secondNames[random.nextInt(10)], studentsGroup);
+                    for (TestTask testTask : testTasks) {
+                        TestTaskWrapper testTaskWrapper = new TestTaskWrapper(testTask);
+                        testTaskWrapper.setPoints(random.nextInt(50) + 50);
+                        student.addTestTaskWrapper(testTaskWrapper);
+                    }
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
-        ivan = new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
+        try {
+            ivan = new Student("Іванов", "Іван", "Іванович", studentsGroupsList.get(0));
+        } catch (IOException e) {
+            System.out.println("Ivan: " + e.getMessage());
+        }
         IOFileHandling.saveStudentsGroupSet(new TreeSet<>(studentsGroupsList));
     }
 
@@ -69,7 +86,7 @@ public class StartInitObjects {
     }
 
     public static void initTestTask() {
-        ArrayList<TestTask> testTasks = new ArrayList<>();
+        testTasks = new ArrayList<>();
         String[] disciplineNames = {"Інформатика", "Інформатика", "Дискратна математика"};
         List<Teacher> teachers = new ArrayList<>(teacherSet);
         try {
@@ -78,13 +95,18 @@ public class StartInitObjects {
                 TestTask testTask = createTests("tests/test.txt", "Модульна контрольна робота " + i++, disciplineNames[j], teacher);
                 testTask.getAuthorsList().add(ivanov);
                 testTasks.add(testTask);
-                testTask.setStudentGroupsList(studentsGroupsList);
                 j = j == 2 ? 0 : ++j;
             }
         } catch (IOException e) {
             e.getMessage();
         }
         IOFileHandling.saveTestTasks(testTasks);
+    }
+
+    public static void addStudentsToTest() {
+        for (TestTask testTask : testTasks) {
+            testTask.setStudentGroupsList(studentsGroupsList);
+        }
     }
 
     public static TestTask createTests(String fileName, String testName, String discipline, Teacher creatorName)

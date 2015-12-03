@@ -135,6 +135,6 @@ public class TestTaskWrapper implements Serializable {
 
     @Override
     public String toString() {
-        return testTask.getDisciplineName() + " " + testTask.getTaskName() + " " + getStatusName();
+        return testTask.getDisciplineName() + " " + getStatusName();
     }
 }

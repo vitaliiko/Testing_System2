@@ -326,17 +326,22 @@ public class TestTaskSettingsGI extends JDialog {
     }
 
     private void prepareLimitTabPanel() {
-        limitTabPanel = new JPanel(new BorderLayout());
+        limitTabPanel = new BoxPanel(BoxLayout.Y_AXIS);
         limitTabPanel.setBackground(Color.WHITE);
         limitTabPanel.setBorder(new EmptyBorder(10, 20, 240, 40));
 
-        limitTabPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Максимальна кількість варіантів відповідей:",
+        JPanel limitPanel = new JPanel(new BorderLayout());
+        limitPanel.setBackground(Color.WHITE);
+        limitPanel.add(FrameUtils.createLabelGridPanel(JLabel.RIGHT, "Максимальна кількість варіантів відповідей:",
                 "Максимальна кількість запитань у тесті:",
                 "Максимальна кількість часу, хв.:",
                 "Максимальна кількість спроб:",
                 "Мінімальна кількість балів для сдачі тесту:"), BorderLayout.WEST);
-        limitTabPanel.add(createSpinners(), BorderLayout.CENTER);
-        limitTabPanel.add(createAllowedBoxes(), BorderLayout.SOUTH);
+        limitPanel.add(createSpinners(), BorderLayout.CENTER);
+
+        limitTabPanel.add(limitPanel);
+        limitTabPanel.add(new JSeparator());
+        limitTabPanel.add(new BoxPanel(createAllowedBoxes()));
     }
 
     private JPanel createSpinners() {

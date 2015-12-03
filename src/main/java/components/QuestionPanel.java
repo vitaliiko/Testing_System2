@@ -93,7 +93,7 @@ public class QuestionPanel extends JPanel {
             }
         }
 
-        if (question.getRightAnswersList().size() == 0) {
+        if (question.getRightAnswersList().size() == 0 && studentAnswersCount > 0) {
             return 0;
         }
         float result = (studentRightAnswersCount * 2 - studentAnswersCount) / question.getRightAnswersList().size();
